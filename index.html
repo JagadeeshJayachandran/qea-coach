@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QEA Mega Coaching Card â Your AI Technical Coach</title>
+  <title>QEA Mega Coaching Card Ã¢ÂÂ Your AI Technical Coach</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -253,12 +253,20 @@
 
     .phase-label {
       color: #c084fc;
-      font-weight: 600;
+      font-weight: 700;
+      font-size: 1.05em;
+      display: inline-block;
+      border-left: 3px solid #c084fc;
+      padding-left: 8px;
+      margin-top: 4px;
     }
 
     .gate-label {
       color: #fbbf24;
       font-weight: 600;
+      font-size: 0.9em;
+      opacity: 0.8;
+      font-style: italic;
     }
 
     .divider {
@@ -325,7 +333,7 @@
     </div>
 
     <button class="copy-btn" onclick="copyPrompt(this)">
-      <span class="copy-icon">ð</span>
+      <span class="copy-icon">Ã°ÂÂÂ</span>
       <span class="btn-text">Copy Entire Prompt</span>
     </button>
 
@@ -352,7 +360,7 @@
           <span class="dot-green"></span>
         </div>
         <button class="copy-btn-small" onclick="copyPrompt(this)">
-          <span>ð</span> Copy
+          <span>Ã°ÂÂÂ</span> Copy
         </button>
       </div>
       <div class="prompt-content" id="promptContent"></div>
@@ -635,21 +643,21 @@ When all Phase 5 gate items are done, say: "You've completed the full framework.
         .replace(/^(ABOUT ME:)$/gm, '<span class="section-header">$1</span>')
         .replace(/^(MY PROGRESS SO FAR.*?):$/gm, '<span class="section-header">$1</span>')
         // Fill markers
-        .replace(/(â FILL THIS IN)/g, '<span class="fill-marker">$1</span>')
+        .replace(/(Ã¢ÂÂ FILL THIS IN)/g, '<span class="fill-marker">$1</span>')
         // Rules
-        .replace(/^(RULE \d+ â .*?)$/gm, '<span class="rule-label">$1</span>')
+        .replace(/^(RULE \d+ Ã¢ÂÂ .*?)$/gm, '<span class="rule-label">$1</span>')
         // Chains
-        .replace(/^(CHAIN [A-F] â .*?)$/gm, '<span class="chain-label">$1</span>')
+        .replace(/^(CHAIN [A-F] Ã¢ÂÂ .*?)$/gm, '<span class="chain-label">$1</span>')
         .replace(/^(CHAIN ROUTING:)$/gm, '<span class="chain-label">$1</span>')
         .replace(/^(CONFLICT RESOLUTION:)$/gm, '<span class="chain-label">$1</span>')
         // Stop markers
         .replace(/(&gt;&gt;&gt; STOP\..*?&lt;&lt;&lt;)/g, '<span class="stop-marker">$1</span>')
         // Phase labels
-        .replace(/^(Phase \d+ â \w+.*?)$/gm, '<span class="phase-label">$1</span>')
+        .replace(/^(Phase \d+ Ã¢ÂÂ \w+.*?)$/gm, '<span class="phase-label">$1</span>')
         // Gate labels
-        .replace(/(PHASE GATE â.*?)$/gm, '<span class="gate-label">$1</span>')
+        .replace(/(PHASE GATE Ã¢ÂÂ.*?)$/gm, '<span class="gate-label">$1</span>')
         // First/After labels
-        .replace(/^(FIRST MESSAGE â BEFORE WE START:)$/gm, '<span class="section-header">$1</span>')
+        .replace(/^(FIRST MESSAGE Ã¢ÂÂ BEFORE WE START:)$/gm, '<span class="section-header">$1</span>')
         .replace(/^(AFTER PHASE 5:)$/gm, '<span class="section-header">$1</span>')
         .replace(/^(IMPORTANT:)/gm, '<span class="stop-marker">$1</span>');
 
@@ -666,18 +674,18 @@ When all Phase 5 gate items are done, say: "You've completed the full framework.
 
         if (btn.querySelector('.btn-text')) {
           btn.querySelector('.btn-text').textContent = 'Copied!';
-          btn.querySelector('.copy-icon').textContent = 'â';
+          btn.querySelector('.copy-icon').textContent = 'Ã¢ÂÂ';
         } else {
-          btn.innerHTML = '<span>â</span> Copied!';
+          btn.innerHTML = '<span>Ã¢ÂÂ</span> Copied!';
         }
 
         setTimeout(() => {
           btn.classList.remove('copied');
           if (btn.querySelector('.btn-text')) {
             btn.querySelector('.btn-text').textContent = 'Copy Entire Prompt';
-            btn.querySelector('.copy-icon').textContent = 'ð';
+            btn.querySelector('.copy-icon').textContent = 'Ã°ÂÂÂ';
           } else {
-            btn.innerHTML = '<span>ð</span> Copy';
+            btn.innerHTML = '<span>Ã°ÂÂÂ</span> Copy';
           }
         }, 2500);
       });
