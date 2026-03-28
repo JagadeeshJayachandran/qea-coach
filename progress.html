@@ -65,10 +65,46 @@
   .week-progress .bar-bg { width: 200px; height: 8px; background: #e0e0e0; border-radius: 4px; margin: 8px auto; position: relative; }
   .week-progress .bar-fill { height: 100%; background: linear-gradient(90deg, #1565c0, #42a5f5); border-radius: 4px; width: 25%; }
   .week-progress .label { font-size: 13px; color: #666; font-weight: 600; }
+
+  .password-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(135deg, #0d47a1, #1565c0, #1a73e8);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999;
+  }
+  .password-box {
+    background: #fff; border-radius: 16px; padding: 40px 36px; text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 400px; width: 90%;
+  }
+  .password-box h2 { color: #0d47a1; font-size: 22px; margin-bottom: 6px; }
+  .password-box p { color: #666; font-size: 13px; margin-bottom: 24px; }
+  .password-box input {
+    width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px;
+    font-size: 16px; outline: none; text-align: center; letter-spacing: 2px;
+  }
+  .password-box input:focus { border-color: #1a73e8; }
+  .password-box button {
+    margin-top: 16px; width: 100%; padding: 12px; background: #1a73e8; color: #fff;
+    border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer;
+  }
+  .password-box button:hover { background: #1565c0; }
+  .password-box .error { color: #c62828; font-size: 12px; margin-top: 10px; display: none; }
+  .password-box .lock-icon { font-size: 40px; margin-bottom: 12px; }
+  .content-hidden { display: none; }
 </style>
 </head>
 <body>
-<div class="container">
+<div class="password-overlay" id="passwordGate">
+  <div class="password-box">
+    <div class="lock-icon">&#128274;</div>
+    <h2>QEA Beta Cohort</h2>
+    <p>Enter the cohort password to view progress</p>
+    <input type="password" id="passwordInput" placeholder="Enter password" autofocus>
+    <button onclick="checkPassword()">View Progress</button>
+    <div class="error" id="errorMsg">Incorrect password. Try again.</div>
+  </div>
+</div>
+<div class="container content-hidden" id="mainContent">
   <div class="header">
     <h1>QEA Beta Cohort &mdash; Phase Journey Map</h1>
     <p>Where you started vs. where you are now</p>
@@ -177,5 +213,21 @@
 
   <div class="footer">Updated weekly by Coach Jag &mdash; QE Architect Accelerator Beta Cohort</div>
 </div>
+<script>
+function checkPassword() {
+  var input = document.getElementById('passwordInput').value;
+  if (input === atob('cWVhLWJldGEtMjAyNg==')) {
+    document.getElementById('passwordGate').style.display = 'none';
+    document.getElementById('mainContent').classList.remove('content-hidden');
+  } else {
+    document.getElementById('errorMsg').style.display = 'block';
+    document.getElementById('passwordInput').value = '';
+    document.getElementById('passwordInput').focus();
+  }
+}
+document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') checkPassword();
+});
+</script>
 </body>
 </html>
