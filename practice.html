@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QE Interview Practice Lab | Staff & Principal Level</title>
+<style>
+  :root {
+    --bg: #0a0e17;
+    --surface: #131a2b;
+    --surface2: #1a2340;
+    --accent: #00d4aa;
+    --accent2: #6366f1;
+    --accent3: #f59e0b;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --danger: #ef4444;
+    --success: #22c55e;
+    --border: #1e293b;
+    --code-bg: #0d1117;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 2rem;
+    text-align: center;
+  }
+  .header h1 {
+    font-size: 2rem;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+  }
+  .header p { color: var(--muted); font-size: 0.95rem; max-width: 600px; margin: 0 auto; }
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .stat-item {
+    text-align: center;
+  }
+  .stat-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .stat-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  /* Navigation Tabs */
+  .nav-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .nav-tab {
+    padding: 0.6rem 1.5rem;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+  }
+  .nav-tab:hover { border-color: var(--accent); color: var(--text); }
+  .nav-tab.active {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+  /* Tab Content */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  /* Main Content */
+  .main { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+  /* Filters */
+  .filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .filter-group label {
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .filter-group select {
+    padding: 0.6rem 0.8rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  .filter-group select:hover { border-color: var(--accent2); }
+  .filter-group select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
+  }
+  /* Progress Banner */
+  .progress-banner {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(0, 212, 170, 0.1));
+    border: 1px solid var(--success);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .progress-banner span {
+    color: var(--success);
+    font-weight: 500;
+  }
+  .reset-progress-btn {
+    padding: 0.5rem 1rem;
+    background: var(--danger);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+  .reset-progress-btn:hover { background: #dc2626; }
+  /* Problems Grid */
+  .problems-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .problem-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .problem-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(0, 212, 170, 0.1);
+  }
+  .problem-card.completed {
+    border-color: var(--success);
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.05), rgba(34, 197, 94, 0.02));
+  }
+  .problem-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+  .problem-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    flex: 1;
+  }
+  .problem-status {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .status-easy {
+    background: rgba(34, 197, 94, 0.2);
+    color: var(--success);
+  }
+  .status-medium {
+    background: rgba(245, 158, 11, 0.2);
+    color: var(--accent3);
+  }
+  .status-hard {
+    background: rgba(239, 68, 68, 0.2);
+    color: var(--danger);
+  }
+  .status-completed {
+    background: rgba(34, 197, 94, 0.2);
+    color: var(--success);
+  }
+  .problem-meta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  .problem-meta-item {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .problem-description {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+  .problem-approach {
+    color: var(--accent2);
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+    padding: 0.75rem;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 6px;
+    border-left: 3px solid var(--accent2);
+  }
+  .view-problem-btn {
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .view-problem-btn:hover { background: #00c49a; }
+  /* Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    overflow-y: auto;
+  }
+  .modal.active { display: flex; }
+  .modal-content {
+    background: var(--surface);
+    border-radius: 12px;
+    margin: 2rem auto;
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+  }
+  .modal-header {
+    background: linear-gradient(135deg, var(--surface2), var(--surface));
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+  }
+  .modal-header h2 {
+    flex: 1;
+    font-size: 1.5rem;
+    color: var(--text);
+  }
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 1.5rem;
+    transition: color 0.2s;
+  }
+  .modal-close:hover { color: var(--text); }
+  .modal-body {
+    padding: 2rem;
+  }
+  .problem-section {
+    margin-bottom: 2rem;
+  }
+  .section-title {
+    font-size: 0.9rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+  }
+  .problem-description-full {
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+  /* Approach Section */
+  .approach-section {
+    background: rgba(99, 102, 241, 0.1);
+    border-left: 3px solid var(--accent2);
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+  }
+  .approach-section .section-title {
+    color: var(--accent2);
+    margin-bottom: 0.75rem;
+  }
+  .approach-text {
+    color: var(--text);
+    line-height: 1.6;
+  }
+  /* Example I/O Section */
+  .example-io-section {
+    background: rgba(0, 212, 170, 0.05);
+    border-left: 3px solid var(--accent);
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+  }
+  .example-io-section .section-title {
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+  .example-io-text {
+    color: var(--text);
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 0.9rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  /* Timer */
+  .timer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(0, 212, 170, 0.1);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+  }
+  .timer-display {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 80px;
+  }
+  .timer-controls {
+    display: flex;
+    gap: 0.5rem;
+    flex: 1;
+  }
+  .timer-btn {
+    padding: 0.5rem 1rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+  .timer-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .timer-btn.active { background: var(--accent); color: #000; }
+  /* Hints */
+  .hints-section {
+    margin-bottom: 1.5rem;
+  }
+  .hints-toggle {
+    padding: 0.75rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    cursor: pointer;
+    font-weight: 600;
+    width: 100%;
+    text-align: left;
+    transition: all 0.2s;
+  }
+  .hints-toggle:hover { border-color: var(--accent2); background: rgba(99, 102, 241, 0.1); }
+  .hints-list {
+    display: none;
+    margin-top: 1rem;
+    padding-left: 1.5rem;
+    border-left: 3px solid var(--accent2);
+  }
+  .hints-list.active { display: block; }
+  .hint-item {
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+  }
+  /* Code Editor */
+  .code-editor-section {
+    margin-bottom: 1.5rem;
+  }
+  .code-editor-label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.75rem;
+  }
+  textarea {
+    width: 100%;
+    min-height: 300px;
+    padding: 1rem;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    resize: vertical;
+  }
+  textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
+  }
+  /* Buttons */
+  .button-group {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .button-group button {
+    flex: 1;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+  }
+  .btn-submit {
+    background: var(--accent);
+    color: #000;
+  }
+  .btn-submit:hover { background: #00c49a; }
+  .btn-reset {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-reset:hover { border-color: var(--accent); color: var(--accent); }
+  /* Model Answer */
+  .model-answer-section {
+    margin-bottom: 1.5rem;
+  }
+  .model-answer-toggle {
+    padding: 0.75rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    cursor: pointer;
+    font-weight: 600;
+    width: 100%;
+    text-align: left;
+    transition: all 0.2s;
+  }
+  .model-answer-toggle:hover { border-color: var(--accent3); background: rgba(245, 158, 11, 0.1); }
+  .model-answer-content {
+    display: none;
+    margin-top: 1rem;
+  }
+  .model-answer-content.active { display: block; }
+  .code-display {
+    position: relative;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .copy-code-btn {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--accent2);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    z-index: 10;
+    transition: all 0.2s;
+  }
+  .copy-code-btn:hover { background: #4f46e5; }
+  .code-lines {
+    padding: 1.5rem 1rem;
+    padding-right: 1rem;
+    overflow-x: auto;
+  }
+  .code-line {
+    display: flex;
+    line-height: 1.6;
+  }
+  .line-number {
+    display: inline-block;
+    width: 3em;
+    margin-right: 1em;
+    color: var(--muted);
+    text-align: right;
+    user-select: none;
+  }
+  .line-content {
+    flex: 1;
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 0.9rem;
+    color: var(--text);
+  }
+  /* Readiness Report */
+  .readiness-section {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(0, 212, 170, 0.1));
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .readiness-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 1rem;
+  }
+  .readiness-item {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    color: var(--muted);
+  }
+  .readiness-item.pass {
+    color: var(--success);
+  }
+  .readiness-item.fail {
+    color: var(--danger);
+  }
+  .readiness-icon {
+    min-width: 20px;
+  }
+  .readiness-text {
+    flex: 1;
+  }
+  /* Responsive */
+  @media (max-width: 768px) {
+    .header h1 { font-size: 1.5rem; }
+    .problems-grid { grid-template-columns: 1fr; }
+    .modal-content { width: 95%; margin: 1rem auto; }
+    .button-group { flex-direction: column; }
+    .progress-banner { flex-direction: column; gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>QE Interview Practice Lab</h1>
+  <p>Master Staff & Principal Level QE Skills: Flakiness Detection, Test Architecture, API Testing, Test Data Management, Reliability Engineering & AI</p>
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-value" id="stat-completed">0</div>
+      <div class="stat-label">Completed</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="stat-total">17</div>
+      <div class="stat-label">Problems</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="stat-category">All</div>
+      <div class="stat-label">Category</div>
+    </div>
+  </div>
+</div>
+
+<div class="nav-tabs">
+  <button class="nav-tab active" data-tab="practice">Practice</button>
+  <button class="nav-tab" data-tab="readiness">Readiness Report</button>
+  <button class="nav-tab" data-tab="about">About</button>
+</div>
+
+<div class="main">
+  <div id="practice-tab" class="tab-content active">
+    <div class="progress-banner">
+      <span>✓ Your progress is saved in this browser</span>
+      <button class="reset-progress-btn" onclick="resetProgress()">Reset All Progress</button>
+    </div>
+
+    <div class="filters">
+      <div class="filter-group">
+        <label for="level-filter">Filter by Level</label>
+        <select id="level-filter" onchange="applyFilters()">
+          <option value="">All Levels</option>
+          <option value="Staff">Staff</option>
+          <option value="Principal">Principal</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="category-filter">Filter by Category</label>
+        <select id="category-filter" onchange="applyFilters()">
+          <option value="">All Categories</option>
+          <option value="Flakiness Detection">Flakiness Detection</option>
+          <option value="Test Architecture">Test Architecture</option>
+          <option value="API Testing">API Testing</option>
+          <option value="Test Data Management">Test Data Management</option>
+          <option value="Reliability Engineering">Reliability Engineering</option>
+          <option value="AI in Testing">AI in Testing</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="difficulty-filter">Filter by Difficulty</label>
+        <select id="difficulty-filter" onchange="applyFilters()">
+          <option value="">All Difficulties</option>
+          <option value="Easy">Easy</option>
+          <option value="Medium">Medium</option>
+          <option value="Hard">Hard</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="status-filter">Filter by Status</label>
+        <select id="status-filter" onchange="applyFilters()">
+          <option value="">All Status</option>
+          <option value="completed">Completed</option>
+          <option value="in-progress">In Progress</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="problems-grid" id="problems-container"></div>
+  </div>
+
+  <div id="readiness-tab" class="tab-content">
+    <div style="max-width: 800px; margin: 2rem auto;">
+      <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--accent);">Readiness Report</h2>
+
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem;">
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center;">
+          <div style="font-size: 2.5rem; font-weight: 700; color: var(--accent);" id="report-score">0%</div>
+          <div style="font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px;">Overall Score</div>
+        </div>
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center;">
+          <div style="font-size: 2.5rem; font-weight: 700; color: var(--accent2);" id="report-completed">0/17</div>
+          <div style="font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px;">Completed</div>
+        </div>
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center;">
+          <div style="font-size: 2.5rem; font-weight: 700; color: var(--accent3);" id="report-categories">0/6</div>
+          <div style="font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px;">Categories Covered</div>
+        </div>
+      </div>
+
+      <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--text);">Category Breakdown</h3>
+      <div id="category-breakdown" style="margin-bottom: 2rem;"></div>
+
+      <div style="text-align: center; padding-top: 1.5rem; border-top: 1px solid var(--border);">
+        <button class="reset-progress-btn" onclick="resetProgress()" style="padding: 0.75rem 2rem; font-size: 1rem;">Reset All Progress</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="about-tab" class="tab-content">
+    <div style="max-width: 800px; margin: 2rem auto;">
+      <h2 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--accent);">About This Lab</h2>
+      <p style="color: var(--muted); line-height: 1.8; margin-bottom: 1rem;">
+        The QE Interview Practice Lab is designed to help you master Staff & Principal level QE concepts. Each problem focuses on critical skills needed at senior QE levels.
+      </p>
+      <h3 style="font-size: 1.2rem; margin-top: 2rem; margin-bottom: 1rem;">Categories</h3>
+      <ul style="color: var(--muted); line-height: 1.8; margin-left: 2rem;">
+        <li><strong>Flakiness Detection:</strong> Identifying and quantifying flaky tests</li>
+        <li><strong>Test Architecture:</strong> Designing scalable test systems</li>
+        <li><strong>API Testing:</strong> Testing REST/GraphQL APIs at scale</li>
+        <li><strong>Test Data Management:</strong> Managing complex test data</li>
+        <li><strong>Reliability Engineering:</strong> Ensuring infrastructure reliability</li>
+        <li><strong>AI in Testing:</strong> Leveraging AI/ML for QE</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for problem detail view -->
+<div class="modal" id="problem-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="modal-title"></h2>
+      <button class="modal-close" onclick="closeProblem()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="problem-section">
+        <div class="section-title">Problem</div>
+        <div class="problem-description-full" id="modal-description"></div>
+      </div>
+
+      <div class="approach-section" id="approach-section" style="display:none;">
+        <div class="section-title">Approach Strategy</div>
+        <div class="approach-text" id="approach-content"></div>
+      </div>
+
+      <div class="example-io-section" id="example-io-section" style="display:none;">
+        <div class="section-title">Example Input/Output</div>
+        <div class="example-io-text" id="example-io-content"></div>
+      </div>
+
+      <div class="timer">
+        <div class="timer-display" id="timer-display">00:00</div>
+        <div class="timer-controls">
+          <button class="timer-btn active" id="timer-start" onclick="startTimer()">Start</button>
+          <button class="timer-btn" id="timer-pause" onclick="pauseTimer()">Pause</button>
+          <button class="timer-btn" id="timer-reset" onclick="resetTimer()">Reset</button>
+        </div>
+      </div>
+
+      <div class="hints-section">
+        <button class="hints-toggle" onclick="toggleHints()" id="hints-toggle">Show Hints</button>
+        <div class="hints-list" id="hints-list"></div>
+      </div>
+
+      <div class="code-editor-section">
+        <label class="code-editor-label">Your Solution</label>
+        <textarea id="code-editor" placeholder="Write your solution here. Minimum 20 characters required."></textarea>
+      </div>
+
+      <div class="button-group">
+        <button class="btn-submit" onclick="submitSolution()">Finish & Self-Assess</button>
+        <button class="btn-reset" onclick="clearCode()">Clear Code</button>
+      </div>
+
+      <div class="model-answer-section">
+        <button class="model-answer-toggle" onclick="toggleModelAnswer()" id="model-answer-toggle">Show Model Answer</button>
+        <div class="model-answer-content" id="model-answer-content">
+          <div class="approach-section" id="model-approach-section" style="display:none; margin-bottom: 1rem;">
+            <div class="section-title">Approach Strategy</div>
+            <div class="approach-text" id="model-approach-content"></div>
+          </div>
+          <div class="code-display">
+            <button class="copy-code-btn" onclick="copyCode()">Copy</button>
+            <div class="code-lines" id="model-answer-code"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="readiness-section" id="readiness-section" style="display:none;">
+        <div class="readiness-title">Readiness Assessment</div>
+        <div id="readiness-content"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const problems = [
+  {
+    id: 1,
+    title: "Flaky Test Detection Algorithm",
+    description: "Design an algorithm to identify flaky tests from a stream of test execution records. A test is considered flaky if it passes sometimes and fails other times. Return a list of flaky tests ranked by their flakiness score.",
+    difficulty: "Hard",
+    level: "Principal",
+    category: "Flakiness Detection",
+    timeMinutes: 40,
+    approach: "Group runs by test_name, compute pass/fail ratio with a sliding window bias toward recent runs, then classify based on thresholds. Rank flaky tests by score for quarantine priority.",
+    exampleIO: "Input: [{test: 'login', status: 'pass'}, {test: 'login', status: 'fail'}, {test: 'checkout', status: 'pass'}, ...]\nOutput: [{test: 'login', flakiness: 0.45}, {test: 'payment', flakiness: 0.32}]",
+    hints: [
+      "Think about how to handle time-series data efficiently",
+      "Consider using a sliding window approach for recent bias",
+      "How would you quantify flakiness between 0 and 1?"
+    ],
+    sampleAnswer: "function detectFlaky(records) {\n  const testStats = {};\n  const windowSize = 20;\n  \n  for (const r of records) {\n    if (!testStats[r.test]) {\n      testStats[r.test] = { passes: 0, fails: 0, recent: [] };\n    }\n    testStats[r.test].recent.push(r.status === 'pass' ? 1 : 0);\n    if (testStats[r.test].recent.length > windowSize) {\n      testStats[r.test].recent.shift();\n    }\n    if (r.status === 'pass') testStats[r.test].passes++;\n    else testStats[r.test].fails++;\n  }\n  \n  const flaky = [];\n  for (const [test, stats] of Object.entries(testStats)) {\n    const total = stats.passes + stats.fails;\n    if (total < 5) continue;\n    const passRate = stats.passes / total;\n    const flakiness = Math.min(passRate, 1 - passRate) * 2;\n    if (flakiness > 0.3) {\n      flaky.push({ test, flakiness: parseFloat(flakiness.toFixed(2)) });\n    }\n  }\n  return flaky.sort((a, b) => b.flakiness - a.flakiness);\n}"
+  },
+  {
+    id: 2,
+    title: "Test Dependency Graph",
+    description: "Create a test dependency graph that identifies which tests depend on others. Implement cycle detection to prevent infinite loops. Output tests in execution order.",
+    difficulty: "Hard",
+    level: "Principal",
+    category: "Test Architecture",
+    timeMinutes: 35,
+    approach: "Build an adjacency list from dependency declarations, use DFS with cycle detection (visited/rec-stack), then perform topological sort. Return ordered execution plan or error if cycle detected.",
+    exampleIO: "Input: {test_A: ['test_B', 'test_C'], test_B: [], test_C: ['test_B']}\nOutput: {order: ['test_B', 'test_C', 'test_A'], cycles: []}",
+    hints: [
+      "Use depth-first search for cycle detection",
+      "Maintain two sets: visited nodes and recursion stack",
+      "Topological sort works well for DAGs"
+    ],
+    sampleAnswer: "function buildDependencyGraph(deps) {\n  const visited = new Set();\n  const recStack = new Set();\n  const order = [];\n  const cycles = [];\n  \n  function dfs(test) {\n    visited.add(test);\n    recStack.add(test);\n    \n    for (const dep of deps[test] || []) {\n      if (!visited.has(dep)) {\n        dfs(dep);\n      } else if (recStack.has(dep)) {\n        cycles.push([test, dep]);\n      }\n    }\n    \n    recStack.delete(test);\n    order.unshift(test);\n  }\n  \n  for (const test of Object.keys(deps)) {\n    if (!visited.has(test)) dfs(test);\n  }\n  \n  return { order, cycles: cycles.length > 0 ? cycles : [] };\n}"
+  },
+  {
+    id: 3,
+    title: "REST API Contract Testing",
+    description: "Build a contract test framework that validates API requests/responses against a schema. Support multiple endpoints and version tolerance. Flag breaking changes.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "API Testing",
+    timeMinutes: 45,
+    approach: "Define JSON schemas per endpoint, validate request/response structure against schemas, track version compatibility, flag schema violations. Support nested validation and optional fields.",
+    exampleIO: "Input: {endpoint: '/api/users', method: 'GET', response: {id: 123, name: 'John'}, schema: {type: 'object', properties: {id: {type: 'number'}}}}\nOutput: {valid: true, breaking: false, warnings: []}",
+    hints: [
+      "Use JSON Schema for validation",
+      "Think about version tolerance and backwards compatibility",
+      "Consider optional vs required fields"
+    ],
+    sampleAnswer: "function validateContract(endpoint, response, schema) {\n  const errors = [];\n  const warnings = [];\n  \n  function validate(obj, sch, path = '') {\n    if (sch.type === 'object') {\n      for (const [key, propSchema] of Object.entries(sch.properties || {})) {\n        if (!(key in obj)) {\n          if (sch.required?.includes(key)) {\n            errors.push(`Missing required field: ${path}.${key}`);\n          } else {\n            warnings.push(`Optional field missing: ${path}.${key}`);\n          }\n        } else {\n          validate(obj[key], propSchema, `${path}.${key}`);\n        }\n      }\n    } else if (sch.type === 'array') {\n      if (Array.isArray(obj)) {\n        obj.forEach((item, i) => validate(item, sch.items, `${path}[${i}]`));\n      }\n    } else if (typeof obj !== sch.type) {\n      errors.push(`Type mismatch at ${path}: expected ${sch.type}, got ${typeof obj}`);\n    }\n  }\n  \n  validate(response, schema);\n  return { valid: errors.length === 0, breaking: errors.length > 0, warnings };\n}"
+  },
+  {
+    id: 4,
+    title: "Test Data Factory Builder",
+    description: "Implement a fluent builder pattern for test data creation with support for relationships, defaults, and validation.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "Test Data Management",
+    timeMinutes: 30,
+    approach: "Create Builder class with chainable methods for setting properties, support nested builders for relationships, apply defaults before validation, return configured object on build().",
+    exampleIO: "Input: new UserBuilder().withName('Alice').withEmail('alice@test.com').withRole('admin').build()\nOutput: {name: 'Alice', email: 'alice@test.com', role: 'admin', id: 1, createdAt: '2024-01-01'}",
+    hints: [
+      "Builder pattern allows readable test data setup",
+      "Support method chaining for fluency",
+      "Apply defaults before returning final object"
+    ],
+    sampleAnswer: "class TestDataBuilder {\n  constructor() {\n    this.data = {};\n    this.defaults = {};\n  }\n  \n  withDefaults(defaults) {\n    this.defaults = defaults;\n    return this;\n  }\n  \n  with(key, value) {\n    this.data[key] = value;\n    return this;\n  }\n  \n  build() {\n    return { ...this.defaults, ...this.data };\n  }\n}\n\nclass UserBuilder extends TestDataBuilder {\n  constructor() {\n    super();\n    this.defaults = { role: 'user', id: Math.random(), createdAt: new Date().toISOString() };\n  }\n  \n  withName(name) {\n    this.data.name = name;\n    return this;\n  }\n  \n  withEmail(email) {\n    this.data.email = email;\n    return this;\n  }\n}"
+  },
+  {
+    id: 5,
+    title: "CI/CD Pipeline Health Monitor",
+    description: "Design a monitoring system that tracks CI/CD pipeline health. Identify problematic stages, calculate reliability scores, and predict infrastructure failures.",
+    difficulty: "Hard",
+    level: "Principal",
+    category: "Reliability Engineering",
+    timeMinutes: 40,
+    approach: "Aggregate pipeline run data by stage, compute pass rates and duration variance, detect anomalies via thresholds, predict failures using historical patterns. Return health score and recommendations.",
+    exampleIO: "Input: {stages: ['build', 'test', 'deploy'], runs: [{stage: 'test', duration: 120, status: 'pass'}, ...]}\nOutput: {health: 0.85, riskStages: ['deploy'], recommendations: ['Optimize test parallelization']}",
+    hints: [
+      "Aggregate statistics per stage",
+      "Calculate pass rate and variance per stage",
+      "Use thresholds to identify problematic areas"
+    ],
+    sampleAnswer: "function monitorPipelineHealth(runs) {\n  const stageStats = {};\n  \n  for (const run of runs) {\n    if (!stageStats[run.stage]) {\n      stageStats[run.stage] = { passes: 0, fails: 0, durations: [] };\n    }\n    if (run.status === 'pass') stageStats[run.stage].passes++;\n    else stageStats[run.stage].fails++;\n    stageStats[run.stage].durations.push(run.duration);\n  }\n  \n  const riskStages = [];\n  let totalHealth = 0;\n  \n  for (const [stage, stats] of Object.entries(stageStats)) {\n    const total = stats.passes + stats.fails;\n    const passRate = stats.passes / total;\n    const avgDuration = stats.durations.reduce((a, b) => a + b) / stats.durations.length;\n    \n    if (passRate < 0.95 || avgDuration > 300) riskStages.push(stage);\n    totalHealth += passRate;\n  }\n  \n  return {\n    health: parseFloat((totalHealth / Object.keys(stageStats).length).toFixed(2)),\n    riskStages,\n    recommendations: riskStages.length > 0 ? ['Investigate pipeline bottlenecks'] : []\n  };\n}"
+  },
+  {
+    id: 6,
+    title: "ML-Based Test Selection",
+    description: "Implement an intelligent test selection system using ML concepts. Predict which tests are likely to fail based on code changes.",
+    difficulty: "Hard",
+    level: "Principal",
+    category: "AI in Testing",
+    timeMinutes: 35,
+    approach: "Build feature vectors from code changes (files, functions affected), train/query a model to predict test failure probability, rank tests by likelihood of failure. Return prioritized test set.",
+    exampleIO: "Input: {changedFiles: ['auth.py', 'user.py'], changedFunctions: ['authenticate', 'create_user'], testSuite: [{name: 'test_login', affectedFiles: ['auth.py']}, ...]}\nOutput: [{test: 'test_login', failureProbability: 0.87}, {test: 'test_user_create', failureProbability: 0.72}]",
+    hints: [
+      "Create feature vectors for code changes",
+      "Map tests to affected code areas",
+      "Use overlap to predict test failure probability"
+    ],
+    sampleAnswer: "function selectTestsByMLPrediction(changes, tests) {\n  const predictions = [];\n  const changedFileSet = new Set(changes.changedFiles);\n  const changedFuncSet = new Set(changes.changedFunctions);\n  \n  for (const test of tests) {\n    let score = 0;\n    const affectedCount = test.affectedFiles?.length || 0;\n    const matchedFiles = test.affectedFiles?.filter(f => changedFileSet.has(f)).length || 0;\n    const matchedFuncs = test.affectedFunctions?.filter(f => changedFuncSet.has(f)).length || 0;\n    \n    score = (matchedFiles / (affectedCount || 1)) * 0.6 + (matchedFuncs / (changes.changedFunctions.length || 1)) * 0.4;\n    predictions.push({ test: test.name, failureProbability: Math.min(score, 0.99) });\n  }\n  \n  return predictions.sort((a, b) => b.failureProbability - a.failureProbability);\n}"
+  },
+  {
+    id: 7,
+    title: "Parallel Test Execution Scheduler",
+    description: "Design a scheduler for parallel test execution that respects dependencies while minimizing total runtime.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "Test Architecture",
+    timeMinutes: 40,
+    approach: "Use topological sort to identify independent test sets, group tests into parallel batches, balance load across workers. Account for test duration variance and resource constraints.",
+    exampleIO: "Input: {tests: [{name: 'A', duration: 30}, {name: 'B', duration: 20, deps: ['A']}], workers: 2}\nOutput: [{batch: 1, tests: ['A']}, {batch: 2, tests: ['B']}]",
+    hints: [
+      "Topological sort identifies execution order",
+      "Group independent tests into batches",
+      "Balance execution time across parallel workers"
+    ],
+    sampleAnswer: "function scheduleParallelTests(tests, workers) {\n  const graph = {};\n  const durations = {};\n  \n  for (const test of tests) {\n    graph[test.name] = test.deps || [];\n    durations[test.name] = test.duration;\n  }\n  \n  const schedule = [];\n  const completed = new Set();\n  \n  while (completed.size < tests.length) {\n    const batch = [];\n    for (const test of tests) {\n      if (completed.has(test.name)) continue;\n      const depsComplete = (test.deps || []).every(d => completed.has(d));\n      if (depsComplete && batch.length < workers) batch.push(test.name);\n    }\n    if (batch.length > 0) {\n      schedule.push(batch);\n      batch.forEach(t => completed.add(t));\n    }\n  }\n  \n  return schedule.map((batch, i) => ({ batch: i + 1, tests: batch }));\n}"
+  },
+  {
+    id: 8,
+    title: "API Rate Limit Testing Framework",
+    description: "Build a framework to test API rate limiting behavior under various load conditions.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "API Testing",
+    timeMinutes: 45,
+    approach: "Simulate requests at increasing rates, track response codes and headers (Retry-After, X-RateLimit-*), identify rate limit threshold, validate error handling. Report burst capacity.",
+    exampleIO: "Input: {endpoint: '/api/data', requestsPerSecond: [10, 50, 100, 200]}\nOutput: {rateLimitThreshold: 100, headerCompliance: true, burstCapacity: 150, errorHandling: 'correct'}",
+    hints: [
+      "Send requests at increasing rates",
+      "Monitor response headers for rate limit info",
+      "Identify the breaking point of the API"
+    ],
+    sampleAnswer: "function testRateLimiting(endpoint, ratesPerSecond) {\n  const results = {};\n  let rateLimitHit = false;\n  let threshold = null;\n  \n  for (const rate of ratesPerSecond) {\n    const responses = [];\n    const startTime = Date.now();\n    let requestCount = 0;\n    \n    while (Date.now() - startTime < 1000) {\n      const response = simulateRequest(endpoint);\n      responses.push(response);\n      requestCount++;\n      if (requestCount >= rate) break;\n    }\n    \n    const successCount = responses.filter(r => r.status === 200).length;\n    const rateLimitResponses = responses.filter(r => r.status === 429);\n    \n    if (rateLimitResponses.length > 0 && !rateLimitHit) {\n      threshold = rate;\n      rateLimitHit = true;\n    }\n  }\n  \n  return { rateLimitThreshold: threshold, headerCompliance: true, burstCapacity: threshold * 1.5, errorHandling: 'correct' };\n}"
+  },
+  {
+    id: 9,
+    title: "Feature Flag Coverage Analysis",
+    description: "Analyze test coverage for feature flags and identify untested flag combinations.",
+    difficulty: "Easy",
+    level: "Staff",
+    category: "Test Architecture",
+    timeMinutes: 45,
+    approach: "Parse test code for flag assertions, build matrix of flag combinations tested, identify gaps (untested combinations). Return coverage report and recommendations.",
+    exampleIO: "Input: {flags: ['featureA', 'featureB'], tests: [{flags: {featureA: true, featureB: true}}, {flags: {featureA: false, featureB: false}}]}\nOutput: {coverage: 0.50, untested: [{featureA: true, featureB: false}], recommendation: 'Add 2 tests'}",
+    hints: [
+      "Create all possible flag combinations",
+      "Track which combinations are tested",
+      "Calculate coverage percentage"
+    ],
+    sampleAnswer: "function analyzeFeatureFlagCoverage(flags, tests) {\n  const allCombinations = generateCombinations(flags);\n  const testedSet = new Set();\n  \n  for (const test of tests) {\n    const key = Object.entries(test.flags).sort().map(([k, v]) => `${k}=${v}`).join(',');\n    testedSet.add(key);\n  }\n  \n  const untested = allCombinations.filter(combo => !testedSet.has(combo));\n  const coverage = testedSet.size / allCombinations.length;\n  \n  return {\n    coverage: parseFloat(coverage.toFixed(2)),\n    untested: untested.map(u => Object.fromEntries(u.split(',').map(p => p.split('=')))),\n    recommendation: `Add ${untested.length} tests for complete coverage`\n  };\n}\n\nfunction generateCombinations(flags) {\n  const combos = [];\n  const n = flags.length;\n  for (let i = 0; i < Math.pow(2, n); i++) {\n    const combo = [];\n    for (let j = 0; j < n; j++) {\n      combo.push(`${flags[j]}=${(i >> j) & 1 ? 'true' : 'false'}`);\n    }\n    combos.push(combo.join(','));\n  }\n  return combos;\n}"
+  },
+  {
+    id: 10,
+    title: "Test Execution Timeline Analyzer",
+    description: "Analyze test execution timelines to identify bottlenecks and optimization opportunities.",
+    difficulty: "Easy",
+    level: "Staff",
+    category: "Test Architecture",
+    timeMinutes: 45,
+    approach: "Parse execution logs with timestamps, calculate per-test duration and cumulative time, identify slowest tests, detect serialization bottlenecks, suggest parallelization.",
+    exampleIO: "Input: [{test: 'setup', duration: 100}, {test: 'auth_test', duration: 50}, {test: 'teardown', duration: 20}]\nOutput: {totalTime: 170, slowestTests: ['setup'], parallelizationPotential: 0.59, recommendation: 'Parallelize auth_test and other tests'}",
+    hints: [
+      "Sum all test durations",
+      "Identify longest individual tests",
+      "Estimate parallelization potential"
+    ],
+    sampleAnswer: "function analyzeExecutionTimeline(executions) {\n  let totalTime = 0;\n  const durations = [];\n  \n  for (const exec of executions) {\n    totalTime += exec.duration;\n    durations.push({ test: exec.test, duration: exec.duration });\n  }\n  \n  durations.sort((a, b) => b.duration - a.duration);\n  const slowestTests = durations.slice(0, 3).map(d => d.test);\n  const maxDuration = durations[0].duration;\n  const parallelizationPotential = 1 - (maxDuration / totalTime);\n  \n  return {\n    totalTime,\n    slowestTests,\n    parallelizationPotential: parseFloat(parallelizationPotential.toFixed(2)),\n    recommendation: `Parallelize ${slowestTests.length} slowest tests`\n  };\n}"
+  },
+  {
+    id: 11,
+    title: "Assertion Library Design",
+    description: "Design a custom assertion library with clear failure messages and type safety.",
+    difficulty: "Easy",
+    level: "Staff",
+    category: "Test Architecture",
+    timeMinutes: 30,
+    approach: "Create assertion functions (equals, contains, etc.), generate detailed failure messages with actual/expected values, support custom matchers. Return pass/fail with context.",
+    exampleIO: "Input: assertEquals(5, 3, 'user count')\nOutput: {passed: false, message: 'Expected user count to be 5, but got 3'}\n",
+    hints: [
+      "Use function overloading for type safety",
+      "Generate clear, actionable error messages",
+      "Support chaining for fluent assertions"
+    ],
+    sampleAnswer: "class AssertionLibrary {\n  static assertEquals(actual, expected, context = '') {\n    const passed = actual === expected;\n    return {\n      passed,\n      message: passed ? '' : `Expected ${context} to be ${expected}, but got ${actual}`\n    };\n  }\n  \n  static assertContains(str, substring, context = '') {\n    const passed = str.includes(substring);\n    return {\n      passed,\n      message: passed ? '' : `Expected ${context} to contain '${substring}', but got '${str}'`\n    };\n  }\n  \n  static assertTrue(condition, context = '') {\n    return {\n      passed: condition,\n      message: condition ? '' : `Expected ${context} to be true, but got false`\n    };\n  }\n}"
+  },
+  {
+    id: 12,
+    title: "Load Test Data Validator",
+    description: "Build a validator that checks load test data for consistency, completeness, and realistic distributions.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "Test Data Management",
+    timeMinutes: 40,
+    approach: "Check for required fields, validate data types, analyze distributions (min/max/mean), detect duplicates, verify referential integrity. Return validation report with recommendations.",
+    exampleIO: "Input: {users: [{id: 1, age: 25}, {id: 2, age: -5}, {id: 1, age: 30}], schema: {id: 'unique', age: 'number'}}\nOutput: {valid: false, errors: ['duplicate id: 1', 'invalid age: -5'], warnings: ['unrealistic age distribution']}",
+    hints: [
+      "Validate required fields exist",
+      "Check data types match schema",
+      "Identify duplicates and outliers"
+    ],
+    sampleAnswer: "function validateLoadTestData(data, schema) {\n  const errors = [];\n  const warnings = [];\n  const seenIds = new Set();\n  \n  for (const record of data) {\n    for (const [field, constraint] of Object.entries(schema)) {\n      if (!(field in record)) errors.push(`missing field: ${field}`);\n      \n      if (constraint === 'unique') {\n        if (seenIds.has(record[field])) {\n          errors.push(`duplicate ${field}: ${record[field]}`);\n        }\n        seenIds.add(record[field]);\n      }\n    }\n    \n    if (record.age && (record.age < 0 || record.age > 150)) {\n      errors.push(`invalid age: ${record.age}`);\n    }\n  }\n  \n  return {\n    valid: errors.length === 0,\n    errors,\n    warnings: errors.length === 0 ? ['Check data distribution'] : warnings\n  };\n}"
+  },
+  {
+    id: 13,
+    title: "Error Budget Calculator",
+    description: "Implement an error budget system that tracks allowable failures for a service.",
+    difficulty: "Hard",
+    level: "Principal",
+    category: "Reliability Engineering",
+    timeMinutes: 45,
+    approach: "Define SLO (e.g., 99.9%), calculate error budget from uptime target, track actual errors against budget, predict exhaustion date, recommend remediation.",
+    exampleIO: "Input: {slo: 0.999, monthlyUptime: 0.9985, errorsObserved: 450, totalRequests: 1000000}\nOutput: {errorBudget: 1000, consumed: 450, remaining: 550, exhaustionDate: '2024-02-15', status: 'healthy'}",
+    hints: [
+      "Error budget = (1 - SLO) × total requests",
+      "Track consumed errors against budget",
+      "Project exhaustion based on burn rate"
+    ],
+    sampleAnswer: "function calculateErrorBudget(slo, totalRequests, errorsObserved) {\n  const allowedErrors = Math.floor((1 - slo) * totalRequests);\n  const consumed = errorsObserved;\n  const remaining = allowedErrors - consumed;\n  const percentConsumed = (consumed / allowedErrors) * 100;\n  \n  let status;\n  if (percentConsumed < 50) status = 'healthy';\n  else if (percentConsumed < 80) status = 'warning';\n  else status = 'critical';\n  \n  const daysRemaining = Math.floor((remaining / (consumed / 30)));\n  const exhaustionDate = new Date();\n  exhaustionDate.setDate(exhaustionDate.getDate() + daysRemaining);\n  \n  return {\n    errorBudget: allowedErrors,\n    consumed,\n    remaining,\n    exhaustionDate: exhaustionDate.toISOString().split('T')[0],\n    status\n  };\n}"
+  },
+  {
+    id: 14,
+    title: "Cross-Browser Compatibility Matrix",
+    description: "Design a system to test and track cross-browser compatibility across multiple browser versions and operating systems.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "API Testing",
+    timeMinutes: 30,
+    approach: "Build matrix of browsers × versions × OS, execute tests on each combination, collect results, identify incompatibilities. Generate compatibility report and prioritize fixes.",
+    exampleIO: "Input: {browsers: ['Chrome', 'Firefox'], versions: ['100', '101'], oses: ['Windows', 'macOS'], tests: [...]}\nOutput: {totalCombinations: 8, passed: 7, failed: 1, incompatibilities: [{browser: 'Firefox', version: '100', os: 'macOS', issue: 'CSS grid not rendering'}]}",
+    hints: [
+      "Create matrix of all browser/version/OS combinations",
+      "Run tests against each combination",
+      "Aggregate results by browser and issue"
+    ],
+    sampleAnswer: "function testCrossBrowserCompatibility(browsers, versions, oses, tests) {\n  const results = [];\n  let passed = 0, failed = 0;\n  const incompatibilities = [];\n  \n  for (const browser of browsers) {\n    for (const version of versions) {\n      for (const os of oses) {\n        for (const test of tests) {\n          const result = runTestOnBrowser(test, browser, version, os);\n          if (result.status === 'pass') passed++;\n          else {\n            failed++;\n            incompatibilities.push({\n              browser, version, os,\n              issue: result.error\n            });\n          }\n        }\n      }\n    }\n  }\n  \n  const totalCombinations = browsers.length * versions.length * oses.length * tests.length;\n  return { totalCombinations, passed, failed, incompatibilities };\n}"
+  },
+  {
+    id: 15,
+    title: "Test Coverage Gap Analyzer",
+    description: "Analyze code coverage reports to identify gaps and prioritize untested code paths.",
+    difficulty: "Hard",
+    level: "Principal",
+    category: "Reliability Engineering",
+    timeMinutes: 40,
+    approach: "Parse coverage data (lines/branches/functions), identify uncovered paths, rank by risk (complexity/usage), suggest tests for highest-risk gaps. Return prioritized test plan.",
+    exampleIO: "Input: {coverage: {coveredLines: 500, totalLines: 600, branches: {covered: 40, total: 60}}, riskAreas: ['payment_processing', 'auth']}\nOutput: {lineCoverage: 0.83, branchCoverage: 0.67, gaps: [{function: 'payment_processing', coverage: 0.40, risk: 'high'}], recommendations: ['Add tests for payment failure paths']}",
+    hints: [
+      "Calculate coverage percentages",
+      "Identify uncovered branches and paths",
+      "Rank gaps by business risk"
+    ],
+    sampleAnswer: "function analyzeCodeCoveragGaps(coverage, riskAreas) {\n  const lineCoverage = coverage.coveredLines / coverage.totalLines;\n  const branchCoverage = coverage.branches.covered / coverage.branches.total;\n  \n  const gaps = [];\n  for (const area of riskAreas) {\n    const areaCoverage = coverage[area]?.coverage || 0;\n    const risk = areaCoverage < 0.7 ? 'high' : areaCoverage < 0.85 ? 'medium' : 'low';\n    if (risk !== 'low') {\n      gaps.push({ function: area, coverage: areaCoverage, risk });\n    }\n  }\n  \n  gaps.sort((a, b) => a.coverage - b.coverage);\n  \n  return {\n    lineCoverage: parseFloat(lineCoverage.toFixed(2)),\n    branchCoverage: parseFloat(branchCoverage.toFixed(2)),\n    gaps,\n    recommendations: gaps.length > 0 ? ['Add tests for high-risk gaps'] : ['Coverage excellent']\n  };\n}"
+  },
+  {
+    id: 16,
+    title: "Flaky Test Quarantine System",
+    description: "Implement a system to quarantine flaky tests, track remediation, and prevent them from blocking releases.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "Flakiness Detection",
+    timeMinutes: 35,
+    approach: "Flag flaky tests (high variance pass/fail rate), move to quarantine status, track remediation progress, document root cause, validate fix before un-quarantine.",
+    exampleIO: "Input: {test: 'payment_flow', passRate: 0.65, attempts: 100, flakiness: 'high'}\nOutput: {status: 'quarantined', rootCause: 'timing_issue', estimatedFix: '2024-02-15', severity: 'high'}",
+    hints: [
+      "Detect high-variance tests statistically",
+      "Document root cause when quarantining",
+      "Track remediation metrics over time"
+    ],
+    sampleAnswer: "function quarantineFlakyTest(test, passRate, attempts) {\n  let status = 'active';\n  let severity = 'low';\n  \n  const isFlaky = passRate > 0.3 && passRate < 0.9 && attempts > 10;\n  if (isFlaky) {\n    status = 'quarantined';\n    const variance = Math.abs(0.5 - passRate);\n    severity = variance < 0.2 ? 'medium' : 'high';\n  }\n  \n  return {\n    test: test.name,\n    status,\n    passRate: parseFloat(passRate.toFixed(2)),\n    rootCause: 'unknown',\n    severity,\n    estimatedFix: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]\n  };\n}"
+  },
+  {
+    id: 17,
+    title: "Multi-Signal Release Gate",
+    description: "Design a release decision system that considers multiple quality signals (coverage, flakiness, perf, bugs) to gate releases.",
+    difficulty: "Hard",
+    level: "Principal",
+    category: "Reliability Engineering",
+    timeMinutes: 30,
+    approach: "Aggregate signals (normalized 0-1 scores), weight by importance, apply gate rules (min thresholds), return release recommendation. Support override with justification.",
+    exampleIO: "Input: {signals: {coverage: 0.92, testStability: 0.88, performance: 0.79, bugsOpen: 5}, weights: {coverage: 0.3, testStability: 0.3, performance: 0.25, bugs: 0.15}}\nOutput: {releaseScore: 0.86, recommendation: 'GO', risks: ['performance slightly below threshold'], overrideRequired: false}",
+    hints: [
+      "Normalize all signals to 0-1 scale",
+      "Apply weights based on importance",
+      "Use threshold rules for GO/NO-GO decision"
+    ],
+    sampleAnswer: "function evaluateReleaseGate(signals, weights) {\n  let weightedScore = 0;\n  const normalizedSignals = {};\n  \n  for (const [signal, value] of Object.entries(signals)) {\n    if (signal === 'bugsOpen') {\n      normalizedSignals[signal] = Math.max(0, 1 - (value / 10));\n    } else {\n      normalizedSignals[signal] = value;\n    }\n    weightedScore += normalizedSignals[signal] * (weights[signal] || 0.2);\n  }\n  \n  let recommendation = 'GO';\n  const risks = [];\n  if (normalizedSignals.testStability < 0.85) {\n    recommendation = 'CAUTION';\n    risks.push('test stability below 85%');\n  }\n  if (normalizedSignals.coverage < 0.80) {\n    recommendation = 'NO-GO';\n    risks.push('coverage below 80%');\n  }\n  \n  return {\n    releaseScore: parseFloat(weightedScore.toFixed(2)),\n    recommendation,\n    risks,\n    overrideRequired: recommendation === 'NO-GO'\n  };\n}"
+  }
+];
+
+let currentProblem = null;
+let timerInterval = null;
+let timerSeconds = 0;
+let isTimerRunning = false;
+
+function renderProblems(problemsToRender) {
+  const container = document.getElementById('problems-container');
+  container.innerHTML = '';
+
+  problemsToRender.forEach(problem => {
+    const card = document.createElement('div');
+    card.className = 'problem-card';
+
+    const savedProgress = JSON.parse(localStorage.getItem(`problem-${problem.id}`) || '{}');
+    if (savedProgress.completed) {
+      card.classList.add('completed');
+    }
+
+    const difficultyClass = `status-${problem.difficulty.toLowerCase()}`;
+
+    card.innerHTML = `
+      <div class="problem-header">
+        <h3 class="problem-title">${problem.title}</h3>
+        <div class="problem-status">
+          <span class="status-badge ${difficultyClass}">${problem.difficulty}</span>
+          ${savedProgress.completed ? '<span class="status-badge status-completed">✓ Done</span>' : ''}
+        </div>
+      </div>
+      <div class="problem-meta">
+        <div class="problem-meta-item">🎯 ${problem.level}</div>
+        <div class="problem-meta-item">📚 ${problem.category}</div>
+        <div class="problem-meta-item">⏱️ ${problem.timeMinutes} min</div>
+      </div>
+      <p class="problem-description">${problem.description}</p>
+      ${problem.approach ? `<div class="problem-approach"><strong>Approach:</strong> ${problem.approach}</div>` : ''}
+      <button class="view-problem-btn" onclick="openProblem(${problem.id})">View Problem</button>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+function openProblem(id) {
+  currentProblem = problems.find(p => p.id === id);
+  if (!currentProblem) return;
+
+  const savedProgress = JSON.parse(localStorage.getItem(`problem-${id}`) || '{}');
+
+  document.getElementById('modal-title').textContent = currentProblem.title;
+  document.getElementById('modal-description').textContent = currentProblem.description;
+
+  const approachSection = document.getElementById('approach-section');
+  if (currentProblem.approach) {
+    approachSection.style.display = 'block';
+    document.getElementById('approach-content').textContent = currentProblem.approach;
+  } else {
+    approachSection.style.display = 'none';
+  }
+
+  const exampleIOSection = document.getElementById('example-io-section');
+  if (currentProblem.exampleIO) {
+    exampleIOSection.style.display = 'block';
+    document.getElementById('example-io-content').textContent = currentProblem.exampleIO;
+  } else {
+    exampleIOSection.style.display = 'none';
+  }
+
+  const modelApproachSection = document.getElementById('model-approach-section');
+  if (currentProblem.approach) {
+    modelApproachSection.style.display = 'block';
+    document.getElementById('model-approach-content').textContent = currentProblem.approach;
+  } else {
+    modelApproachSection.style.display = 'none';
+  }
+
+  document.getElementById('code-editor').value = savedProgress.code || '';
+  document.getElementById('model-answer-content').classList.remove('active');
+  document.getElementById('model-answer-toggle').textContent = 'Show Model Answer';
+
+  renderHints();
+  renderModelAnswer();
+  resetTimer();
+  timerSeconds = currentProblem.timeMinutes * 60;
+  updateTimerDisplay();
+
+  document.getElementById('problem-modal').classList.add('active');
+}
+
+function closeProblem() {
+  document.getElementById('problem-modal').classList.remove('active');
+  if (timerInterval) clearInterval(timerInterval);
+  isTimerRunning = false;
+}
+
+function renderHints() {
+  const hintsList = document.getElementById('hints-list');
+  hintsList.innerHTML = '';
+  if (!currentProblem.hints) return;
+
+  currentProblem.hints.forEach((hint, idx) => {
+    const item = document.createElement('div');
+    item.className = 'hint-item';
+    item.textContent = `Hint ${idx + 1}: ${hint}`;
+    hintsList.appendChild(item);
+  });
+
+  document.getElementById('hints-toggle').textContent = 'Show Hints';
+  hintsList.classList.remove('active');
+}
+
+function toggleHints() {
+  const hintsList = document.getElementById('hints-list');
+  hintsList.classList.toggle('active');
+  const toggle = document.getElementById('hints-toggle');
+  toggle.textContent = hintsList.classList.contains('active') ? 'Hide Hints' : 'Show Hints';
+}
+
+function renderModelAnswer() {
+  const codeLines = document.getElementById('model-answer-code');
+  codeLines.innerHTML = '';
+
+  const lines = (currentProblem.sampleAnswer || '').split('\n');
+  lines.forEach((line, idx) => {
+    const lineDiv = document.createElement('div');
+    lineDiv.className = 'code-line';
+    lineDiv.innerHTML = `
+      <span class="line-number">${idx + 1}</span>
+      <span class="line-content">${line}</span>
+    `;
+    codeLines.appendChild(lineDiv);
+  });
+}
+
+function toggleModelAnswer() {
+  const content = document.getElementById('model-answer-content');
+  content.classList.toggle('active');
+  const toggle = document.getElementById('model-answer-toggle');
+  toggle.textContent = content.classList.contains('active') ? 'Hide Model Answer' : 'Show Model Answer';
+}
+
+function copyCode() {
+  const code = currentProblem.sampleAnswer;
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = document.querySelector('.copy-code-btn');
+    const origText = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = origText; }, 2000);
+  });
+}
+
+function formatCodeWithLineNumbers(code) {
+  const lines = code.split('\n');
+  let formatted = '';
+  lines.forEach((line, idx) => {
+    formatted += `<div class="code-line"><span class="line-number">${idx + 1}</span><span class="line-content">${line}</span></div>`;
+  });
+  return formatted;
+}
+
+function submitSolution() {
+  const code = document.getElementById('code-editor').value.trim();
+
+  if (code.length < 20) {
+    alert('Write your solution first before self-assessing. Even pseudocode counts!');
+    return;
+  }
+
+  const savedProgress = JSON.parse(localStorage.getItem(`problem-${currentProblem.id}`) || '{}');
+  savedProgress.code = code;
+  savedProgress.completed = true;
+  savedProgress.submittedAt = new Date().toISOString();
+  localStorage.setItem(`problem-${currentProblem.id}`, JSON.stringify(savedProgress));
+
+  showReadinessReport();
+  updateStats();
+}
+
+function clearCode() {
+  document.getElementById('code-editor').value = '';
+}
+
+function showReadinessReport() {
+  const code = document.getElementById('code-editor').value;
+  const report = {
+    codeLength: code.length,
+    hasComments: code.includes('//') || code.includes('/*'),
+    hasEdgeCases: code.includes('if') || code.includes('?'),
+    isWellStructured: code.split('\n').length > 5
+  };
+
+  const readinessSection = document.getElementById('readiness-section');
+  const readinessContent = document.getElementById('readiness-content');
+
+  readinessContent.innerHTML = `
+    <div class="readiness-item ${report.codeLength >= 50 ? 'pass' : 'fail'}">
+      <span class="readiness-icon">${report.codeLength >= 50 ? '✓' : '✗'}</span>
+      <span class="readiness-text">Code length (${report.codeLength} chars) - ${report.codeLength >= 50 ? 'Good substance' : 'Too brief'}</span>
+    </div>
+    <div class="readiness-item ${report.hasComments ? 'pass' : 'fail'}">
+      <span class="readiness-icon">${report.hasComments ? '✓' : '✗'}</span>
+      <span class="readiness-text">Code documentation - ${report.hasComments ? 'Has comments' : 'Missing comments'}</span>
+    </div>
+    <div class="readiness-item ${report.hasEdgeCases ? 'pass' : 'fail'}">
+      <span class="readiness-icon">${report.hasEdgeCases ? '✓' : '✗'}</span>
+      <span class="readiness-text">Edge case handling - ${report.hasEdgeCases ? 'Addresses edge cases' : 'Missing edge cases'}</span>
+    </div>
+    <div class="readiness-item ${report.isWellStructured ? 'pass' : 'fail'}">
+      <span class="readiness-icon">${report.isWellStructured ? '✓' : '✗'}</span>
+      <span class="readiness-text">Code structure - ${report.isWellStructured ? 'Well organized' : 'Needs structure'}</span>
+    </div>
+  `;
+
+  readinessSection.style.display = 'block';
+}
+
+function startTimer() {
+  if (isTimerRunning) return;
+  isTimerRunning = true;
+  document.getElementById('timer-start').classList.add('active');
+  document.getElementById('timer-pause').classList.remove('active');
+
+  timerInterval = setInterval(() => {
+    timerSeconds--;
+    updateTimerDisplay();
+    if (timerSeconds <= 0) {
+      clearInterval(timerInterval);
+      isTimerRunning = false;
+      alert('Time is up!');
+    }
+  }, 1000);
+}
+
+function pauseTimer() {
+  isTimerRunning = false;
+  clearInterval(timerInterval);
+  document.getElementById('timer-start').classList.remove('active');
+  document.getElementById('timer-pause').classList.add('active');
+}
+
+function resetTimer() {
+  isTimerRunning = false;
+  clearInterval(timerInterval);
+  timerSeconds = currentProblem ? currentProblem.timeMinutes * 60 : 0;
+  updateTimerDisplay();
+  document.getElementById('timer-start').classList.add('active');
+  document.getElementById('timer-pause').classList.remove('active');
+}
+
+function updateTimerDisplay() {
+  const mins = Math.floor(timerSeconds / 60);
+  const secs = timerSeconds % 60;
+  document.getElementById('timer-display').textContent =
+    `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+}
+
+function applyFilters() {
+  const level = document.getElementById('level-filter').value;
+  const category = document.getElementById('category-filter').value;
+  const difficulty = document.getElementById('difficulty-filter').value;
+  const status = document.getElementById('status-filter').value;
+
+  let filtered = problems;
+
+  if (level) {
+    filtered = filtered.filter(p => p.level === level);
+  }
+  if (category) {
+    filtered = filtered.filter(p => p.category === category);
+  }
+  if (difficulty) {
+    filtered = filtered.filter(p => p.difficulty === difficulty);
+  }
+  if (status) {
+    if (status === 'completed') {
+      filtered = filtered.filter(p => {
+        const saved = JSON.parse(localStorage.getItem(`problem-${p.id}`) || '{}');
+        return saved.completed;
+      });
+    }
+  }
+
+  document.getElementById('stat-category').textContent = category || 'All';
+  renderProblems(filtered);
+}
+
+function updateStats() {
+  let completed = 0;
+  problems.forEach(p => {
+    const saved = JSON.parse(localStorage.getItem(`problem-${p.id}`) || '{}');
+    if (saved.completed) completed++;
+  });
+  document.getElementById('stat-completed').textContent = completed;
+}
+
+function resetProgress() {
+  if (confirm('Are you sure? This will clear all your saved progress.')) {
+    for (let i = 1; i <= 17; i++) {
+      localStorage.removeItem(`problem-${i}`);
+    }
+    updateStats();
+    applyFilters();
+    renderReadinessReport();
+  }
+}
+
+function renderReadinessReport() {
+  let completed = 0;
+  const categoryStats = {};
+  const categories = ['Flakiness Detection', 'Test Architecture', 'API Testing', 'Test Data Management', 'Reliability Engineering', 'AI in Testing'];
+
+  categories.forEach(cat => {
+    categoryStats[cat] = { total: 0, completed: 0 };
+  });
+
+  problems.forEach(p => {
+    categoryStats[p.category].total++;
+    const saved = JSON.parse(localStorage.getItem(`problem-${p.id}`) || '{}');
+    if (saved.completed) {
+      completed++;
+      categoryStats[p.category].completed++;
+    }
+  });
+
+  const score = problems.length > 0 ? Math.round((completed / problems.length) * 100) : 0;
+  const categoriesCovered = categories.filter(c => categoryStats[c].completed > 0).length;
+
+  document.getElementById('report-score').textContent = score + '%';
+  document.getElementById('report-completed').textContent = completed + '/17';
+  document.getElementById('report-categories').textContent = categoriesCovered + '/6';
+
+  const breakdown = document.getElementById('category-breakdown');
+  breakdown.innerHTML = categories.map(cat => {
+    const stats = categoryStats[cat];
+    const pct = stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0;
+    const barColor = pct === 100 ? 'var(--success)' : pct > 0 ? 'var(--accent3)' : 'var(--border)';
+    return `
+      <div style="margin-bottom: 1rem;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
+          <span style="font-size: 0.9rem; color: var(--text);">${cat}</span>
+          <span style="font-size: 0.85rem; color: var(--muted);">${stats.completed}/${stats.total} (${pct}%)</span>
+        </div>
+        <div style="height: 8px; background: var(--surface); border-radius: 4px; overflow: hidden;">
+          <div style="height: 100%; width: ${pct}%; background: ${barColor}; border-radius: 4px; transition: width 0.3s;"></div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// Tab navigation
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.addEventListener('click', (e) => {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    e.target.classList.add('active');
+
+    document.querySelectorAll('.tab-content').forEach(content => {
+      content.classList.remove('active');
+    });
+    const tabId = e.target.dataset.tab + "-tab";
+    document.getElementById(tabId).classList.add('active');
+
+    if (e.target.dataset.tab === 'readiness') {
+      renderReadinessReport();
+    }
+  });
+});
+
+// Initialize
+renderProblems(problems);
+updateStats();
+</script>
+</body>
+</html>
