@@ -443,6 +443,29 @@
       .tip-box { padding: 16px; }
       .tip-addon-content { font-size: 11px; }
     }
+/* Template Fill Prompts Section */
+.templates-section { max-width: 820px; margin: 0 auto; padding: 24px 20px 0; }
+.templates-box { background: linear-gradient(135deg, #1a2332 0%, #172033 100%); border: 1px solid #6366f133; border-left: 4px solid #6366f1; border-radius: 12px; padding: 20px 24px; }
+.templates-header-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.templates-badge { display: inline-block; background: #6366f122; color: #818cf8; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 4px 10px; border-radius: 6px; }
+.templates-new-badge { display: inline-block; background: #10b98133; color: #10b981; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 8px; border-radius: 6px; }
+.templates-title { font-size: 16px; font-weight: 700; color: #f8fafc; margin-bottom: 8px; }
+.templates-subtitle { font-size: 14px; color: #94a3b8; margin-bottom: 18px; line-height: 1.6; }
+.templates-subtitle strong { color: #e2e8f0; }
+.template-tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.template-tab { padding: 6px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; border: 1px solid #334155; background: #1e293b; color: #94a3b8; }
+.template-tab--active { background: #6366f1; border-color: #6366f1; color: white; }
+.template-tab--soon { opacity: 0.45; cursor: default; }
+.soon-label { font-size: 10px; background: #334155; padding: 1px 5px; border-radius: 4px; margin-left: 4px; vertical-align: middle; font-weight: 500; }
+.template-prompt-box { background: #0f172a; border: 1px solid #334155; border-radius: 8px; overflow: hidden; }
+.template-prompt-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 16px; background: #1e293b; border-bottom: 1px solid #334155; }
+.template-prompt-header span { font-size: 11px; font-weight: 600; letter-spacing: 0.5px; color: #64748b; }
+.template-prompt-content { padding: 16px; font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', 'Cascadia Code', Menlo, Consolas, monospace; font-size: 12px; line-height: 1.7; color: #cbd5e1; white-space: pre-wrap; word-wrap: break-word; max-height: 300px; overflow-y: auto; }
+.template-prompt-content::-webkit-scrollbar { width: 6px; }
+.template-prompt-content::-webkit-scrollbar-track { background: #0f172a; }
+.template-prompt-content::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+.template-footnote { font-size: 12px; color: #64748b; margin-top: 12px; font-style: italic; }
+
   </style>
 </head>
 <body>
@@ -497,6 +520,34 @@
       <div class="tip-footnote">New users: the full prompt below already includes this feature. Just copy and go.</div>
     </div>
   </div>
+
+<!-- TEMPLATE FILL PROMPTS SECTION -->
+<div class="templates-section">
+  <div class="templates-box">
+    <div class="templates-header-row">
+      <span class="templates-badge">Template Fill Prompts</span>
+      <span class="templates-new-badge">New</span>
+    </div>
+    <div class="templates-title">Fill your QEA templates with AI</div>
+    <div class="templates-subtitle">
+      Each prompt turns any AI tool into a guided interview for one QEA template.
+      <strong>Works best when pasted into your existing coaching card chat</strong> — the AI already knows your initiative and phase.
+    </div>
+    <div class="template-tabs">
+      <div class="template-tab template-tab--active">T5 &mdash; ADR</div>
+      <div class="template-tab template-tab--soon">T4 <span class="soon-label">Soon</span></div>
+      <div class="template-tab template-tab--soon">T6 <span class="soon-label">Soon</span></div>
+    </div>
+    <div class="template-prompt-box">
+      <div class="template-prompt-header">
+        <span>T5 &mdash; Architecture Decision Record &middot; Paste into your AI chat</span>
+        <button class="copy-btn-small" onclick="copyT5(this)"><span>📋</span> Copy</button>
+      </div>
+      <div class="template-prompt-content" id="t5Content"></div>
+    </div>
+    <div class="template-footnote">More template prompts coming soon. Suggest one: <a href="https://www.linkedin.com/in/jagadeesh-jayachandran/" style="color:#6366f1;text-decoration:none;">message Coach Jagadeesh</a>.</div>
+  </div>
+</div>
 
   <div class="container">
     <div class="prompt-label">
@@ -958,6 +1009,71 @@ When all Phase 5 gate items are done, say: "You've completed the full framework.
 
     renderPrompt();
     renderAddon();
+
+const T5_PROMPT = `I need to fill in my QEA Template 5 — Architecture Decision Record (ADR).
+
+An ADR captures the key technical decision I made in Phase 1: what problem I was solving, what alternatives I evaluated, what I chose, and why. It is the written evidence of the thinking behind my initiative.
+
+Please help me complete it by asking the questions below ONE AT A TIME. Wait for my answer before asking the next question. Do not give me all questions at once.
+
+---
+
+QUESTION 1 — CONTEXT
+What specific problem were you trying to solve that led to this decision? Describe the situation in 2–4 sentences: what was broken, slow, risky, or manual?
+
+>>> STOP. Wait for my answer. <
+
+QUESTION 2 — OPTIONS CONSIDERED
+What 2–3 alternatives did you evaluate before choosing your approach? For each one: what made it appealing, and what made you rule it out?
+
+>>> STOP. Wait for my answer. <
+
+QUESTION 3 — THE DECISION
+State your final decision in ONE clear sentence: "We will use [X] to [achieve Y]."
+
+>>> STOP. Wait for my answer. <
+
+QUESTION 4 — RATIONALE
+Why was this the best choice for YOUR specific situation? Consider: your team's current skills, your company's existing tech stack, timeline constraints, and what will be easiest to get stakeholder buy-in for.
+
+>>> STOP. Wait for my answer. <
+
+QUESTION 5 — STAKEHOLDERS
+Who did you align with before or after making this decision? (Manager, tech lead, sponsor, team?) Have they approved it, or do they still need to be informed?
+
+>>> STOP. Wait for my answer. <
+
+QUESTION 6 — CONSEQUENCES
+Now that you've made this choice, what are the trade-offs?
+- What will be easier or better as a result?
+- What might be harder or riskier?
+- What is one thing to watch out for?
+
+>>> STOP. Wait for my answer. <
+
+---
+
+AFTER ALL 6 ANSWERS:
+Format my answers as a completed ADR I can copy-paste into my T5 Google Doc template. Use plain, professional language. Use the 6 question labels above as section headings. No jargon unless I used it myself. Keep each section to 3–5 sentences — concise but complete.`;
+
+function renderT5() {
+  const el = document.getElementById('t5Content');
+  if (el) el.textContent = T5_PROMPT;
+}
+
+function copyT5(btn) {
+  navigator.clipboard.writeText(T5_PROMPT).then(() => {
+    btn.classList.add('copied');
+    btn.innerHTML = '<span>✅</span> Copied!';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = '<span>📋</span> Copy';
+    }, 2500);
+  });
+}
+
+renderT5();
+
   </script>
 </body>
 </html>
