@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T5 — ADR Starter Template | QE Architect Accelerator</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f4f6fb;
+    color: #1a2340;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── PASSWORD GATE ── */
+  #auth-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #1c3d6e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+  .auth-box {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 16px;
+    padding: 48px 40px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+  }
+  .auth-box h2 {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .auth-box p {
+    color: rgba(255,255,255,0.55);
+    font-size: 14px;
+    margin-bottom: 28px;
+  }
+  .auth-box input[type="password"] {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    font-size: 15px;
+    outline: none;
+    margin-bottom: 16px;
+    text-align: center;
+    letter-spacing: 2px;
+  }
+  .auth-box input[type="password"]::placeholder {
+    color: rgba(255,255,255,0.35);
+    letter-spacing: normal;
+  }
+  .auth-box input[type="password"]:focus {
+    border-color: rgba(255,255,255,0.4);
+  }
+  .auth-box button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #e8a020;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .auth-box button:hover { background: #d4900e; }
+  .auth-error {
+    color: #ff6b6b;
+    font-size: 13px;
+    margin-top: 12px;
+    display: none;
+  }
+
+  /* ── Hide content until authenticated ── */
+  #page-content { display: none; }
+
+  /* ── HEADER ── */
+  .page-header {
+    background: linear-gradient(135deg, #1c3d6e 0%, #0f2447 100%);
+    color: #fff;
+    padding: 32px 40px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .page-header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  .page-header .subtitle {
+    font-size: 13px;
+    color: #a8c4e8;
+    margin-top: 4px;
+  }
+  .week-badge {
+    background: #e8a020;
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 6px 16px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  /* ── LAYOUT ── */
+  .main { max-width: 900px; margin: 0 auto; padding: 32px 24px 60px; }
+
+  /* ── ANALOGY BLOCK ── */
+  .analogy-block {
+    background: #fff;
+    border-left: 5px solid #1c3d6e;
+    border-radius: 8px;
+    padding: 28px 32px;
+    margin-bottom: 28px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .analogy-block h2 {
+    font-size: 17px;
+    color: #1c3d6e;
+    font-weight: 700;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .analogy-block p { margin-bottom: 12px; color: #2c3e5a; }
+  .analogy-block p:last-child { margin-bottom: 0; }
+
+  /* ── COMPARISON TABLE ── */
+  .compare-table {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    margin-bottom: 28px;
+  }
+  .compare-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .compare-table th {
+    padding: 14px 20px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .compare-table th:first-child { background: #1c3d6e; color: #fff; width: 22%; }
+  .compare-table th:nth-child(2) { background: #2e6db4; color: #fff; }
+  .compare-table th:nth-child(3) { background: #1a6340; color: #fff; }
+  .compare-table td {
+    padding: 13px 20px;
+    border-bottom: 1px solid #e8edf5;
+    vertical-align: top;
+  }
+  .compare-table td:first-child { font-weight: 600; color: #1c3d6e; background: #f8f9fc; }
+  .compare-table td:nth-child(2) { color: #1a2340; }
+  .compare-table td:nth-child(3) { color: #1a2340; }
+  .compare-table tr:last-child td { border-bottom: none; }
+
+  /* ── SECTION LABELS ── */
+  .section-label {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+  }
+  .label-example { background: #e8f4e8; color: #1a6340; }
+  .label-template { background: #e4ecf8; color: #1c3d6e; }
+
+  /* ── CARD (shared by filled example + blank template) ── */
+  .card {
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    margin-bottom: 32px;
+  }
+  .card-header {
+    padding: 20px 28px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e8edf5;
+  }
+  .card-header-example { background: #f0f8f1; }
+  .card-header-template { background: #f0f4fb; }
+  .card-header h3 {
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .card-header-example h3 { color: #1a6340; }
+  .card-header-template h3 { color: #1c3d6e; }
+  .status-pill {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 12px;
+  }
+  .status-accepted { background: #d4f0da; color: #1a6340; }
+  .status-proposed { background: #e0e8f8; color: #1c3d6e; }
+
+  /* ── ADR FIELD ROWS ── */
+  .adr-body { padding: 0 28px 24px; }
+  .adr-field { margin-top: 22px; }
+  .adr-field-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #7a8aa8;
+    margin-bottom: 6px;
+  }
+  .adr-field-content {
+    color: #1a2340;
+    line-height: 1.65;
+  }
+  .adr-field-content.filled {
+    background: #f8faf8;
+    border: 1px solid #d0e8d0;
+    border-radius: 6px;
+    padding: 12px 16px;
+  }
+  .adr-field-content.blank {
+    background: #f8f9fc;
+    border: 1.5px dashed #c0ccdd;
+    border-radius: 6px;
+    padding: 12px 16px;
+    color: #8a9bbf;
+    font-style: italic;
+  }
+
+  /* ── ALTERNATIVES TABLE ── */
+  .alt-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+  .alt-table th {
+    background: #1c3d6e;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 8px 14px;
+    text-align: left;
+  }
+  .alt-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #e8edf5;
+    font-size: 14px;
+    vertical-align: top;
+  }
+  .alt-table tr:last-child td { border-bottom: none; }
+  .alt-table tr:nth-child(even) td { background: #f8f9fc; }
+  .chosen-row td { background: #eaf5ea !important; }
+  .chosen-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    background: #1a6340;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: 6px;
+  }
+  .rejected-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    background: #c0392b;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: 6px;
+  }
+
+  /* ── BLANK ALT TABLE ── */
+  .blank-alt-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+  .blank-alt-table th {
+    background: #e4ecf8;
+    color: #1c3d6e;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 8px 14px;
+    text-align: left;
+  }
+  .blank-alt-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #e8edf5;
+    font-size: 14px;
+    color: #8a9bbf;
+    font-style: italic;
+  }
+  .blank-alt-table tr:last-child td { border-bottom: none; }
+
+  /* ── COACH NOTE ── */
+  .coach-note {
+    background: #fffbea;
+    border-left: 4px solid #e8a020;
+    border-radius: 6px;
+    padding: 14px 18px;
+    font-size: 13px;
+    color: #4a3800;
+    margin-top: 24px;
+  }
+  .coach-note strong { color: #c07800; }
+
+  /* ── FOOTER ── */
+  .page-footer {
+    background: #1c3d6e;
+    color: #a8c4e8;
+    text-align: center;
+    padding: 18px;
+    font-size: 12px;
+    margin-top: 40px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider { border: none; border-top: 2px dashed #d0d8e8; margin: 36px 0; }
+
+  /* ── PRINT ── */
+  @media print {
+    body { background: #fff; }
+    .page-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .card { box-shadow: none; border: 1px solid #ddd; }
+    #auth-gate { display: none !important; }
+    #page-content { display: block !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="auth-gate">
+  <div class="auth-box">
+    <h2>QE Architect Accelerator</h2>
+    <p>Enter the cohort password to access this resource.</p>
+    <input type="password" id="auth-password" placeholder="Password" autofocus>
+    <button id="auth-submit">Access</button>
+    <div class="auth-error" id="auth-error">Incorrect password. Please try again.</div>
+  </div>
+</div>
+
+<!-- PAGE CONTENT (hidden until authenticated) -->
+<div id="page-content">
+
+<!-- HEADER -->
+<div class="page-header">
+  <div>
+    <h1>T5 — Architecture Decision Record (ADR)</h1>
+    <div class="subtitle">QE Architect Accelerator &nbsp;·&nbsp; Week 4 Asset &nbsp;·&nbsp; Your first cross-team artefact</div>
+  </div>
+  <div class="week-badge">Week 4</div>
+</div>
+
+<div class="main">
+
+  <!-- ── WHAT IS AN ADR? ── -->
+  <div class="analogy-block">
+    <h2>🏗️ What is an ADR — and why does it matter for your career?</h2>
+    <p>
+      An <strong>Architecture Decision Record (ADR)</strong> is a short document that captures a significant technical decision you made — what you decided, what you considered, and <em>why</em> you chose it over the alternatives.
+    </p>
+    <p>
+      <strong>The analogy:</strong> Think of it like a sat-nav journey log. You decided to take the M25 to get to your destination. The ADR records: "We chose the M25 (faster, reliable). We considered the A3 (scenic but slow) and the train (no flexibility). We accepted the risk of motorway traffic because speed was the priority."
+      Six months later, when your colleague asks "why didn't we take the train?", the ADR answers it — without a meeting.
+    </p>
+    <p>
+      <strong>Why it separates Architects from Engineers:</strong> Anyone can build a solution. An Architect can <em>explain and defend</em> why that solution was chosen over everything else. That's what gets you promoted.
+    </p>
+  </div>
+
+  <!-- ── T4 vs T5 COMPARISON ── -->
+  <div class="compare-table">
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th>📄 T4 — Initiative Pitch</th>
+          <th>📐 T5 — Architecture Decision Record</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>What is it?</td>
+          <td>A persuasion document. You're selling your initiative to your manager or team.</td>
+          <td>A decision log. The decision has been made — now you're recording it for the record.</td>
+        </tr>
+        <tr>
+          <td>Who reads it?</td>
+          <td>Your manager, stakeholders you need buy-in from.</td>
+          <td>Your team, future engineers, your promotion panel — anyone who needs to understand <em>why</em>.</td>
+        </tr>
+        <tr>
+          <td>Tone</td>
+          <td>"Here's what I propose and why you should approve it."</td>
+          <td>"Here's what was decided, what was considered, and what we accepted as a trade-off."</td>
+        </tr>
+        <tr>
+          <td>Timing</td>
+          <td>Before starting. You're getting alignment.</td>
+          <td>As you make significant technical choices. Ongoing throughout the initiative.</td>
+        </tr>
+        <tr>
+          <td>The analogy</td>
+          <td>The planning meeting where you propose which route to take.</td>
+          <td>The journey log written <em>after</em> the decision — so no one debates the route again.</td>
+        </tr>
+        <tr>
+          <td>Career signal</td>
+          <td>Shows strategic thinking and stakeholder awareness.</td>
+          <td>Shows architectural thinking and professional maturity. This is Staff-level behaviour.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── FILLED EXAMPLE ── -->
+  <div class="section-label label-example">✅ Filled Example — Read This First</div>
+
+  <div class="card">
+    <div class="card-header card-header-example">
+      <div>
+        <h3>ADR-001: UI Test Automation Framework Selection</h3>
+        <div style="font-size:13px;color:#3a6a45;margin-top:4px;">Chakri &nbsp;·&nbsp; Echo Securities &nbsp;·&nbsp; April 2026</div>
+      </div>
+      <span class="status-pill status-accepted">✓ Accepted</span>
+    </div>
+
+    <div class="adr-body">
+
+      <div class="adr-field">
+        <div class="adr-field-label">Context</div>
+        <div class="adr-field-content filled">
+          Echo Securities is migrating its core dashboard UI from an older AngularJS app to a modern React-based interface. The current QA process is entirely manual — no UI automation exists. The engineering team has been given a 6-month delivery timeline and expects the QA function to own a scalable automated regression suite that can be maintained by the QE team without developer involvement. The manager has explicitly asked for a Staff-level initiative that demonstrates architectural ownership.
+        </div>
+      </div>
+
+      <div class="adr-field">
+        <div class="adr-field-label">Decision</div>
+        <div class="adr-field-content filled">
+          We will adopt <strong>Playwright (TypeScript)</strong> as the UI test automation framework for the Echo Securities dashboard migration project.
+        </div>
+      </div>
+
+      <div class="adr-field">
+        <div class="adr-field-label">Alternatives Considered</div>
+        <table class="alt-table">
+          <thead>
+            <tr>
+              <th>Option</th>
+              <th>Pros</th>
+              <th>Cons</th>
+              <th>Verdict</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="chosen-row">
+              <td><strong>Playwright (TS)</strong> <span class="chosen-badge">CHOSEN</span></td>
+              <td>Native async support, multi-browser, auto-wait, strong TypeScript support, active community, excellent CI integration</td>
+              <td>Team unfamiliar — learning curve in weeks 1–2</td>
+              <td>Best long-term ROI; manager-recommended</td>
+            </tr>
+            <tr>
+              <td>Selenium (Java) <span class="rejected-badge">REJECTED</span></td>
+              <td>Widely known, extensive documentation, team has prior exposure</td>
+              <td>Verbose setup, slower execution, explicit waits required, brittle on React apps</td>
+              <td>Legacy choice — does not meet Staff-level expectations</td>
+            </tr>
+            <tr>
+              <td>Cypress <span class="rejected-badge">REJECTED</span></td>
+              <td>Good DX, fast feedback loops, good docs</td>
+              <td>JavaScript-only, limited multi-tab support, no native cross-browser, licensing changes in 2024</td>
+              <td>Narrower use case; Playwright supersedes it for this context</td>
+            </tr>
+            <tr>
+              <td>Manual testing only <span class="rejected-badge">REJECTED</span></td>
+              <td>Zero upfront investment</td>
+              <td>Not scalable for 6-month delivery cadence; no architectural ownership signal</td>
+              <td>Not viable given programme and project goals</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="adr-field">
+        <div class="adr-field-label">Decision Rationale</div>
+        <div class="adr-field-content filled">
+          Playwright was prioritised because: (1) it is the framework explicitly suggested by the engineering manager, signalling team-wide alignment; (2) it natively handles React's async rendering without brittle explicit waits; (3) it supports TypeScript out of the box, aligning with the team's existing codebase language; (4) it integrates cleanly into GitHub Actions CI, enabling shift-left quality from sprint 1. The learning curve risk was mitigated by scheduling a 2-week ramp-up spike before writing production tests.
+        </div>
+      </div>
+
+      <div class="adr-field">
+        <div class="adr-field-label">Consequences</div>
+        <div class="adr-field-content filled">
+          <strong>Positive:</strong> Automated regression suite in place by sprint 4. Reduced manual testing cycle by ~60%. Foundation for future visual testing and API contract testing layers.<br><br>
+          <strong>Accepted trade-off:</strong> 2-week learning investment required. First sprint's test output will be lower than steady-state.<br><br>
+          <strong>If this decision proves wrong:</strong> Cypress remains a viable fallback, but migration cost would be ~1 sprint of rework. Decision to be reviewed at Week 6 if adoption is slower than expected.
+        </div>
+      </div>
+
+      <div class="adr-field">
+        <div class="adr-field-label">Status</div>
+        <div class="adr-field-content filled">
+          <strong>Accepted</strong> — Agreed with engineering manager in Week 3 1:1. Implementation started Week 4.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- coach note -->
+  <div class="coach-note">
+    <strong>📌 Coach note:</strong> Notice what this ADR does — it proves Chakri <em>thought like an Architect</em>, not just a tester who picked a tool. It shows he evaluated options, considered trade-offs, and made a documented decision. That's the evidence a promotion panel needs. This document now lives in the repo — permanently. Your name is on it.
+  </div>
+
+  <hr class="divider">
+
+  <!-- ── BLANK TEMPLATE ── -->
+  <div class="section-label label-template">📝 Your Turn — Fill This In</div>
+
+  <div class="card">
+    <div class="card-header card-header-template">
+      <div>
+        <h3>ADR-001: [Decision Title — e.g., "AI Test Generation Tool Selection"]</h3>
+        <div style="font-size:13px;color:#3a5a8a;margin-top:4px;">[Your name] &nbsp;·&nbsp; [Company] &nbsp;·&nbsp; [Date]</div>
+      </div>
+      <span class="status-pill status-proposed">◌ Proposed</span>
+    </div>
+
+    <div class="adr-body">
+
+      <div class="adr-field">
+        <div class="adr-field-label">Context</div>
+        <div class="adr-field-content blank">
+          Describe the situation that forced a decision. What is the project? What is broken, missing, or changing? What does the team/manager expect from you? Keep it to 3–5 sentences. A good reader should understand the problem without knowing your company.
+        </div>
+      </div>
+
+      <div class="adr-field">
+        <div class="adr-field-label">Decision</div>
+        <div class="adr-field-content blank">
+          State your decision in one clear sentence. "We will adopt [X] for [purpose]." Be specific — name the tool, framework, pattern, or approach.
+        </div>
+      </div>
+
+      <div class="adr-field">
+        <div class="adr-field-label">Alternatives Considered</div>
+        <table class="blank-alt-table">
+          <thead>
+            <tr>
+              <th>Option</th>
+              <th>Pros</th>
+              <th>Cons</th>
+              <th>Verdict</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>[Option A — your chosen approach]</td>
+              <td>[Why it works for your context]</td>
+              <td>[What you're giving up or risking]</td>
+              <td>[CHOSEN — one sentence why]</td>
+            </tr>
+            <tr>
+              <td>[Option B]</td>
+              <td>[Its strengths]</td>
+              <td>[Why it didn't fit here]</td>
+              <td>[REJECTED — one sentence why]</td>
+            </tr>
+            <tr>
+              <td>[Option C]</td>
+              <td>[Its strengths]</td>
+              <td>[Why it didn't fit here]</td>
+              <td>[REJECTED — one sentence why]</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="adr-field">
+        <div class="adr-field-label">Decision Rationale</div>
+        <div class="adr-field-content blank">
+          Explain <em>why</em> you chose Option A over the others. Reference your context: team constraints, timeline, stakeholder expectations, technical fit. This is the section that shows architectural thinking — don't skip it. 3–5 sentences.
+        </div>
+      </div>
+
+      <div class="adr-field">
+        <div class="adr-field-label">Consequences</div>
+        <div class="adr-field-content blank">
+          <strong>Positive outcomes expected:</strong> [What improves? Faster delivery? Less manual effort? Team capability?]<br><br>
+          <strong>Accepted trade-off:</strong> [What are you giving up or accepting as a known risk?]<br><br>
+          <strong>If this decision proves wrong:</strong> [What is the fallback or review trigger?]
+        </div>
+      </div>
+
+      <div class="adr-field">
+        <div class="adr-field-label">Status</div>
+        <div class="adr-field-content blank">
+          Choose one: <strong>Proposed</strong> (still being reviewed) / <strong>Accepted</strong> (agreed with stakeholder) / <strong>Deprecated</strong> (no longer active) / <strong>Superseded by ADR-00X</strong>. Add who agreed it and when.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── HOMEWORK REMINDER ── -->
+  <div class="coach-note">
+    <strong>📌 Homework for this week:</strong> Write your own ADR-001 for the biggest technical decision in your initiative so far. It doesn't need to be perfect — it needs to exist. Aim for: your decision title, your context (3 sentences), and at least 2 alternatives considered. Share the link with Jagadeesh before your 1:1.<br><br>
+    <strong>Tip:</strong> Not sure what decision to write about? Ask yourself: "What tool, framework, or approach have I already chosen — or am about to choose — for my initiative?" That's your ADR.
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="page-footer">
+  QE Architect Accelerator &nbsp;·&nbsp; T5 — Architecture Decision Record &nbsp;·&nbsp; Week 4 Asset &nbsp;·&nbsp; Beta Cohort 2026
+</div>
+
+</div><!-- end #page-content -->
+
+<script>
+(function() {
+  var PASS = 'qeabeta';
+  var KEY = 'qea_authenticated';
+  var gate = document.getElementById('auth-gate');
+  var content = document.getElementById('page-content');
+  var input = document.getElementById('auth-password');
+  var btn = document.getElementById('auth-submit');
+  var err = document.getElementById('auth-error');
+
+  function unlock() {
+    gate.style.display = 'none';
+    content.style.display = 'block';
+    sessionStorage.setItem(KEY, '1');
+  }
+
+  if (sessionStorage.getItem(KEY) === '1') {
+    unlock();
+  }
+
+  function attempt() {
+    if (input.value === PASS) {
+      unlock();
+    } else {
+      err.style.display = 'block';
+      input.value = '';
+      input.focus();
+    }
+  }
+
+  btn.addEventListener('click', attempt);
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') attempt();
+  });
+})();
+</script>
+</body>
+</html>

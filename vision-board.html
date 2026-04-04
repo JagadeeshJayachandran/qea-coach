@@ -17,6 +17,80 @@
     overflow-x: hidden;
   }
 
+  /* ── PASSWORD GATE ── */
+  #auth-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #1c3d6e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  }
+  .auth-box {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 16px;
+    padding: 48px 40px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+  }
+  .auth-box h2 {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .auth-box p {
+    color: rgba(255,255,255,0.55);
+    font-size: 14px;
+    margin-bottom: 28px;
+  }
+  .auth-box input[type="password"] {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    font-size: 15px;
+    outline: none;
+    margin-bottom: 16px;
+    text-align: center;
+    letter-spacing: 2px;
+  }
+  .auth-box input[type="password"]::placeholder {
+    color: rgba(255,255,255,0.35);
+    letter-spacing: normal;
+  }
+  .auth-box input[type="password"]:focus {
+    border-color: rgba(255,255,255,0.4);
+  }
+  .auth-box button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #e8a020;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .auth-box button:hover { background: #d4900e; }
+  .auth-error {
+    color: #ff6b6b;
+    font-size: 13px;
+    margin-top: 12px;
+    display: none;
+  }
+
+  /* ── Hide content until authenticated ── */
+  #page-content { display: none; }
+
   /* ── STARS CANVAS ── */
   #stars {
     position: fixed;
@@ -322,6 +396,20 @@
 </head>
 <body>
 
+<!-- PASSWORD GATE -->
+<div id="auth-gate">
+  <div class="auth-box">
+    <h2>QE Architect Accelerator</h2>
+    <p>Enter the cohort password to access this resource.</p>
+    <input type="password" id="auth-password" placeholder="Password" autofocus>
+    <button id="auth-submit">Access</button>
+    <div class="auth-error" id="auth-error">Incorrect password. Please try again.</div>
+  </div>
+</div>
+
+<!-- PAGE CONTENT (hidden until authenticated) -->
+<div id="page-content">
+
 <canvas id="stars"></canvas>
 
 <!-- HERO -->
@@ -480,47 +568,87 @@
   </div>
 </div>
 
+</div><!-- end #page-content -->
+
 <script>
 (function() {
-  var canvas = document.getElementById('stars');
-  var ctx = canvas.getContext('2d');
-  var stars = [];
+  var PASS = 'qeabeta';
+  var KEY = 'qea_authenticated';
+  var gate = document.getElementById('auth-gate');
+  var content = document.getElementById('page-content');
+  var input = document.getElementById('auth-password');
+  var btn = document.getElementById('auth-submit');
+  var err = document.getElementById('auth-error');
 
-  function resize() {
-    canvas.width  = window.innerWidth;
-    canvas.height = window.innerHeight;
+  function unlock() {
+    gate.style.display = 'none';
+    content.style.display = 'block';
+    sessionStorage.setItem(KEY, '1');
+    // Initialize stars after content is visible
+    initStars();
   }
 
-  function init() {
-    stars = [];
-    for (var i = 0; i < 150; i++) {
-      stars.push({
-        x:      Math.random() * canvas.width,
-        y:      Math.random() * canvas.height,
-        radius: Math.random() * 1.2 + 0.3,
-        offset: Math.random() * Math.PI * 2,
-        speed:  Math.random() * 0.6 + 0.2
-      });
+  if (sessionStorage.getItem(KEY) === '1') {
+    unlock();
+  }
+
+  function attempt() {
+    if (input.value === PASS) {
+      unlock();
+    } else {
+      err.style.display = 'block';
+      input.value = '';
+      input.focus();
     }
   }
 
-  function draw(t) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (var i = 0; i < stars.length; i++) {
-      var s = stars[i];
-      var alpha = 0.2 + 0.6 * (0.5 + 0.5 * Math.sin(t * s.speed * 0.001 + s.offset));
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255,255,255,' + alpha + ')';
-      ctx.fill();
+  btn.addEventListener('click', attempt);
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') attempt();
+  });
+
+  function initStars() {
+    var canvas = document.getElementById('stars');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var stars = [];
+
+    function resize() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
     }
+
+    function init() {
+      stars = [];
+      for (var i = 0; i < 150; i++) {
+        stars.push({
+          x:      Math.random() * canvas.width,
+          y:      Math.random() * canvas.height,
+          radius: Math.random() * 1.2 + 0.3,
+          offset: Math.random() * Math.PI * 2,
+          speed:  Math.random() * 0.6 + 0.2
+        });
+      }
+    }
+
+    function draw(t) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (var i = 0; i < stars.length; i++) {
+        var s = stars[i];
+        var alpha = 0.2 + 0.6 * (0.5 + 0.5 * Math.sin(t * s.speed * 0.001 + s.offset));
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255,255,255,' + alpha + ')';
+        ctx.fill();
+      }
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', function() { resize(); init(); });
+    resize();
+    init();
     requestAnimationFrame(draw);
   }
-
-  window.addEventListener('resize', function() { resize(); init(); });
-  resize();
-  init();
-  requestAnimationFrame(draw);
 })();
 </script>
 </body>
