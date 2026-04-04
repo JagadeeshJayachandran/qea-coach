@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QEA Cohort — Week 12 Vision</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #0a0f1e;
+    color: #fff;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── STARS CANVAS ── */
+  #stars {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 64px 24px 48px;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+    color: #0a0f1e;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 800;
+    line-height: 1.15;
+    background: linear-gradient(135deg, #fff 0%, #a8c8ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+  }
+
+  .hero p {
+    font-size: 17px;
+    color: rgba(255,255,255,0.55);
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ── GRID ── */
+  .grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 32px 28px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255,255,255,0.18);
+  }
+
+  /* Glow accent top */
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .card.chakri::before  { background: linear-gradient(90deg, #7c3aed, #a855f7); }
+  .card.arpit::before   { background: linear-gradient(90deg, #0ea5e9, #38bdf8); }
+  .card.divya::before   { background: linear-gradient(90deg, #ec4899, #f97316); }
+  .card.ashutosh::before{ background: linear-gradient(90deg, #10b981, #34d399); }
+  .card.jeevak::before  { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+
+  /* Avatar */
+  .avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .card.chakri  .avatar { background: linear-gradient(135deg, #7c3aed, #a855f7); }
+  .card.arpit   .avatar { background: linear-gradient(135deg, #0ea5e9, #38bdf8); }
+  .card.divya   .avatar { background: linear-gradient(135deg, #ec4899, #f97316); }
+  .card.ashutosh .avatar{ background: linear-gradient(135deg, #10b981, #34d399); }
+  .card.jeevak  .avatar { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+
+  .card-name {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .card-initiative {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    margin-bottom: 24px;
+    line-height: 1.4;
+  }
+
+  /* Progress */
+  .section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 8px;
+  }
+
+  .phase-track {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 6px;
+  }
+
+  .phase-dot {
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.1);
+  }
+
+  .phase-dot.done    { background: rgba(255,255,255,0.7); }
+  .phase-dot.current { background: rgba(255,255,255,0.35); animation: pulse 1.8s ease-in-out infinite; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.35; }
+    50% { opacity: 0.8; }
+  }
+
+  .phase-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 24px;
+  }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: rgba(255,255,255,0.07);
+    margin-bottom: 20px;
+  }
+
+  /* Vision section */
+  .vision-icon {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+
+  .vision-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .vision-headline {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.35;
+    margin-bottom: 12px;
+    color: #fff;
+  }
+
+  .vision-change {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.55;
+    margin-bottom: 20px;
+  }
+
+  /* Life change pill */
+  .life-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .card.chakri  .life-pill { background: rgba(124,58,237,0.15); color: #c4b5fd; border: 1px solid rgba(124,58,237,0.25); }
+  .card.arpit   .life-pill { background: rgba(14,165,233,0.15); color: #7dd3fc; border: 1px solid rgba(14,165,233,0.25); }
+  .card.divya   .life-pill { background: rgba(236,72,153,0.15); color: #f9a8d4; border: 1px solid rgba(236,72,153,0.25); }
+  .card.ashutosh .life-pill{ background: rgba(16,185,129,0.15); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.25); }
+  .card.jeevak  .life-pill { background: rgba(245,158,11,0.15); color: #fcd34d; border: 1px solid rgba(245,158,11,0.25); }
+
+  /* ── SALARY BLOCK ── */
+  .salary-block {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 5px 12px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 600;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #4ade80;
+    letter-spacing: 0.2px;
+  }
+
+  /* ── CARD ENTRANCE ── */
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card {
+    animation: cardIn 0.5s ease both;
+  }
+  .card:nth-child(1) { animation-delay: 0.1s; }
+  .card:nth-child(2) { animation-delay: 0.2s; }
+  .card:nth-child(3) { animation-delay: 0.3s; }
+  .card:nth-child(4) { animation-delay: 0.4s; }
+  .card:nth-child(5) { animation-delay: 0.5s; }
+
+  /* ── FOOTER BANNER ── */
+  .footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 0 24px 60px;
+  }
+
+  .footer-inner {
+    max-width: 700px;
+    margin: 0 auto;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 36px 40px;
+  }
+
+  .footer-inner h2 {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #ffd700, #ff8c00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .footer-inner p {
+    color: rgba(255,255,255,0.5);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .week-count {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+
+  .week-stat { text-align: center; }
+  .week-stat .num {
+    font-size: 32px;
+    font-weight: 800;
+    color: #fff;
+    display: block;
+  }
+  .week-stat .lbl {
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">✦ QEA Beta Cohort — Week 12 Destination</div>
+  <h1>This is where you're going.<br>Not where you are.</h1>
+  <p>Every template, every call, every hard conversation is building to this. Here's what each of you will hold in your hands by Week 12.</p>
+</div>
+
+<!-- CARDS GRID -->
+<div class="grid">
+
+  <!-- CHAKRI -->
+  <div class="card chakri">
+    <div class="avatar">C</div>
+    <div class="card-name">Chakri</div>
+    <div class="card-initiative">UI Automation · New UI Migration Initiative</div>
+
+    <div class="section-label">Current Phase</div>
+    <div class="phase-track">
+      <div class="phase-dot done"></div>
+      <div class="phase-dot done"></div>
+      <div class="phase-dot current"></div>
+      <div class="phase-dot"></div>
+      <div class="phase-dot"></div>
+    </div>
+    <div class="phase-label">Phase 2 — Learn &nbsp;·&nbsp; T4 ✅ &nbsp;·&nbsp; Starting T5</div>
+
+    <div class="divider"></div>
+
+    <div class="vision-icon">🚀</div>
+    <div class="vision-title">Week 12 Vision</div>
+    <div class="vision-headline">"My title changes. My seat at the table is permanent."</div>
+    <div class="vision-change">Chakri's UI automation initiative gets signed off by leadership — his first cross-team architectural win. The promotion follows the proof. He steps into a QE Architect or senior role, no longer waiting to be seen.</div>
+    <div class="life-pill">⬆ Role Expansion &amp; Promotion</div>
+    <div class="salary-block">Senior SDET → QE Architect &nbsp;·&nbsp; +£18–25k</div>
+  </div>
+
+  <!-- ARPIT -->
+  <div class="card arpit">
+    <div class="avatar">A</div>
+    <div class="card-name">Arpit</div>
+    <div class="card-initiative">Snowflake Data Integrity Assurance · Tokyo Marine Kiln</div>
+
+    <div class="section-label">Current Phase</div>
+    <div class="phase-track">
+      <div class="phase-dot done"></div>
+      <div class="phase-dot current"></div>
+      <div class="phase-dot"></div>
+      <div class="phase-dot"></div>
+      <div class="phase-dot"></div>
+    </div>
+    <div class="phase-label">Phase 1→2 — Scope to Learn &nbsp;·&nbsp; T4 ✅ &nbsp;·&nbsp; Starting T5</div>
+
+    <div class="divider"></div>
+
+    <div class="vision-icon">🏆</div>
+    <div class="vision-title">Week 12 Vision</div>
+    <div class="vision-headline">"When data quality is questioned, they call my name."</div>
+    <div class="vision-change">Arpit's Snowflake validation framework becomes the standard at TMK. Lauren and Richard champion it. He's no longer a tester — he's the data integrity authority. His expertise is an asset the organisation depends on.</div>
+    <div class="life-pill">🎯 Recognised Data Quality Leader</div>
+    <div class="salary-block">Senior QA → Data Quality Lead &nbsp;·&nbsp; +£15–22k</div>
+  </div>
+
+  <!-- DIVYA -->
+  <div class="card divya">
+    <div class="avatar">D</div>
+    <div class="card-name">Divya</div>
+    <div class="card-initiative">Playwright + AI Framework · Publicis Sapient UK</div>
+
+    <div class="section-label">Current Phase</div>
+    <div class="phase-track">
+      <div class="phase-dot done"></div>
+      <div class="phase-dot done"></div>
+      <div class="phase-dot current"></div>
+      <div class="phase-dot"></div>
+      <div class="phase-dot"></div>
+    </div>
+    <div class="phase-label">Phase 2 — Learn &nbsp;·&nbsp; T3 ✅ &nbsp;·&nbsp; T4 in progress</div>
+
+    <div class="divider"></div>
+
+    <div class="vision-icon">🌍</div>
+    <div class="vision-title">Week 12 Vision</div>
+    <div class="vision-headline">"I walk into my next interview with a live AI framework, not just a CV."</div>
+    <div class="vision-change">Divya's Playwright + AI framework becomes her portfolio piece. She uses it to step outside her current role and land a position at a company that values what she's built — a career move, not just a job change.</div>
+    <div class="life-pill">🌟 New Role · New Chapter</div>
+    <div class="salary-block">Current Role → New Company &nbsp;·&nbsp; New salary band</div>
+  </div>
+
+  <!-- ASHUTOSH -->
+  <div class="card ashutosh">
+    <div class="avatar">As</div>
+    <div class="card-name">Ashutosh</div>
+    <div class="card-initiative">AI-Enabled QA Framework · Rubico</div>
+
+    <div class="section-label">Current Phase</div>
+    <div class="phase-track">
+      <div class="phase-dot done"></div>
+      <div class="phase-dot done"></div>
+      <div class="phase-dot current"></div>
+      <div class="phase-dot"></div>
+      <div class="phase-dot"></div>
+    </div>
+    <div class="phase-label">Phase 1 — Scope &nbsp;·&nbsp; T3 ✅ &nbsp;·&nbsp; T4 next</div>
+
+    <div class="divider"></div>
+
+    <div class="vision-icon">🤖</div>
+    <div class="vision-title">Week 12 Vision</div>
+    <div class="vision-headline">"Saahil and Stan don't just approve it — they champion it."</div>
+    <div class="vision-change">Ashutosh's AI-QA methodology gets adopted across the team at Rubico. He goes from doing the work to shaping how the team works. His stakeholders see him as the person who brought the future into their testing practice.</div>
+    <div class="life-pill">💡 AI-QA Champion at Rubico</div>
+    <div class="salary-block">SDET → AI-QA Champion &nbsp;·&nbsp; Promotion case built</div>
+  </div>
+
+  <!-- JEEVAK -->
+  <div class="card jeevak">
+    <div class="avatar">J</div>
+    <div class="card-name">Jeevak</div>
+    <div class="card-initiative">QA Automation Specialist · BT UK &amp; Beyond</div>
+
+    <div class="section-label">Current Phase</div>
+    <div class="phase-track">
+      <div class="phase-dot current"></div>
+      <div class="phase-dot"></div>
+      <div class="phase-dot"></div>
+      <div class="phase-dot"></div>
+      <div class="phase-dot"></div>
+    </div>
+    <div class="phase-label">Phase 1 — Scope &nbsp;·&nbsp; Templates: getting started</div>
+
+    <div class="divider"></div>
+
+    <div class="vision-icon">🔑</div>
+    <div class="vision-title">Week 12 Vision</div>
+    <div class="vision-headline">"I walk into BT UK not as a junior — as the person who built something."</div>
+    <div class="vision-change">Jeevak lands the BT UK role using his Playwright expertise and QEA credential as a differentiator. The programme gives him the language and the artefacts to position himself above junior level — and he arrives with proof.</div>
+    <div class="life-pill">🔒 Secured · Stable · Elevated</div>
+    <div class="salary-block">Freelance → Permanent BT UK &nbsp;·&nbsp; Stability secured</div>
+  </div>
+
+</div>
+
+<!-- FOOTER BANNER -->
+<div class="footer">
+  <div class="footer-inner">
+    <h2>12 Weeks. 5 Transformations. One Cohort.</h2>
+    <p>This isn't a training course. It's a career-defining period where you stop waiting for someone to recognise your potential — and start building the proof that makes it undeniable.</p>
+    <div class="week-count">
+      <div class="week-stat"><span class="num">12</span><span class="lbl">Weeks</span></div>
+      <div class="week-stat"><span class="num">5</span><span class="lbl">Architects</span></div>
+      <div class="week-stat"><span class="num">12</span><span class="lbl">Templates</span></div>
+      <div class="week-stat"><span class="num">1</span><span class="lbl">Vision</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var canvas = document.getElementById('stars');
+  var ctx = canvas.getContext('2d');
+  var stars = [];
+
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  function init() {
+    stars = [];
+    for (var i = 0; i < 150; i++) {
+      stars.push({
+        x:      Math.random() * canvas.width,
+        y:      Math.random() * canvas.height,
+        radius: Math.random() * 1.2 + 0.3,
+        offset: Math.random() * Math.PI * 2,
+        speed:  Math.random() * 0.6 + 0.2
+      });
+    }
+  }
+
+  function draw(t) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (var i = 0; i < stars.length; i++) {
+      var s = stars[i];
+      var alpha = 0.2 + 0.6 * (0.5 + 0.5 * Math.sin(t * s.speed * 0.001 + s.offset));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,' + alpha + ')';
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', function() { resize(); init(); });
+  resize();
+  init();
+  requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>
