@@ -577,27 +577,111 @@
     flex: 1;
   }
   /* Responsive */
+  /* Top Nav Bar */
+  .top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 2rem;
+    background: #080b12;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+  }
+  .top-nav a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .top-nav a:hover { color: var(--accent); }
+  .top-nav-links { display: flex; gap: 1.5rem; }
+  /* Mode Toggle */
+  .mode-toggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 2rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .mode-btn {
+    padding: 0.5rem 1.5rem;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+  .mode-btn:hover { border-color: var(--accent); color: var(--text); }
+  .mode-btn.active {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+  .mode-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-left: 1rem;
+  }
+  .sprint-banner {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(245, 158, 11, 0.1));
+    border: 1px solid var(--accent2);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--accent2);
+    display: none;
+  }
+  .sprint-banner.active { display: block; }
+  /* Footer */
+  .site-footer {
+    text-align: center;
+    padding: 1.5rem 2rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+  .site-footer a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .site-footer a:hover { text-decoration: underline; }
   @media (max-width: 768px) {
     .header h1 { font-size: 1.5rem; }
     .problems-grid { grid-template-columns: 1fr; }
     .modal-content { width: 95%; margin: 1rem auto; }
     .button-group { flex-direction: column; }
     .progress-banner { flex-direction: column; gap: 1rem; }
+    .top-nav { flex-direction: column; gap: 0.5rem; padding: 0.5rem 1rem; }
+    .mode-toggle { flex-wrap: wrap; }
   }
 </style>
 </head>
 <body>
 
+<div class="top-nav">
+  <a href="index.html">&larr; Home</a>
+  <div class="top-nav-links">
+    <a href="progress.html">Progress Tracker</a>
+  </div>
+</div>
+
 <div class="header">
   <h1>QE Interview Practice Lab</h1>
-  <p>Master Staff & Principal Level QE Skills: Flakiness Detection, Test Architecture, API Testing, Test Data Management, Reliability Engineering & AI</p>
+  <p>Staff & Principal QE Interview Prep — DSA, Playwright, Test Architecture, API Testing, Reliability, AI & more</p>
   <div class="stats-bar">
     <div class="stat-item">
       <div class="stat-value" id="stat-completed">0</div>
       <div class="stat-label">Completed</div>
     </div>
     <div class="stat-item">
-      <div class="stat-value" id="stat-total">17</div>
+      <div class="stat-value" id="stat-total">66</div>
       <div class="stat-label">Problems</div>
     </div>
     <div class="stat-item">
@@ -613,8 +697,17 @@
   <button class="nav-tab" data-tab="about">About</button>
 </div>
 
+<div class="mode-toggle">
+  <button class="mode-btn active" id="growth-mode-btn" onclick="setMode('growth')">Growth Mode</button>
+  <button class="mode-btn" id="sprint-mode-btn" onclick="setMode('sprint')">Sprint Mode</button>
+  <span class="mode-label" id="mode-label">All 66 problems — build architect depth</span>
+</div>
+
 <div class="main">
   <div id="practice-tab" class="tab-content active">
+    <div class="sprint-banner" id="sprint-banner">
+      Day 1-7: DSA for QE (3/day) &rarr; Day 8-14: Playwright + API Testing (2/day)
+    </div>
     <div class="progress-banner">
       <span>✓ Your progress is saved in this browser</span>
       <button class="reset-progress-btn" onclick="resetProgress()">Reset All Progress</button>
@@ -625,6 +718,7 @@
         <label for="level-filter">Filter by Level</label>
         <select id="level-filter" onchange="applyFilters()">
           <option value="">All Levels</option>
+          <option value="Senior">Senior</option>
           <option value="Staff">Staff</option>
           <option value="Principal">Principal</option>
         </select>
@@ -639,6 +733,15 @@
           <option value="Test Data Management">Test Data Management</option>
           <option value="Reliability Engineering">Reliability Engineering</option>
           <option value="AI in Testing">AI in Testing</option>
+          <option value="Playwright">Playwright</option>
+          <option value="DSA for QE">DSA for QE</option>
+          <option value="Performance & Load Testing">Performance & Load Testing</option>
+          <option value="AI/LLM Testing">AI/LLM Testing</option>
+          <option value="Test Infrastructure System Design">Test Infrastructure System Design</option>
+          <option value="Observability-Driven Testing">Observability-Driven Testing</option>
+          <option value="Contract & Schema Testing">Contract & Schema Testing</option>
+          <option value="CI/CD & Pipeline Engineering">CI/CD & Pipeline Engineering</option>
+          <option value="Security Testing">Security Testing</option>
         </select>
       </div>
       <div class="filter-group">
@@ -673,11 +776,11 @@
           <div style="font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px;">Overall Score</div>
         </div>
         <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center;">
-          <div style="font-size: 2.5rem; font-weight: 700; color: var(--accent2);" id="report-completed">0/17</div>
+          <div style="font-size: 2.5rem; font-weight: 700; color: var(--accent2);" id="report-completed">0/66</div>
           <div style="font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px;">Completed</div>
         </div>
         <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center;">
-          <div style="font-size: 2.5rem; font-weight: 700; color: var(--accent3);" id="report-categories">0/6</div>
+          <div style="font-size: 2.5rem; font-weight: 700; color: var(--accent3);" id="report-categories">0/15</div>
           <div style="font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px;">Categories Covered</div>
         </div>
       </div>
@@ -694,18 +797,44 @@
   <div id="about-tab" class="tab-content">
     <div style="max-width: 800px; margin: 2rem auto;">
       <h2 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--accent);">About This Lab</h2>
-      <p style="color: var(--muted); line-height: 1.8; margin-bottom: 1rem;">
-        The QE Interview Practice Lab is designed to help you master Staff & Principal level QE concepts. Each problem focuses on critical skills needed at senior QE levels.
+      <p style="color: var(--muted); line-height: 1.8; margin-bottom: 1.5rem;">
+        The QE Interview Practice Lab is built for Senior, Staff & Principal level QE professionals preparing for technical interviews. Whether you're actively job hunting or building long-term architect skills, this lab covers every interview round — from DSA coding challenges to system design, from Playwright automation to AI/LLM testing.
       </p>
-      <h3 style="font-size: 1.2rem; margin-top: 2rem; margin-bottom: 1rem;">Categories</h3>
-      <ul style="color: var(--muted); line-height: 1.8; margin-left: 2rem;">
-        <li><strong>Flakiness Detection:</strong> Identifying and quantifying flaky tests</li>
-        <li><strong>Test Architecture:</strong> Designing scalable test systems</li>
-        <li><strong>API Testing:</strong> Testing REST/GraphQL APIs at scale</li>
-        <li><strong>Test Data Management:</strong> Managing complex test data</li>
-        <li><strong>Reliability Engineering:</strong> Ensuring infrastructure reliability</li>
-        <li><strong>AI in Testing:</strong> Leveraging AI/ML for QE</li>
+
+      <h3 style="font-size: 1.2rem; margin-top: 2rem; margin-bottom: 0.75rem; color: var(--text);">Two Modes, One Goal</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem;">
+          <div style="font-weight: 600; color: var(--accent); margin-bottom: 0.5rem;">Growth Mode</div>
+          <p style="color: var(--muted); font-size: 0.9rem; line-height: 1.6;">For employed professionals building long-term architect depth. All 66 problems across 14 categories. No rush — work through them at your own pace to sharpen your edge for when the right opportunity comes.</p>
+        </div>
+        <div style="background: var(--surface); border: 1px solid var(--accent2); border-radius: 10px; padding: 1.25rem;">
+          <div style="font-weight: 600; color: var(--accent2); margin-bottom: 0.5rem;">Sprint Mode</div>
+          <p style="color: var(--muted); font-size: 0.9rem; line-height: 1.6;">For active job seekers who need to be interview-ready in 2 weeks. Focuses on the highest-ROI categories: DSA for QE, Playwright, and API Testing. Follow the daily plan to cover all the essentials.</p>
+        </div>
+      </div>
+
+      <h3 style="font-size: 1.2rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--text);">Categories</h3>
+      <ul style="color: var(--muted); line-height: 2; margin-left: 2rem;">
+        <li><strong style="color: var(--text);">DSA for QE:</strong> Data structures & algorithms applied to testing — HashMap, graphs, binary search, heaps, queues, and sliding windows framed as real QE problems</li>
+        <li><strong style="color: var(--text);">Playwright:</strong> Advanced Playwright automation — Page Object Model, fixtures, network mocking, visual regression, custom reporters, auth state management</li>
+        <li><strong style="color: var(--text);">API Testing:</strong> Contract testing, rate limiting, cross-browser matrices, and REST API validation at scale</li>
+        <li><strong style="color: var(--text);">Test Architecture:</strong> System design for test infrastructure — dependency graphs, parallel scheduling, feature flag coverage, timeline analysis</li>
+        <li><strong style="color: var(--text);">Flakiness Detection:</strong> Identifying, quantifying, and quarantining flaky tests with statistical methods</li>
+        <li><strong style="color: var(--text);">Reliability Engineering:</strong> Error budgets, SLOs, pipeline health monitoring, coverage gap analysis, and release gating</li>
+        <li><strong style="color: var(--text);">Test Data Management:</strong> Builder patterns, load test data validation, and fixture management</li>
+        <li><strong style="color: var(--text);">AI in Testing:</strong> ML-based test selection, predictive prioritisation, and AI-augmented QE workflows</li>
+        <li><strong style="color: var(--text);">Performance & Load Testing:</strong> k6 scripting, percentile calculations, throughput analysis, soak test leak detection, and load profile generation</li>
+        <li><strong style="color: var(--text);">AI/LLM Testing:</strong> Semantic similarity scoring, hallucination detection, LLM-as-Judge evaluation, prompt regression testing, and non-deterministic output validation</li>
+        <li><strong style="color: var(--text);">Test Infrastructure System Design:</strong> Distributed test runners, dashboard aggregation, multi-region orchestration, environment provisioning, and auto-quarantine pipelines</li>
+        <li><strong style="color: var(--text);">Observability-Driven Testing:</strong> Log-to-test-case generation, production anomaly detection, trace-based validation, and SLO burn rate monitoring</li>
+        <li><strong style="color: var(--text);">Contract & Schema Testing:</strong> Consumer-driven contracts, OpenAPI breaking change detection, and event schema evolution checking</li>
+        <li><strong style="color: var(--text);">CI/CD & Pipeline Engineering:</strong> Critical path optimisation, pairwise test matrices, canary deployment health checks, and build cache invalidation</li>
+        <li><strong style="color: var(--text);">Security Testing:</strong> SQL injection scanning, JWT token lifecycle validation, and OWASP Top 10 automated checks</li>
       </ul>
+
+      <div style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); text-align: center;">
+        <p style="color: var(--muted); font-size: 0.9rem;">Part of the <strong style="color: var(--text);">AI Technical Coach</strong> implementation framework</p>
+      </div>
     </div>
   </div>
 </div>
@@ -1069,6 +1198,839 @@ const problems = [
       "Use threshold rules for GO/NO-GO decision"
     ],
     sampleAnswer: "function evaluateReleaseGate(signals, weights) {\n  let weightedScore = 0;\n  const normalizedSignals = {};\n  \n  for (const [signal, value] of Object.entries(signals)) {\n    if (signal === 'bugsOpen') {\n      normalizedSignals[signal] = Math.max(0, 1 - (value / 10));\n    } else {\n      normalizedSignals[signal] = value;\n    }\n    weightedScore += normalizedSignals[signal] * (weights[signal] || 0.2);\n  }\n  \n  let recommendation = 'GO';\n  const risks = [];\n  if (normalizedSignals.testStability < 0.85) {\n    recommendation = 'CAUTION';\n    risks.push('test stability below 85%');\n  }\n  if (normalizedSignals.coverage < 0.80) {\n    recommendation = 'NO-GO';\n    risks.push('coverage below 80%');\n  }\n  \n  return {\n    releaseScore: parseFloat(weightedScore.toFixed(2)),\n    recommendation,\n    risks,\n    overrideRequired: recommendation === 'NO-GO'\n  };\n}"
+  },
+  {
+    id: 18,
+    title: "Composable Page Object Model",
+    description: "Design a composable POM architecture where page objects use component composition instead of deep inheritance. A NavigationBar, SearchPanel, and DataTable component should be reusable across multiple pages. Implement constructor injection via Playwright fixtures.",
+    difficulty: "Hard",
+    level: "Principal",
+    category: "Playwright",
+    timeMinutes: 45,
+    approach: "Create small component classes (NavBar, SearchPanel, DataTable) that accept a Page/Locator. Build page classes that compose these components rather than inheriting. Wire everything through test.extend() fixtures so tests receive fully-assembled page objects.",
+    exampleIO: "Input: test('filter users', async ({ dashboardPage }) => { await dashboardPage.nav.goTo('Users'); await dashboardPage.search.filterBy('active'); await dashboardPage.table.expectRowCount(5); })\nOutput: Test passes — nav, search, table are reusable components injected via fixture",
+    hints: [
+      "Components should accept a root Locator, not the whole Page — this scopes them to a section of the DOM",
+      "Use test.extend() to create fixtures that instantiate page objects with their components",
+      "Think about how 50 page objects will be maintained by 10 engineers, not just how 1 works"
+    ],
+    sampleAnswer: "// Component classes\nclass NavigationBar {\n  constructor(page) {\n    this.page = page;\n    this.root = page.locator('nav[role=\"navigation\"]');\n  }\n  async goTo(section) {\n    await this.root.getByRole('link', { name: section }).click();\n  }\n}\n\nclass SearchPanel {\n  constructor(page) {\n    this.root = page.locator('[data-testid=\"search-panel\"]');\n  }\n  async filterBy(term) {\n    await this.root.getByRole('searchbox').fill(term);\n    await this.root.getByRole('button', { name: 'Apply' }).click();\n  }\n}\n\nclass DataTable {\n  constructor(page) {\n    this.root = page.locator('table[role=\"grid\"]');\n  }\n  async expectRowCount(count) {\n    await expect(this.root.locator('tbody tr')).toHaveCount(count);\n  }\n  async getRow(index) {\n    return this.root.locator('tbody tr').nth(index);\n  }\n}\n\n// Composed page object\nclass DashboardPage {\n  constructor(page) {\n    this.page = page;\n    this.nav = new NavigationBar(page);\n    this.search = new SearchPanel(page);\n    this.table = new DataTable(page);\n  }\n  async goto() {\n    await this.page.goto('/dashboard');\n  }\n}\n\n// Fixture wiring\nconst test = base.extend({\n  dashboardPage: async ({ page }, use) => {\n    const dashboard = new DashboardPage(page);\n    await dashboard.goto();\n    await use(dashboard);\n  }\n});"
+  },
+  {
+    id: 19,
+    title: "Network Mock Layer with Fallthrough",
+    description: "Build a Playwright network mock layer using page.route() that can: (1) mock specific endpoints with custom responses, (2) simulate errors (500, timeout, abort), (3) add artificial latency, and (4) fall through to real APIs for unmocked endpoints. Support conditional mocking based on request parameters.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "Playwright",
+    timeMinutes: 40,
+    approach: "Create a MockLayer class that registers route handlers. Each mock rule specifies a URL pattern, condition function, and response (data, status, delay, or abort). Use route.fulfill() for mocks, route.abort() for network errors, and route.continue() for fallthrough.",
+    exampleIO: "Input: mockLayer.mock('/api/users', { body: [{id:1}] }); mockLayer.error('/api/payments', { status: 500 }); mockLayer.delay('/api/search', { ms: 3000, body: [] });\nOutput: /api/users returns mock data, /api/payments returns 500, /api/search responds after 3s, all other routes hit real server",
+    hints: [
+      "Use route.fulfill() for mock responses and route.abort() for network failures",
+      "route.continue() passes the request to the real server — use this for fallthrough",
+      "Add a delay with: await new Promise(r => setTimeout(r, ms)) before route.fulfill()"
+    ],
+    sampleAnswer: "class MockLayer {\n  constructor(page) {\n    this.page = page;\n    this.rules = [];\n  }\n\n  mock(urlPattern, { body, status = 200, headers = {} }) {\n    this.rules.push({ urlPattern, type: 'mock', body, status, headers });\n  }\n\n  error(urlPattern, { status = 500, message = 'Server Error' }) {\n    this.rules.push({ urlPattern, type: 'error', status, message });\n  }\n\n  delay(urlPattern, { ms, body, status = 200 }) {\n    this.rules.push({ urlPattern, type: 'delay', ms, body, status });\n  }\n\n  abort(urlPattern) {\n    this.rules.push({ urlPattern, type: 'abort' });\n  }\n\n  async install() {\n    for (const rule of this.rules) {\n      await this.page.route(rule.urlPattern, async (route) => {\n        switch (rule.type) {\n          case 'mock':\n            await route.fulfill({\n              status: rule.status,\n              contentType: 'application/json',\n              body: JSON.stringify(rule.body),\n              headers: rule.headers\n            });\n            break;\n          case 'error':\n            await route.fulfill({\n              status: rule.status,\n              contentType: 'application/json',\n              body: JSON.stringify({ error: rule.message })\n            });\n            break;\n          case 'delay':\n            await new Promise(r => setTimeout(r, rule.ms));\n            await route.fulfill({\n              status: rule.status,\n              contentType: 'application/json',\n              body: JSON.stringify(rule.body)\n            });\n            break;\n          case 'abort':\n            await route.abort('failed');\n            break;\n        }\n      });\n    }\n  }\n\n  async cleanup() {\n    await this.page.unrouteAll({ behavior: 'wait' });\n  }\n}"
+  },
+  {
+    id: 20,
+    title: "Visual Regression Test Suite",
+    description: "Design a visual regression testing system using Playwright's toHaveScreenshot(). Handle dynamic content masking (timestamps, avatars, ads), disable animations, configure cross-browser baselines, and test responsive layouts at multiple viewport sizes.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "Playwright",
+    timeMinutes: 35,
+    approach: "Use toHaveScreenshot() (NOT toMatchSnapshot — it doesn't retry). Mask dynamic elements with the mask option. Disable animations via test.use(). Capture at multiple viewports. Configure maxDiffPixels for tolerance. Generate platform-specific baselines.",
+    exampleIO: "Input: Visual test for a dashboard with live timestamps, user avatars, and a chart\nOutput: Screenshot comparison passes — dynamic areas masked, animations frozen, tested at 3 viewports (mobile/tablet/desktop)",
+    hints: [
+      "toHaveScreenshot() retries automatically; toMatchSnapshot() does NOT — always prefer toHaveScreenshot()",
+      "Use mask: [page.locator('.timestamp'), page.locator('.avatar')] to exclude dynamic content",
+      "Set animations: 'disabled' in test.use() to freeze CSS transitions before capture"
+    ],
+    sampleAnswer: "// playwright.config.ts excerpt\n// expect: { toHaveScreenshot: { maxDiffPixels: 100, threshold: 0.2 } }\n// use: { actionTimeout: 10000 }\n\nconst { test, expect } = require('@playwright/test');\n\ntest.use({ animations: 'disabled' });\n\nconst viewports = [\n  { name: 'mobile', width: 375, height: 812 },\n  { name: 'tablet', width: 768, height: 1024 },\n  { name: 'desktop', width: 1440, height: 900 }\n];\n\nfunction getDynamicMasks(page) {\n  return [\n    page.locator('[data-testid=\"timestamp\"]'),\n    page.locator('[data-testid=\"avatar\"]'),\n    page.locator('[data-testid=\"live-chart\"]'),\n    page.locator('.ad-banner')\n  ];\n}\n\nfor (const vp of viewports) {\n  test(`dashboard visual - ${vp.name}`, async ({ page }) => {\n    await page.setViewportSize({ width: vp.width, height: vp.height });\n    await page.goto('/dashboard');\n    await page.waitForLoadState('networkidle');\n\n    // Wait for skeleton loaders to disappear\n    await expect(page.locator('.skeleton')).toHaveCount(0);\n\n    await expect(page).toHaveScreenshot(\n      `dashboard-${vp.name}.png`,\n      {\n        mask: getDynamicMasks(page),\n        maxDiffPixels: vp.name === 'mobile' ? 150 : 100,\n        fullPage: true\n      }\n    );\n  });\n}\n\ntest('component visual - header theme toggle', async ({ page }) => {\n  await page.goto('/dashboard');\n  await expect(page.locator('header')).toHaveScreenshot('header-light.png');\n  await page.getByRole('button', { name: 'Toggle theme' }).click();\n  await expect(page.locator('header')).toHaveScreenshot('header-dark.png');\n});"
+  },
+  {
+    id: 21,
+    title: "Custom Fixture Dependency Chain",
+    description: "Design a Playwright fixture architecture with proper dependency injection: an apiClient fixture depends on authToken, which depends on baseURL. Add a dbSeed fixture with worker scope that seeds data once per worker. Implement proper setup/teardown using the use() callback pattern.",
+    difficulty: "Hard",
+    level: "Principal",
+    category: "Playwright",
+    timeMinutes: 45,
+    approach: "Use test.extend() to define fixtures. Each fixture receives its dependencies as parameters. Use the async ({dep}, use) => { setup; await use(value); teardown; } pattern. Mark worker-scoped fixtures with { scope: 'worker' }. Chain: baseURL → authToken → apiClient → seeded test.",
+    exampleIO: "Input: test('create order', async ({ apiClient, dbSeed }) => { const order = await apiClient.post('/orders', {...}); expect(order.status).toBe(201); })\nOutput: baseURL resolved → auth token fetched → apiClient created with token → db seeded once per worker → test runs → teardown in reverse order",
+    hints: [
+      "The use() callback is the setup/teardown boundary: code before use() is setup, code after is teardown",
+      "Worker-scoped fixtures ({ scope: 'worker' }) run once per parallel worker process, not once per test",
+      "Fixture dependencies are declared as parameter names — Playwright resolves the dependency graph automatically"
+    ],
+    sampleAnswer: "const { test: base, expect } = require('@playwright/test');\n\nconst test = base.extend({\n  // Worker-scoped: resolved once per worker\n  baseURL: [async ({}, use) => {\n    const url = process.env.API_URL || 'http://localhost:3000';\n    await use(url);\n  }, { scope: 'worker' }],\n\n  // Worker-scoped: auth token persists across tests in same worker\n  authToken: [async ({ baseURL }, use) => {\n    const res = await fetch(`${baseURL}/auth/login`, {\n      method: 'POST',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify({ user: 'test', pass: 'test' })\n    });\n    const { token } = await res.json();\n    await use(token);\n    // Teardown: invalidate token\n    await fetch(`${baseURL}/auth/logout`, {\n      headers: { Authorization: `Bearer ${token}` }\n    });\n  }, { scope: 'worker' }],\n\n  // Test-scoped: new client per test\n  apiClient: async ({ baseURL, authToken }, use) => {\n    const client = {\n      async get(path) {\n        const res = await fetch(`${baseURL}${path}`, {\n          headers: { Authorization: `Bearer ${authToken}` }\n        });\n        return { status: res.status, data: await res.json() };\n      },\n      async post(path, body) {\n        const res = await fetch(`${baseURL}${path}`, {\n          method: 'POST',\n          headers: {\n            Authorization: `Bearer ${authToken}`,\n            'Content-Type': 'application/json'\n          },\n          body: JSON.stringify(body)\n        });\n        return { status: res.status, data: await res.json() };\n      }\n    };\n    await use(client);\n  },\n\n  // Worker-scoped: seed database once per worker\n  dbSeed: [async ({ baseURL, authToken }, use) => {\n    const res = await fetch(`${baseURL}/test/seed`, {\n      method: 'POST',\n      headers: { Authorization: `Bearer ${authToken}` }\n    });\n    const { seedId } = await res.json();\n    await use(seedId);\n    // Teardown: clean up seeded data\n    await fetch(`${baseURL}/test/cleanup/${seedId}`, {\n      method: 'DELETE',\n      headers: { Authorization: `Bearer ${authToken}` }\n    });\n  }, { scope: 'worker' }]\n});\n\nmodule.exports = { test, expect };"
+  },
+  {
+    id: 22,
+    title: "Parallel Test Isolation Manager",
+    description: "Design a system to handle shared resource isolation when running Playwright tests in parallel. Each worker needs unique test data to avoid conflicts (e.g., unique usernames, isolated DB rows). Implement a WorkerDataManager that assigns isolated data per worker and cleans up after.",
+    difficulty: "Hard",
+    level: "Principal",
+    category: "Playwright",
+    timeMinutes: 40,
+    approach: "Use workerInfo.workerIndex to generate unique identifiers per worker. Create a worker-scoped fixture that provisions isolated data (unique user, namespace). Pass isolated context to each test. Clean up in fixture teardown. Handle the case where workers share a database.",
+    exampleIO: "Input: 4 parallel workers each running user CRUD tests against the same database\nOutput: Worker 0 uses user_w0_*, Worker 1 uses user_w1_*, etc. — zero conflicts, full cleanup after each worker finishes",
+    hints: [
+      "workerInfo.workerIndex gives you a unique integer per parallel worker — use it as a namespace",
+      "Worker-scoped fixtures are perfect for provisioning per-worker resources",
+      "Always clean up in the teardown (after use()) — don't rely on test afterAll hooks"
+    ],
+    sampleAnswer: "const { test: base, expect } = require('@playwright/test');\n\nclass WorkerDataManager {\n  constructor(workerIndex, baseURL, token) {\n    this.prefix = `w${workerIndex}`;\n    this.baseURL = baseURL;\n    this.token = token;\n    this.createdResources = [];\n  }\n\n  uniqueId(name) {\n    return `${this.prefix}_${name}_${Date.now()}`;\n  }\n\n  async createUser(overrides = {}) {\n    const user = {\n      username: this.uniqueId('user'),\n      email: `${this.uniqueId('test')}@test.com`,\n      ...overrides\n    };\n    const res = await fetch(`${this.baseURL}/api/users`, {\n      method: 'POST',\n      headers: {\n        Authorization: `Bearer ${this.token}`,\n        'Content-Type': 'application/json'\n      },\n      body: JSON.stringify(user)\n    });\n    const created = await res.json();\n    this.createdResources.push({ type: 'user', id: created.id });\n    return created;\n  }\n\n  async cleanup() {\n    for (const resource of this.createdResources.reverse()) {\n      await fetch(\n        `${this.baseURL}/api/${resource.type}s/${resource.id}`,\n        {\n          method: 'DELETE',\n          headers: { Authorization: `Bearer ${this.token}` }\n        }\n      );\n    }\n    this.createdResources = [];\n  }\n}\n\nconst test = base.extend({\n  workerData: [async ({ baseURL }, use, workerInfo) => {\n    // Setup: provision isolated data manager\n    const loginRes = await fetch(`${baseURL}/auth/login`, {\n      method: 'POST',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify({ user: 'admin', pass: 'admin' })\n    });\n    const { token } = await loginRes.json();\n    const manager = new WorkerDataManager(\n      workerInfo.workerIndex, baseURL, token\n    );\n    await use(manager);\n    // Teardown: clean up all resources this worker created\n    await manager.cleanup();\n  }, { scope: 'worker' }]\n});\n\nmodule.exports = { test, expect };"
+  },
+  {
+    id: 23,
+    title: "Custom Playwright Reporter",
+    description: "Build a custom Playwright reporter that: (1) tracks test duration trends and flags tests that became >50% slower, (2) sends a Slack notification on failure with test name, error, and trace link, (3) writes a JSON summary. Implement the Reporter interface with onBegin, onTestEnd, and onEnd lifecycle hooks.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "Playwright",
+    timeMinutes: 40,
+    approach: "Implement the Reporter class interface. In onTestEnd, collect results and compare duration to historical baseline. In onEnd, write JSON summary and send Slack webhook for failures. Track trends by reading/writing a baseline JSON file.",
+    exampleIO: "Input: 3 tests run — 2 pass (1 slower than baseline), 1 fails\nOutput: JSON report written, Slack notification sent for failure, console warning for slow test: 'login_test duration 8.2s exceeds baseline 4.1s (+100%)'",
+    hints: [
+      "The Reporter interface methods: onBegin(config, suite), onTestEnd(test, result), onEnd(result)",
+      "result.duration gives you milliseconds; result.status gives 'passed'|'failed'|'timedOut'|'skipped'",
+      "Read a baseline.json file for historical durations and compare — write updated baselines at onEnd"
+    ],
+    sampleAnswer: "const fs = require('fs');\nconst path = require('path');\n\nclass CustomReporter {\n  constructor(options = {}) {\n    this.slackWebhook = options.slackWebhook;\n    this.baselinePath = options.baselinePath || './test-baselines.json';\n    this.results = [];\n    this.slowTests = [];\n    this.failures = [];\n    this.baselines = {};\n  }\n\n  onBegin(config, suite) {\n    this.totalTests = suite.allTests().length;\n    try {\n      this.baselines = JSON.parse(\n        fs.readFileSync(this.baselinePath, 'utf-8')\n      );\n    } catch { this.baselines = {}; }\n    console.log(`Running ${this.totalTests} tests...`);\n  }\n\n  onTestEnd(test, result) {\n    const entry = {\n      title: test.title,\n      file: test.location.file,\n      status: result.status,\n      duration: result.duration\n    };\n    this.results.push(entry);\n\n    // Check for slowdown\n    const baseline = this.baselines[test.title];\n    if (baseline && result.duration > baseline * 1.5) {\n      const increase = Math.round(\n        ((result.duration - baseline) / baseline) * 100\n      );\n      this.slowTests.push({\n        title: test.title,\n        baseline,\n        actual: result.duration,\n        increase\n      });\n      console.warn(\n        `SLOW: ${test.title} ${result.duration}ms ` +\n        `exceeds baseline ${baseline}ms (+${increase}%)`\n      );\n    }\n\n    // Track failures\n    if (result.status === 'failed') {\n      this.failures.push({\n        title: test.title,\n        error: result.errors?.[0]?.message || 'Unknown error',\n        file: test.location.file\n      });\n    }\n\n    // Update baseline (rolling average)\n    this.baselines[test.title] = baseline\n      ? Math.round((baseline + result.duration) / 2)\n      : result.duration;\n  }\n\n  async onEnd(result) {\n    // Write JSON report\n    const report = {\n      timestamp: new Date().toISOString(),\n      status: result.status,\n      total: this.totalTests,\n      passed: this.results.filter(r => r.status === 'passed').length,\n      failed: this.failures.length,\n      slowTests: this.slowTests,\n      failures: this.failures\n    };\n    fs.writeFileSync(\n      './test-report.json',\n      JSON.stringify(report, null, 2)\n    );\n\n    // Update baselines\n    fs.writeFileSync(\n      this.baselinePath,\n      JSON.stringify(this.baselines, null, 2)\n    );\n\n    // Slack notification for failures\n    if (this.failures.length > 0 && this.slackWebhook) {\n      await this.sendSlackAlert(report);\n    }\n  }\n\n  async sendSlackAlert(report) {\n    const text = this.failures.map(f =>\n      `*${f.title}*\\n${f.error}`\n    ).join('\\n\\n');\n    await fetch(this.slackWebhook, {\n      method: 'POST',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify({\n        text: `Test run failed: ${report.failed}/${report.total}\\n${text}`\n      })\n    });\n  }\n}\n\nmodule.exports = CustomReporter;"
+  },
+  {
+    id: 24,
+    title: "Multi-Role Auth State Manager",
+    description: "Implement a Playwright authentication strategy using storageState that supports multiple user roles (admin, editor, viewer). Create a setup project that authenticates each role once and saves state. Handle token expiration by checking validity before tests and re-authenticating if needed.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "Playwright",
+    timeMinutes: 35,
+    approach: "Create auth setup files per role that login and save storageState to .auth/ directory. In playwright.config, declare a 'setup' project as a dependency. Build a fixture that checks if the stored token is expired (decode JWT exp) before each test and re-authenticates if stale.",
+    exampleIO: "Input: playwright.config with setup project → 3 role auth files → test suites using storageState per role\nOutput: Admin tests use admin session, editor tests use editor session, viewer tests use viewer session — all sessions validated before use",
+    hints: [
+      "storageState files contain session tokens — NEVER commit them to version control",
+      "Use projects with dependencies in playwright.config: { name: 'setup', testMatch: /.*\\.setup\\.ts/ }",
+      "Decode the JWT exp claim to check if the token is still valid before reusing storageState"
+    ],
+    sampleAnswer: "// auth.setup.ts — runs once before all test projects\nconst { test: setup } = require('@playwright/test');\nconst path = require('path');\nconst fs = require('fs');\n\nconst AUTH_DIR = path.join(__dirname, '../.auth');\nif (!fs.existsSync(AUTH_DIR)) fs.mkdirSync(AUTH_DIR);\n\nconst roles = [\n  { name: 'admin', user: 'admin@test.com', pass: 'admin123' },\n  { name: 'editor', user: 'editor@test.com', pass: 'editor123' },\n  { name: 'viewer', user: 'viewer@test.com', pass: 'viewer123' }\n];\n\nfor (const role of roles) {\n  setup(`authenticate as ${role.name}`, async ({ page }) => {\n    const statePath = path.join(AUTH_DIR, `${role.name}.json`);\n\n    // Check if existing state is still valid\n    if (isTokenValid(statePath)) return;\n\n    await page.goto('/login');\n    await page.getByLabel('Email').fill(role.user);\n    await page.getByLabel('Password').fill(role.pass);\n    await page.getByRole('button', { name: 'Sign in' }).click();\n    await page.waitForURL('/dashboard');\n    await page.context().storageState({ path: statePath });\n  });\n}\n\nfunction isTokenValid(statePath) {\n  try {\n    const state = JSON.parse(fs.readFileSync(statePath, 'utf-8'));\n    const cookies = state.cookies || [];\n    const session = cookies.find(c => c.name === 'session');\n    if (!session) return false;\n\n    // Decode JWT to check expiration\n    const payload = JSON.parse(\n      Buffer.from(session.value.split('.')[1], 'base64').toString()\n    );\n    return payload.exp * 1000 > Date.now() + 60000; // 1min buffer\n  } catch { return false; }\n}\n\n// playwright.config.ts excerpt\n// projects: [\n//   { name: 'setup', testMatch: /.*\\.setup\\.ts/ },\n//   { name: 'admin', use: { storageState: '.auth/admin.json' },\n//     dependencies: ['setup'] },\n//   { name: 'editor', use: { storageState: '.auth/editor.json' },\n//     dependencies: ['setup'] },\n//   { name: 'viewer', use: { storageState: '.auth/viewer.json' },\n//     dependencies: ['setup'] }\n// ]\n\nmodule.exports = { setup, roles, isTokenValid };"
+  },
+  {
+    id: 25,
+    title: "Smart Locator Strategy Engine",
+    description: "Build a utility that analyzes a page and scores the resilience of locator strategies. Given a target element, rank possible selectors (getByRole, getByLabel, getByTestId, CSS, XPath) by reliability. Refactor brittle selectors to user-facing locators and explain auto-waiting behavior.",
+    difficulty: "Easy",
+    level: "Staff",
+    category: "Playwright",
+    timeMinutes: 30,
+    approach: "For each element, evaluate available attributes (role, aria-label, text content, test-id, CSS class). Score each strategy: getByRole > getByLabel > getByText > getByTestId > CSS > XPath. Return ranked recommendations with actionability check explanation.",
+    exampleIO: "Input: <button class=\"btn-primary j3kx\" aria-label=\"Submit order\" data-testid=\"submit-btn\">Place Order</button>\nOutput: [{strategy: 'getByRole', locator: 'getByRole(\"button\", {name: \"Submit order\"})', score: 95}, {strategy: 'getByText', locator: 'getByText(\"Place Order\")', score: 80}, {strategy: 'getByTestId', locator: 'getByTestId(\"submit-btn\")', score: 70}, {strategy: 'CSS', locator: '.btn-primary', score: 30}]",
+    hints: [
+      "getByRole is preferred because it mirrors assistive technology — making tests accessible AND resilient",
+      "CSS classes like 'btn-primary j3kx' are fragile — the hash changes on rebuild",
+      "Playwright's auto-wait checks: visible, stable, enabled, not obscured, receives events — in that order"
+    ],
+    sampleAnswer: "function scoreLocatorStrategies(element) {\n  const strategies = [];\n  const { role, ariaLabel, textContent, testId, cssClass, tagName } = element;\n\n  // 1. getByRole — best: accessible + resilient\n  if (role || ['button','link','heading','textbox','checkbox'].includes(tagName)) {\n    const effectiveRole = role || tagName;\n    const locator = ariaLabel\n      ? `getByRole('${effectiveRole}', { name: '${ariaLabel}' })`\n      : `getByRole('${effectiveRole}')`;\n    strategies.push({\n      strategy: 'getByRole',\n      locator,\n      score: ariaLabel ? 95 : 80,\n      reason: 'Mirrors assistive technology, survives refactors'\n    });\n  }\n\n  // 2. getByLabel — great for form inputs\n  if (ariaLabel) {\n    strategies.push({\n      strategy: 'getByLabel',\n      locator: `getByLabel('${ariaLabel}')`,\n      score: 85,\n      reason: 'Tied to accessible label, not DOM structure'\n    });\n  }\n\n  // 3. getByText — good for unique visible text\n  if (textContent && textContent.length < 50) {\n    strategies.push({\n      strategy: 'getByText',\n      locator: `getByText('${textContent}')`,\n      score: 75,\n      reason: 'User-visible text, but may match multiple elements'\n    });\n  }\n\n  // 4. getByTestId — OK: stable but not user-facing\n  if (testId) {\n    strategies.push({\n      strategy: 'getByTestId',\n      locator: `getByTestId('${testId}')`,\n      score: 65,\n      reason: 'Stable contract, but not accessible — needs dev cooperation'\n    });\n  }\n\n  // 5. CSS — fragile\n  if (cssClass) {\n    const hasHash = /[a-z0-9]{5,}/.test(cssClass);\n    strategies.push({\n      strategy: 'CSS',\n      locator: `.${cssClass.split(' ')[0]}`,\n      score: hasHash ? 15 : 40,\n      reason: hasHash ? 'Contains hash — breaks on rebuild' : 'Semantic class, somewhat stable'\n    });\n  }\n\n  return strategies.sort((a, b) => b.score - a.score);\n}\n\n// Auto-waiting actionability checks reference:\n// 1. Visible — element has non-zero bounding box\n// 2. Stable — not mid-animation (two frames same position)\n// 3. Enabled — not disabled attribute\n// 4. Not obscured — no overlay blocking click point\n// 5. Receives events — hit test at click point returns element"
+  },
+  {
+    id: 26,
+    title: "Deduplicate Test Results",
+    description: "Given an array of test result objects with possible duplicates (same test ID run multiple times), return only the latest result per test ID. Preserve the order of first appearance.",
+    difficulty: "Easy",
+    level: "Senior",
+    category: "DSA for QE",
+    timeMinutes: 20,
+    approach: "Use a HashMap keyed by testId to store the latest result. Iterate once, overwriting on each occurrence. Then collect values preserving first-seen order.",
+    exampleIO: "Input: [{id:'t1', status:'fail', ts:1}, {id:'t2', status:'pass', ts:2}, {id:'t1', status:'pass', ts:3}]\nOutput: [{id:'t1', status:'pass', ts:3}, {id:'t2', status:'pass', ts:2}]",
+    hints: [
+      "A Map preserves insertion order — use it to track first appearance",
+      "Always overwrite the value so you keep the latest result per ID",
+      "One pass through the array is enough — O(n) time"
+    ],
+    sampleAnswer: "function deduplicateResults(results) {\n  const map = new Map();\n  const order = [];\n\n  for (const r of results) {\n    if (!map.has(r.id)) {\n      order.push(r.id);\n    }\n    map.set(r.id, r);\n  }\n\n  return order.map(id => map.get(id));\n}"
+  },
+  {
+    id: 27,
+    title: "Merge Sorted Test Logs",
+    description: "Merge two sorted arrays of timestamped test log entries into a single sorted array. Each entry has a timestamp and message. Achieve O(n+m) time without re-sorting.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "DSA for QE",
+    timeMinutes: 25,
+    approach: "Classic two-pointer merge. Maintain one pointer per array, compare timestamps, push the smaller one, advance that pointer. Append remaining elements from whichever array isn't exhausted.",
+    exampleIO: "Input: logsA=[{ts:1,msg:'start'},{ts:4,msg:'pass'}], logsB=[{ts:2,msg:'setup'},{ts:3,msg:'run'}]\nOutput: [{ts:1,msg:'start'},{ts:2,msg:'setup'},{ts:3,msg:'run'},{ts:4,msg:'pass'}]",
+    hints: [
+      "Two pointers — one for each array — is the key pattern",
+      "Compare timestamps at both pointers, push the smaller, advance that pointer",
+      "Don't forget to flush the remaining elements after one array is exhausted"
+    ],
+    sampleAnswer: "function mergeSortedLogs(logsA, logsB) {\n  const merged = [];\n  let i = 0, j = 0;\n\n  while (i < logsA.length && j < logsB.length) {\n    if (logsA[i].ts <= logsB[j].ts) {\n      merged.push(logsA[i++]);\n    } else {\n      merged.push(logsB[j++]);\n    }\n  }\n\n  while (i < logsA.length) merged.push(logsA[i++]);\n  while (j < logsB.length) merged.push(logsB[j++]);\n\n  return merged;\n}"
+  },
+  {
+    id: 28,
+    title: "Find Missing Test Coverage",
+    description: "Given a list of all modules in the codebase and a list of modules that have tests, find which modules are missing test coverage. Return them sorted alphabetically.",
+    difficulty: "Easy",
+    level: "Senior",
+    category: "DSA for QE",
+    timeMinutes: 15,
+    approach: "Put all tested modules into a Set. Iterate all modules and collect those not in the Set. Sort the result alphabetically.",
+    exampleIO: "Input: allModules=['auth','cart','payment','search','user'], testedModules=['auth','user','cart']\nOutput: ['payment','search']",
+    hints: [
+      "A Set gives O(1) lookup — much faster than Array.includes() for large lists",
+      "Build the Set from the smaller list (testedModules), iterate the larger list",
+      "Don't forget to sort the output"
+    ],
+    sampleAnswer: "function findMissingCoverage(allModules, testedModules) {\n  const testedSet = new Set(testedModules);\n  const missing = allModules.filter(m => !testedSet.has(m));\n  return missing.sort();\n}"
+  },
+  {
+    id: 29,
+    title: "Balanced Test Suite Partitioning",
+    description: "Split an array of tests (each with a duration) into N runner buckets so that the maximum bucket duration is minimised. This is the classic load-balancing / multiprocessor scheduling problem.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "DSA for QE",
+    timeMinutes: 35,
+    approach: "Sort tests by duration descending. Greedily assign each test to the bucket with the smallest current total (Longest Processing Time first heuristic). Use a min-comparison to pick the lightest bucket.",
+    exampleIO: "Input: tests=[{name:'A',dur:10},{name:'B',dur:7},{name:'C',dur:6},{name:'D',dur:5},{name:'E',dur:3}], runners=2\nOutput: [{runner:0, tests:['A','C','E'], total:19}, {runner:1, tests:['B','D'], total:12}]",
+    hints: [
+      "Sort descending by duration first — this is the LPT (Longest Processing Time) heuristic",
+      "Always assign the next test to the runner with the smallest current total",
+      "This greedy approach gives a good approximation — optimal partitioning is NP-hard"
+    ],
+    sampleAnswer: "function partitionTests(tests, runners) {\n  const sorted = [...tests].sort((a, b) => b.dur - a.dur);\n  const buckets = Array.from({ length: runners }, (_, i) => ({\n    runner: i,\n    tests: [],\n    total: 0\n  }));\n\n  for (const test of sorted) {\n    // Find bucket with smallest total\n    let minBucket = buckets[0];\n    for (const b of buckets) {\n      if (b.total < minBucket.total) minBucket = b;\n    }\n    minBucket.tests.push(test.name);\n    minBucket.total += test.dur;\n  }\n\n  return buckets;\n}"
+  },
+  {
+    id: 30,
+    title: "Test Execution Order (Topological Sort)",
+    description: "Given a map of tests and their dependencies, produce a valid execution order using topological sort. Detect and report circular dependencies that would make execution impossible.",
+    difficulty: "Hard",
+    level: "Principal",
+    category: "DSA for QE",
+    timeMinutes: 40,
+    approach: "Build an adjacency list and in-degree map. Use Kahn's algorithm (BFS with queue of zero-in-degree nodes). If the sorted result has fewer nodes than the graph, a cycle exists — report involved nodes.",
+    exampleIO: "Input: {login:[], dashboard:['login'], profile:['login'], settings:['dashboard','profile']}\nOutput: {order:['login','dashboard','profile','settings'], hasCycle:false}\n\nInput (cycle): {A:['B'], B:['C'], C:['A']}\nOutput: {order:[], hasCycle:true, cycle:['A','B','C']}",
+    hints: [
+      "Kahn's algorithm: start with nodes that have zero in-degree (no dependencies)",
+      "Process the queue — for each node, decrement in-degree of its dependents",
+      "If result.length < total nodes, there's a cycle — the remaining nodes are involved"
+    ],
+    sampleAnswer: "function topologicalSort(deps) {\n  const inDegree = {};\n  const adj = {};\n  const allNodes = new Set();\n\n  // Build graph\n  for (const [node, dependencies] of Object.entries(deps)) {\n    allNodes.add(node);\n    if (!adj[node]) adj[node] = [];\n    if (!inDegree[node]) inDegree[node] = 0;\n    for (const dep of dependencies) {\n      allNodes.add(dep);\n      if (!adj[dep]) adj[dep] = [];\n      adj[dep].push(node);\n      inDegree[node] = (inDegree[node] || 0) + 1;\n      if (!inDegree[dep]) inDegree[dep] = 0;\n    }\n  }\n\n  // Kahn's BFS\n  const queue = [];\n  for (const node of allNodes) {\n    if (inDegree[node] === 0) queue.push(node);\n  }\n\n  const order = [];\n  while (queue.length > 0) {\n    const node = queue.shift();\n    order.push(node);\n    for (const neighbor of (adj[node] || [])) {\n      inDegree[neighbor]--;\n      if (inDegree[neighbor] === 0) queue.push(neighbor);\n    }\n  }\n\n  if (order.length < allNodes.size) {\n    const cycle = [...allNodes].filter(n => !order.includes(n));\n    return { order: [], hasCycle: true, cycle };\n  }\n\n  return { order, hasCycle: false };\n}"
+  },
+  {
+    id: 31,
+    title: "Longest Passing Streak",
+    description: "Given an array of test run results (pass/fail), find the longest consecutive run of passing tests. Return the start index, end index, and length of the streak.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "DSA for QE",
+    timeMinutes: 20,
+    approach: "Sliding window / running counter. Track current streak start and length. When you hit a pass, extend. When you hit a fail, reset. Keep track of the best streak seen so far.",
+    exampleIO: "Input: ['pass','pass','fail','pass','pass','pass','fail','pass']\nOutput: {startIndex:3, endIndex:5, length:3}",
+    hints: [
+      "You don't need a literal sliding window — a simple running counter works",
+      "Reset the counter and start index whenever you encounter a 'fail'",
+      "Update the best result whenever the current streak exceeds the previous best"
+    ],
+    sampleAnswer: "function longestPassingStreak(results) {\n  let best = { startIndex: -1, endIndex: -1, length: 0 };\n  let currentStart = 0;\n  let currentLen = 0;\n\n  for (let i = 0; i < results.length; i++) {\n    if (results[i] === 'pass') {\n      if (currentLen === 0) currentStart = i;\n      currentLen++;\n      if (currentLen > best.length) {\n        best = {\n          startIndex: currentStart,\n          endIndex: i,\n          length: currentLen\n        };\n      }\n    } else {\n      currentLen = 0;\n    }\n  }\n\n  return best;\n}"
+  },
+  {
+    id: 32,
+    title: "Group Similar Error Messages",
+    description: "Given an array of test failure error messages, group similar ones together by normalising away variable parts (numbers, UUIDs, timestamps, file paths). Return groups with count and a representative message.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "DSA for QE",
+    timeMinutes: 30,
+    approach: "Normalise each message by replacing numbers, UUIDs, hex strings, and file paths with placeholders. Use the normalised string as a HashMap key. Group originals under each key and return with counts.",
+    exampleIO: "Input: ['Timeout after 3000ms on /api/users/42', 'Timeout after 5000ms on /api/users/99', 'Element #btn-submit not found', 'Element #btn-cancel not found']\nOutput: [{pattern:'Timeout after <NUM>ms on /api/users/<NUM>', count:2}, {pattern:'Element #btn-<ID> not found', count:2}]",
+    hints: [
+      "Replace numbers with <NUM>, UUIDs with <UUID>, hex strings with <HEX>",
+      "The normalised string becomes your hash key — identical keys = same group",
+      "Sort output by count descending so the noisiest errors surface first"
+    ],
+    sampleAnswer: "function groupSimilarErrors(errors) {\n  const groups = new Map();\n\n  function normalise(msg) {\n    return msg\n      .replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi, '<UUID>')\n      .replace(/0x[0-9a-f]+/gi, '<HEX>')\n      .replace(/\\d+/g, '<NUM>')\n      .replace(/\\/[\\w.-]+\\/[\\w.-]+/g, '/<PATH>');\n  }\n\n  for (const err of errors) {\n    const key = normalise(err);\n    if (!groups.has(key)) {\n      groups.set(key, { pattern: key, count: 0, examples: [] });\n    }\n    const group = groups.get(key);\n    group.count++;\n    if (group.examples.length < 2) group.examples.push(err);\n  }\n\n  return [...groups.values()].sort((a, b) => b.count - a.count);\n}"
+  },
+  {
+    id: 33,
+    title: "Rate-Limited Test Runner",
+    description: "Implement a rate-limited function executor that processes API test calls respecting a max-requests-per-second limit. Use a queue to buffer incoming requests and release them at the allowed rate.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "DSA for QE",
+    timeMinutes: 30,
+    approach: "Maintain a queue of pending requests and a timestamp window. On each call, check if the window allows another request. If yes, execute immediately. If not, schedule it after the window resets. Use a sliding window of recent call timestamps.",
+    exampleIO: "Input: rateLimiter(3) — allows 3 calls/second; then call execute() 7 times rapidly\nOutput: First 3 execute immediately, next 3 execute after 1 second, last 1 executes after 2 seconds",
+    hints: [
+      "Track timestamps of recent calls in an array or deque",
+      "Remove timestamps older than 1 second from the window before checking capacity",
+      "Use setTimeout to schedule calls that exceed the current window"
+    ],
+    sampleAnswer: "class RateLimitedRunner {\n  constructor(maxPerSecond) {\n    this.maxPerSecond = maxPerSecond;\n    this.queue = [];\n    this.timestamps = [];\n    this.processing = false;\n  }\n\n  async execute(fn) {\n    return new Promise((resolve, reject) => {\n      this.queue.push({ fn, resolve, reject });\n      this.processQueue();\n    });\n  }\n\n  async processQueue() {\n    if (this.processing) return;\n    this.processing = true;\n\n    while (this.queue.length > 0) {\n      // Clean old timestamps outside 1-second window\n      const now = Date.now();\n      this.timestamps = this.timestamps.filter(t => now - t < 1000);\n\n      if (this.timestamps.length < this.maxPerSecond) {\n        const { fn, resolve, reject } = this.queue.shift();\n        this.timestamps.push(Date.now());\n        try {\n          const result = await fn();\n          resolve(result);\n        } catch (e) {\n          reject(e);\n        }\n      } else {\n        // Wait until the oldest timestamp expires\n        const waitTime = 1000 - (now - this.timestamps[0]);\n        await new Promise(r => setTimeout(r, waitTime));\n      }\n    }\n\n    this.processing = false;\n  }\n}"
+  },
+  {
+    id: 34,
+    title: "Shortest Path Through Test Pipeline",
+    description: "Model a CI/CD pipeline as a weighted directed graph where nodes are stages and edges have duration costs. Find the fastest (shortest) path from the 'start' stage to the 'deploy' stage using BFS/Dijkstra.",
+    difficulty: "Hard",
+    level: "Principal",
+    category: "DSA for QE",
+    timeMinutes: 40,
+    approach: "Build a weighted adjacency list. Use Dijkstra's algorithm with a min-heap (or simple priority queue) to find the shortest path from start to deploy. Track predecessors to reconstruct the path.",
+    exampleIO: "Input: {start:{build:2,lint:1}, lint:{test:3}, build:{test:2,scan:4}, test:{deploy:1}, scan:{deploy:2}}\nOutput: {path:['start','build','test','deploy'], totalTime:5}",
+    hints: [
+      "Dijkstra's algorithm works for non-negative edge weights — perfect for durations",
+      "Use a distances map initialised to Infinity for all nodes except the source (0)",
+      "Track a predecessors map to reconstruct the actual path after finding the shortest distance"
+    ],
+    sampleAnswer: "function shortestPipelinePath(graph, start, end) {\n  const dist = {};\n  const prev = {};\n  const visited = new Set();\n\n  // Collect all nodes\n  const nodes = new Set();\n  for (const [from, edges] of Object.entries(graph)) {\n    nodes.add(from);\n    for (const to of Object.keys(edges)) nodes.add(to);\n  }\n\n  for (const node of nodes) dist[node] = Infinity;\n  dist[start] = 0;\n\n  while (true) {\n    // Pick unvisited node with smallest distance\n    let current = null;\n    let minDist = Infinity;\n    for (const node of nodes) {\n      if (!visited.has(node) && dist[node] < minDist) {\n        current = node;\n        minDist = dist[node];\n      }\n    }\n\n    if (current === null || current === end) break;\n    visited.add(current);\n\n    // Relax neighbors\n    for (const [neighbor, weight] of Object.entries(graph[current] || {})) {\n      const newDist = dist[current] + weight;\n      if (newDist < dist[neighbor]) {\n        dist[neighbor] = newDist;\n        prev[neighbor] = current;\n      }\n    }\n  }\n\n  // Reconstruct path\n  const path = [];\n  let node = end;\n  while (node) {\n    path.unshift(node);\n    node = prev[node];\n  }\n\n  return {\n    path: path[0] === start ? path : [],\n    totalTime: dist[end] === Infinity ? -1 : dist[end]\n  };\n}"
+  },
+  {
+    id: 35,
+    title: "Binary Search on Build Bisect",
+    description: "Given an array of build commit hashes in chronological order and a function that checks if a build is 'good' or 'bad', find the first bad commit using binary search. This mirrors git bisect.",
+    difficulty: "Easy",
+    level: "Senior",
+    category: "DSA for QE",
+    timeMinutes: 20,
+    approach: "Classic binary search. The array is sorted by time — all good builds come before all bad builds. Binary search for the transition point where isBad flips from false to true.",
+    exampleIO: "Input: commits=['c1','c2','c3','c4','c5','c6'], isBad('c4')=true (c1-c3 good, c4-c6 bad)\nOutput: {firstBadCommit:'c4', checksPerformed:3}",
+    hints: [
+      "This is exactly the 'first bad version' problem — classic binary search",
+      "The invariant: all commits before the answer are good, all after (inclusive) are bad",
+      "You can find the answer in O(log n) checks instead of O(n)"
+    ],
+    sampleAnswer: "function findFirstBadCommit(commits, isBad) {\n  let lo = 0;\n  let hi = commits.length - 1;\n  let checks = 0;\n\n  while (lo < hi) {\n    const mid = Math.floor((lo + hi) / 2);\n    checks++;\n    if (isBad(commits[mid])) {\n      hi = mid; // bad — answer is mid or earlier\n    } else {\n      lo = mid + 1; // good — answer is after mid\n    }\n  }\n\n  return {\n    firstBadCommit: commits[lo],\n    checksPerformed: checks\n  };\n}"
+  },
+  {
+    id: 36,
+    title: "LRU Cache for Test Fixtures",
+    description: "Implement an LRU (Least Recently Used) cache to store expensive test fixtures (database snapshots, browser contexts). When the cache is full, evict the least recently used fixture. Support get and put with O(1) operations.",
+    difficulty: "Hard",
+    level: "Principal",
+    category: "DSA for QE",
+    timeMinutes: 40,
+    approach: "Use a doubly-linked list for access order and a HashMap for O(1) key lookup. On get/put, move the node to the head (most recent). On eviction, remove from the tail (least recent).",
+    exampleIO: "Input: cache=LRU(3); cache.put('dbSnap',data1); cache.put('browser',data2); cache.put('authState',data3); cache.get('dbSnap'); cache.put('apiMock',data4);\nOutput: 'browser' evicted (least recent after dbSnap was accessed), cache contains: dbSnap, authState, apiMock",
+    hints: [
+      "A Map in JS preserves insertion order — you can use it as a simple LRU",
+      "On access: delete the key and re-insert it to move it to the end (most recent)",
+      "On eviction: map.keys().next().value gives the oldest (least recent) key"
+    ],
+    sampleAnswer: "class LRUFixtureCache {\n  constructor(capacity) {\n    this.capacity = capacity;\n    this.cache = new Map();\n  }\n\n  get(key) {\n    if (!this.cache.has(key)) return null;\n    // Move to most recent\n    const value = this.cache.get(key);\n    this.cache.delete(key);\n    this.cache.set(key, value);\n    return value;\n  }\n\n  put(key, value) {\n    if (this.cache.has(key)) {\n      this.cache.delete(key);\n    } else if (this.cache.size >= this.capacity) {\n      // Evict least recently used (first key)\n      const lruKey = this.cache.keys().next().value;\n      const evicted = this.cache.get(lruKey);\n      this.cache.delete(lruKey);\n      // Call teardown if fixture has one\n      if (evicted && typeof evicted.teardown === 'function') {\n        evicted.teardown();\n      }\n    }\n    this.cache.set(key, value);\n  }\n\n  has(key) {\n    return this.cache.has(key);\n  }\n\n  size() {\n    return this.cache.size;\n  }\n\n  clear() {\n    for (const [key, value] of this.cache) {\n      if (value && typeof value.teardown === 'function') {\n        value.teardown();\n      }\n    }\n    this.cache.clear();\n  }\n}"
+  },
+  {
+    id: 37,
+    title: "Frequency-Based Test Prioritisation",
+    description: "Given historical test results, build a priority queue that runs the most-frequently-failing tests first. Use a max-heap keyed by failure count so the flakiest tests get executed earliest in the pipeline.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "DSA for QE",
+    timeMinutes: 30,
+    approach: "Count failures per test using a HashMap. Insert into a max-heap (or sort by failure count descending). Extract in priority order. This is the frequency counting + heap pattern.",
+    exampleIO: "Input: history=[{test:'login',status:'fail'},{test:'login',status:'fail'},{test:'cart',status:'fail'},{test:'search',status:'pass'},{test:'cart',status:'pass'},{test:'login',status:'pass'}]\nOutput: [{test:'login', failures:2, priority:1}, {test:'cart', failures:1, priority:2}, {test:'search', failures:0, priority:3}]",
+    hints: [
+      "First pass: count failures per test in a HashMap",
+      "Second pass: sort by failure count descending (or use a heap for large N)",
+      "Assign priority rank after sorting — rank 1 = most failures = run first"
+    ],
+    sampleAnswer: "function prioritiseByFailures(history) {\n  const failCounts = new Map();\n  const allTests = new Set();\n\n  for (const entry of history) {\n    allTests.add(entry.test);\n    if (entry.status === 'fail') {\n      failCounts.set(entry.test, (failCounts.get(entry.test) || 0) + 1);\n    }\n  }\n\n  const tests = [...allTests].map(test => ({\n    test,\n    failures: failCounts.get(test) || 0\n  }));\n\n  // Sort by failures descending (simulates max-heap extraction)\n  tests.sort((a, b) => b.failures - a.failures);\n\n  // Assign priority rank\n  return tests.map((t, i) => ({\n    ...t,\n    priority: i + 1\n  }));\n}"
+  },
+  {
+    id: 38,
+    title: "k6 Load Test Script Builder",
+    description: "Build a k6 script generator that takes endpoint configuration (URL, method, headers, payload) and outputs a load test script with stages (ramp-up, steady, ramp-down). Include thresholds for p95 response time and error rate.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "Performance & Load Testing",
+    timeMinutes: 35,
+    approach: "Accept endpoint config and stage params. Generate a k6 script string with stages array, default function making HTTP calls, thresholds for p95 and error rate, and sleep between iterations.",
+    exampleIO: "Input: {url:'/api/users', method:'GET', stages:[{dur:'30s',target:10},{dur:'1m',target:50},{dur:'30s',target:0}], thresholds:{p95:500,errorRate:0.01}}\nOutput: k6 script string with options.stages, options.thresholds, and default function",
+    hints: [
+      "k6 stages format: [{duration:'30s', target:10}, ...] for ramp-up/down patterns",
+      "Thresholds use strings like 'p(95)<500' for latency and 'rate<0.01' for errors",
+      "Include sleep(1) between iterations to simulate realistic user pacing"
+    ],
+    sampleAnswer: "function generateK6Script(config) {\n  const { url, method = 'GET', headers = {}, payload, stages, thresholds } = config;\n\n  const stagesStr = stages.map(s =>\n    `    { duration: '${s.dur}', target: ${s.target} }`\n  ).join(',\\n');\n\n  const headersStr = Object.keys(headers).length > 0\n    ? `\\n    headers: ${JSON.stringify(headers)},` : '';\n\n  const payloadStr = payload\n    ? `\\n    body: JSON.stringify(${JSON.stringify(payload)}),` : '';\n\n  const thresholdEntries = [];\n  if (thresholds.p95) thresholdEntries.push(`    http_req_duration: ['p(95)<${thresholds.p95}']`);\n  if (thresholds.errorRate) thresholdEntries.push(`    http_req_failed: ['rate<${thresholds.errorRate}']`);\n\n  return `import http from 'k6/http';\nimport { sleep, check } from 'k6';\n\nexport const options = {\n  stages: [\n${stagesStr}\n  ],\n  thresholds: {\n${thresholdEntries.join(',\\n')}\n  }\n};\n\nexport default function () {\n  const res = http.${method.toLowerCase()}('${url}', {${headersStr}${payloadStr}\n  });\n\n  check(res, {\n    'status is 200': (r) => r.status === 200,\n    'response time < ${thresholds.p95 || 500}ms': (r) => r.timings.duration < ${thresholds.p95 || 500},\n  });\n\n  sleep(1);\n}`;\n}"
+  },
+  {
+    id: 39,
+    title: "Percentile Calculator (P50/P95/P99)",
+    description: "Given an array of response times, calculate P50, P95, and P99 percentiles without using libraries. Use the sort-and-index approach to find exact percentile values.",
+    difficulty: "Easy",
+    level: "Senior",
+    category: "Performance & Load Testing",
+    timeMinutes: 20,
+    approach: "Sort the array ascending. For each percentile P, calculate the index as Math.ceil(P/100 * length) - 1. Return the value at that index. Handle edge cases for empty arrays.",
+    exampleIO: "Input: [120, 450, 200, 310, 95, 180, 400, 250, 500, 150, 280, 350, 190, 220, 160, 300, 420, 380, 270, 140]\nOutput: {p50: 260, p95: 475, p99: 500}",
+    hints: [
+      "Sort the array first — percentiles require ordered data",
+      "Index formula: Math.ceil(percentile / 100 * length) - 1",
+      "P50 is the median, P95 means 95% of values are at or below this value"
+    ],
+    sampleAnswer: "function calculatePercentiles(responseTimes) {\n  if (responseTimes.length === 0) {\n    return { p50: 0, p95: 0, p99: 0 };\n  }\n\n  const sorted = [...responseTimes].sort((a, b) => a - b);\n  const len = sorted.length;\n\n  function percentile(p) {\n    const idx = Math.ceil((p / 100) * len) - 1;\n    return sorted[Math.max(0, idx)];\n  }\n\n  return {\n    p50: percentile(50),\n    p95: percentile(95),\n    p99: percentile(99)\n  };\n}"
+  },
+  {
+    id: 40,
+    title: "Throughput Bottleneck Detector",
+    description: "Analyze request logs to identify which endpoint is the throughput bottleneck. Calculate requests per second per endpoint, flag those below a configurable threshold, and suggest parallelization opportunities.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "Performance & Load Testing",
+    timeMinutes: 30,
+    approach: "Group requests by endpoint. Calculate duration window and throughput (count / duration in seconds) per endpoint. Compare against threshold. Flag bottlenecks and rank by severity.",
+    exampleIO: "Input: {logs:[{endpoint:'/api/users',ts:1000},{endpoint:'/api/users',ts:1500},{endpoint:'/api/orders',ts:1000},{endpoint:'/api/orders',ts:3000}], threshold:1.0}\nOutput: {bottlenecks:[{endpoint:'/api/orders', rps:0.5, severity:'high'}], healthy:[{endpoint:'/api/users', rps:2.0}]}",
+    hints: [
+      "Group logs by endpoint, then find min/max timestamps per group to calculate duration",
+      "RPS = request count / (duration in seconds) — handle single-request endpoints",
+      "Severity: 'high' if < 50% of threshold, 'medium' if < threshold"
+    ],
+    sampleAnswer: "function detectBottlenecks(logs, threshold) {\n  const endpoints = {};\n\n  for (const log of logs) {\n    if (!endpoints[log.endpoint]) {\n      endpoints[log.endpoint] = { count: 0, minTs: Infinity, maxTs: -Infinity };\n    }\n    endpoints[log.endpoint].count++;\n    endpoints[log.endpoint].minTs = Math.min(endpoints[log.endpoint].minTs, log.ts);\n    endpoints[log.endpoint].maxTs = Math.max(endpoints[log.endpoint].maxTs, log.ts);\n  }\n\n  const bottlenecks = [];\n  const healthy = [];\n\n  for (const [endpoint, stats] of Object.entries(endpoints)) {\n    const durationSec = Math.max((stats.maxTs - stats.minTs) / 1000, 1);\n    const rps = parseFloat((stats.count / durationSec).toFixed(2));\n\n    if (rps < threshold) {\n      const severity = rps < threshold * 0.5 ? 'high' : 'medium';\n      bottlenecks.push({ endpoint, rps, severity });\n    } else {\n      healthy.push({ endpoint, rps });\n    }\n  }\n\n  bottlenecks.sort((a, b) => a.rps - b.rps);\n  return { bottlenecks, healthy };\n}"
+  },
+  {
+    id: 41,
+    title: "Soak Test Memory Leak Analyzer",
+    description: "Analyze memory snapshots taken at regular intervals during a soak test. Detect linear growth patterns indicating a memory leak versus stable usage. Calculate leak rate (MB/hour) and estimated time to OOM given a memory limit.",
+    difficulty: "Hard",
+    level: "Principal",
+    category: "Performance & Load Testing",
+    timeMinutes: 45,
+    approach: "Use linear regression (least squares) on memory snapshots over time. If slope is positive and R² is high (>0.8), it's a leak. Calculate leak rate from slope and time-to-OOM from (memLimit - current) / rate.",
+    exampleIO: "Input: {snapshots:[{ts:0,mb:200},{ts:60,mb:210},{ts:120,mb:218},{ts:180,mb:230},{ts:240,mb:238}], memLimitMB:512}\nOutput: {isLeak:true, leakRateMBPerHour:9.6, currentMB:238, timeToOOM:'28.5 hours', r2:0.98}",
+    hints: [
+      "Linear regression: slope = (n*sumXY - sumX*sumY) / (n*sumX2 - sumX^2)",
+      "R² (coefficient of determination) measures how well the line fits — >0.8 suggests a real trend",
+      "Time-to-OOM = (memLimit - lastSnapshot) / leakRatePerMinute, converted to hours"
+    ],
+    sampleAnswer: "function analyzeMemoryLeak(snapshots, memLimitMB) {\n  const n = snapshots.length;\n  if (n < 3) return { isLeak: false, reason: 'insufficient data' };\n\n  // Linear regression: y = memory, x = time in minutes\n  let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0, sumY2 = 0;\n  for (const s of snapshots) {\n    sumX += s.ts;\n    sumY += s.mb;\n    sumXY += s.ts * s.mb;\n    sumX2 += s.ts * s.ts;\n    sumY2 += s.mb * s.mb;\n  }\n\n  const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);\n  const intercept = (sumY - slope * sumX) / n;\n\n  // R² calculation\n  const meanY = sumY / n;\n  let ssRes = 0, ssTot = 0;\n  for (const s of snapshots) {\n    const predicted = slope * s.ts + intercept;\n    ssRes += (s.mb - predicted) ** 2;\n    ssTot += (s.mb - meanY) ** 2;\n  }\n  const r2 = ssTot === 0 ? 0 : parseFloat((1 - ssRes / ssTot).toFixed(2));\n\n  const leakRatePerMin = slope;\n  const leakRateMBPerHour = parseFloat((leakRatePerMin * 60).toFixed(1));\n  const currentMB = snapshots[n - 1].mb;\n  const isLeak = slope > 0.01 && r2 > 0.8;\n\n  let timeToOOM = null;\n  if (isLeak && leakRatePerMin > 0) {\n    const minsToOOM = (memLimitMB - currentMB) / leakRatePerMin;\n    timeToOOM = parseFloat((minsToOOM / 60).toFixed(1)) + ' hours';\n  }\n\n  return { isLeak, leakRateMBPerHour, currentMB, timeToOOM, r2 };\n}"
+  },
+  {
+    id: 42,
+    title: "Load Profile Generator",
+    description: "Generate different load profiles (ramp, spike, steady, stress) as arrays of concurrent-user counts over time intervals. Support configurable total duration, peak users, and ramp speed.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "Performance & Load Testing",
+    timeMinutes: 25,
+    approach: "For each profile type, calculate user count per time interval. Ramp: linear increase. Spike: sudden jump at midpoint. Steady: constant. Stress: staircase increments. Return array of {time, users} points.",
+    exampleIO: "Input: {type:'ramp', duration:60, peakUsers:100, intervals:6}\nOutput: [{time:0,users:0},{time:10,users:20},{time:20,users:40},{time:30,users:60},{time:40,users:80},{time:50,users:100}]",
+    hints: [
+      "Ramp: users = (time / duration) * peakUsers — linear interpolation",
+      "Spike: keep users low, then jump to peak at a specific interval, then drop back",
+      "Stress (staircase): increase by peakUsers/steps every N intervals, never decrease"
+    ],
+    sampleAnswer: "function generateLoadProfile(config) {\n  const { type, duration, peakUsers, intervals } = config;\n  const step = duration / intervals;\n  const points = [];\n\n  for (let i = 0; i < intervals; i++) {\n    const time = i * step;\n    let users = 0;\n\n    switch (type) {\n      case 'ramp':\n        users = Math.round((time / duration) * peakUsers);\n        break;\n      case 'spike':\n        if (i === Math.floor(intervals / 2)) users = peakUsers;\n        else if (i === Math.floor(intervals / 2) + 1) users = Math.round(peakUsers * 0.2);\n        else users = Math.round(peakUsers * 0.1);\n        break;\n      case 'steady':\n        users = peakUsers;\n        break;\n      case 'stress':\n        const stairStep = Math.floor(peakUsers / intervals);\n        users = Math.min(stairStep * (i + 1), peakUsers);\n        break;\n    }\n\n    points.push({ time: Math.round(time), users });\n  }\n\n  return points;\n}"
+  },
+  {
+    id: 43,
+    title: "Semantic Similarity Scorer",
+    description: "Compare two text outputs using cosine similarity on word-frequency vectors. Score 0-1 how semantically similar two LLM responses are. Used for regression testing LLM outputs when exact matching is impossible.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "AI/LLM Testing",
+    timeMinutes: 30,
+    approach: "Tokenise both texts into words, build frequency vectors, compute cosine similarity: dot(A,B) / (|A| * |B|). Normalise to 0-1 range. Handle empty inputs.",
+    exampleIO: "Input: textA='The quick brown fox jumps over the lazy dog', textB='A fast brown fox leaps over a sleepy dog'\nOutput: {score: 0.63, sharedTerms: ['brown','fox','over','dog'], verdict: 'similar'}",
+    hints: [
+      "Tokenise: lowercase, split on non-word chars, remove stop words for better signal",
+      "Build a frequency map for each text, then compute dot product over the union of all terms",
+      "Cosine similarity = dotProduct / (magnitudeA * magnitudeB)"
+    ],
+    sampleAnswer: "function semanticSimilarity(textA, textB) {\n  const stopWords = new Set(['the','a','an','is','are','was','were','in','on','at','to','for','of','and','or','but']);\n\n  function tokenise(text) {\n    return text.toLowerCase().split(/\\W+/).filter(w => w.length > 1 && !stopWords.has(w));\n  }\n\n  function freqMap(tokens) {\n    const map = {};\n    for (const t of tokens) map[t] = (map[t] || 0) + 1;\n    return map;\n  }\n\n  const tokensA = tokenise(textA);\n  const tokensB = tokenise(textB);\n  const freqA = freqMap(tokensA);\n  const freqB = freqMap(tokensB);\n\n  const allTerms = new Set([...Object.keys(freqA), ...Object.keys(freqB)]);\n\n  let dot = 0, magA = 0, magB = 0;\n  const sharedTerms = [];\n\n  for (const term of allTerms) {\n    const a = freqA[term] || 0;\n    const b = freqB[term] || 0;\n    dot += a * b;\n    magA += a * a;\n    magB += b * b;\n    if (a > 0 && b > 0) sharedTerms.push(term);\n  }\n\n  const magnitude = Math.sqrt(magA) * Math.sqrt(magB);\n  const score = magnitude === 0 ? 0 : parseFloat((dot / magnitude).toFixed(2));\n\n  let verdict = 'different';\n  if (score > 0.8) verdict = 'very similar';\n  else if (score > 0.5) verdict = 'similar';\n  else if (score > 0.3) verdict = 'somewhat similar';\n\n  return { score, sharedTerms, verdict };\n}"
+  },
+  {
+    id: 44,
+    title: "Hallucination Detector",
+    description: "Given a source document and an LLM response, identify claims in the response not supported by the source. Use sentence-level overlap analysis to detect fabricated facts. Return unsupported claims with confidence scores.",
+    difficulty: "Hard",
+    level: "Principal",
+    category: "AI/LLM Testing",
+    timeMinutes: 45,
+    approach: "Split response into sentences (claims). For each claim, compute word overlap with source sentences. If max overlap is below threshold, flag as unsupported. Confidence = 1 - maxOverlap. Return flagged claims sorted by confidence.",
+    exampleIO: "Input: source='Python was created by Guido van Rossum in 1991. It is an interpreted language.', response='Python was created by Guido van Rossum in 1991. It compiles to machine code. It was originally written in Java.'\nOutput: {supported:['Python was created by Guido van Rossum in 1991'], hallucinations:[{claim:'It compiles to machine code', confidence:0.85},{claim:'It was originally written in Java', confidence:0.90}]}",
+    hints: [
+      "Split both source and response into sentences using period/newline splitting",
+      "For each response sentence, find the source sentence with highest word overlap",
+      "If best overlap is below threshold (e.g., 0.4), classify as hallucination"
+    ],
+    sampleAnswer: "function detectHallucinations(source, response) {\n  const stopWords = new Set(['the','a','an','is','are','was','were','it','in','on','to','of','and','by']);\n\n  function sentences(text) {\n    return text.split(/[.!?]+/).map(s => s.trim()).filter(s => s.length > 3);\n  }\n\n  function keywords(sentence) {\n    return sentence.toLowerCase().split(/\\W+/).filter(w => w.length > 2 && !stopWords.has(w));\n  }\n\n  function overlap(wordsA, wordsB) {\n    if (wordsA.length === 0 || wordsB.length === 0) return 0;\n    const setB = new Set(wordsB);\n    const shared = wordsA.filter(w => setB.has(w)).length;\n    return shared / Math.max(wordsA.length, wordsB.length);\n  }\n\n  const sourceSentences = sentences(source);\n  const sourceKeywords = sourceSentences.map(s => keywords(s));\n  const responseSentences = sentences(response);\n\n  const supported = [];\n  const hallucinations = [];\n\n  for (const claim of responseSentences) {\n    const claimWords = keywords(claim);\n    let maxOverlap = 0;\n\n    for (const srcWords of sourceKeywords) {\n      const ov = overlap(claimWords, srcWords);\n      maxOverlap = Math.max(maxOverlap, ov);\n    }\n\n    if (maxOverlap >= 0.4) {\n      supported.push(claim);\n    } else {\n      hallucinations.push({\n        claim,\n        confidence: parseFloat((1 - maxOverlap).toFixed(2))\n      });\n    }\n  }\n\n  hallucinations.sort((a, b) => b.confidence - a.confidence);\n  return { supported, hallucinations };\n}"
+  },
+  {
+    id: 45,
+    title: "LLM-as-Judge Evaluator",
+    description: "Build an evaluation framework that scores LLM outputs on 4 dimensions: relevance, faithfulness, coherence, and completeness. Each dimension returns a 0-1 score using heuristic checks. Aggregate with configurable weights.",
+    difficulty: "Hard",
+    level: "Principal",
+    category: "AI/LLM Testing",
+    timeMinutes: 40,
+    approach: "For each dimension, implement a heuristic scorer: relevance (keyword overlap with query), faithfulness (overlap with source), coherence (sentence connectivity), completeness (covers key points). Aggregate using weighted sum.",
+    exampleIO: "Input: {query:'Explain REST APIs', source:'REST uses HTTP methods...', response:'REST APIs use HTTP methods like GET and POST...', weights:{relevance:0.3,faithfulness:0.3,coherence:0.2,completeness:0.2}}\nOutput: {scores:{relevance:0.85, faithfulness:0.78, coherence:0.90, completeness:0.70}, aggregate:0.81, grade:'B+'}",
+    hints: [
+      "Relevance: what percentage of query keywords appear in the response?",
+      "Faithfulness: how much of the response content is traceable to the source?",
+      "Coherence: do sentences flow logically? Check for transition words and consistent length"
+    ],
+    sampleAnswer: "function evaluateLLMOutput(config) {\n  const { query, source, response, weights } = config;\n\n  function keywords(text) {\n    const stops = new Set(['the','a','an','is','are','in','on','to','of','and','or','for','it','that','this']);\n    return text.toLowerCase().split(/\\W+/).filter(w => w.length > 2 && !stops.has(w));\n  }\n\n  function overlapScore(wordsA, wordsB) {\n    if (wordsA.length === 0) return 0;\n    const setB = new Set(wordsB);\n    return wordsA.filter(w => setB.has(w)).length / wordsA.length;\n  }\n\n  // Relevance: query keywords found in response\n  const queryWords = keywords(query);\n  const responseWords = keywords(response);\n  const relevance = parseFloat(overlapScore(queryWords, responseWords).toFixed(2));\n\n  // Faithfulness: response content traceable to source\n  const sourceWords = keywords(source);\n  const faithfulness = parseFloat(overlapScore(responseWords, sourceWords).toFixed(2));\n\n  // Coherence: sentence structure quality\n  const sentences = response.split(/[.!?]+/).filter(s => s.trim().length > 3);\n  const avgLen = sentences.reduce((sum, s) => sum + s.split(/\\s+/).length, 0) / Math.max(sentences.length, 1);\n  const lenVariance = sentences.reduce((sum, s) => sum + Math.abs(s.split(/\\s+/).length - avgLen), 0) / Math.max(sentences.length, 1);\n  const coherence = parseFloat(Math.min(1, Math.max(0, 1 - lenVariance / 20)).toFixed(2));\n\n  // Completeness: covers source key concepts\n  const sourceUnique = [...new Set(sourceWords)];\n  const completeness = parseFloat(overlapScore(sourceUnique, responseWords).toFixed(2));\n\n  const scores = { relevance, faithfulness, coherence, completeness };\n  const aggregate = parseFloat((\n    relevance * weights.relevance +\n    faithfulness * weights.faithfulness +\n    coherence * weights.coherence +\n    completeness * weights.completeness\n  ).toFixed(2));\n\n  const grade = aggregate >= 0.9 ? 'A' : aggregate >= 0.8 ? 'B+' : aggregate >= 0.7 ? 'B' : aggregate >= 0.6 ? 'C' : 'D';\n\n  return { scores, aggregate, grade };\n}"
+  },
+  {
+    id: 46,
+    title: "Prompt Regression Test Suite",
+    description: "Design a test runner that takes a set of prompts with expected quality thresholds, runs them against an LLM API mock, and reports regressions where the score dropped below threshold compared to a baseline.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "AI/LLM Testing",
+    timeMinutes: 35,
+    approach: "For each test case, call the mock LLM, score the output using keyword/length checks, compare against baseline and threshold. Report regressions (score < threshold), improvements, and stable results.",
+    exampleIO: "Input: {tests:[{prompt:'Explain caching',baseline:0.85,threshold:0.75}], mockLLM: fn}\nOutput: {total:1, passed:1, regressions:[], improvements:[], results:[{prompt:'Explain caching', score:0.82, baseline:0.85, status:'passed'}]}",
+    hints: [
+      "A regression is when the score drops below the threshold, not just below baseline",
+      "Score each output using simple heuristics: length adequacy, keyword presence, structure",
+      "Track delta from baseline to identify improvements too, not just failures"
+    ],
+    sampleAnswer: "function runPromptRegressionTests(testCases, mockLLM) {\n  const results = [];\n  const regressions = [];\n  const improvements = [];\n\n  for (const tc of testCases) {\n    const output = mockLLM(tc.prompt);\n\n    // Simple scoring: keyword coverage + length adequacy + structure\n    const expectedKeywords = tc.prompt.toLowerCase().split(/\\W+/).filter(w => w.length > 3);\n    const outputLower = output.toLowerCase();\n    const keywordHits = expectedKeywords.filter(k => outputLower.includes(k)).length;\n    const keywordScore = expectedKeywords.length > 0 ? keywordHits / expectedKeywords.length : 0;\n\n    const lengthScore = Math.min(1, output.length / 200);\n    const hasParagraphs = output.split('\\n').filter(l => l.trim().length > 0).length > 1 ? 1 : 0.5;\n\n    const score = parseFloat(((keywordScore * 0.4 + lengthScore * 0.3 + hasParagraphs * 0.3)).toFixed(2));\n    const delta = parseFloat((score - tc.baseline).toFixed(2));\n\n    let status = 'passed';\n    if (score < tc.threshold) {\n      status = 'regression';\n      regressions.push({ prompt: tc.prompt, score, threshold: tc.threshold, delta });\n    } else if (score > tc.baseline + 0.05) {\n      status = 'improved';\n      improvements.push({ prompt: tc.prompt, score, baseline: tc.baseline, delta });\n    }\n\n    results.push({ prompt: tc.prompt, score, baseline: tc.baseline, delta, status });\n  }\n\n  return {\n    total: testCases.length,\n    passed: results.filter(r => r.status !== 'regression').length,\n    regressions,\n    improvements,\n    results\n  };\n}"
+  },
+  {
+    id: 47,
+    title: "Non-Deterministic Output Validator",
+    description: "Validate LLM outputs without exact matching. Implement 3 validation strategies: keyword presence check, structural format validation (JSON/list/paragraph), and length-within-bounds check. Return composite pass/fail with per-strategy results.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "AI/LLM Testing",
+    timeMinutes: 25,
+    approach: "Run each strategy independently against the output. Keyword: check required words exist. Structure: detect if output matches expected format (JSON parseable, has bullet points, or is prose). Length: within min/max bounds. Aggregate into composite result.",
+    exampleIO: "Input: {output:'{\"name\":\"John\",\"age\":30}', rules:{keywords:['name','age'], format:'json', minLen:10, maxLen:500}}\nOutput: {passed:true, strategies:{keywords:{passed:true,found:['name','age']}, format:{passed:true,detected:'json'}, length:{passed:true,actual:28}}}",
+    hints: [
+      "For JSON detection: try JSON.parse() in a try/catch — if it parses, it's valid JSON",
+      "For list detection: check for lines starting with '- ', '* ', or numbered patterns",
+      "All three strategies must pass for the composite to pass — fail fast is fine"
+    ],
+    sampleAnswer: "function validateLLMOutput(output, rules) {\n  const strategies = {};\n\n  // 1. Keyword presence\n  if (rules.keywords) {\n    const lower = output.toLowerCase();\n    const found = rules.keywords.filter(k => lower.includes(k.toLowerCase()));\n    const missing = rules.keywords.filter(k => !lower.includes(k.toLowerCase()));\n    strategies.keywords = {\n      passed: missing.length === 0,\n      found,\n      missing\n    };\n  }\n\n  // 2. Format validation\n  if (rules.format) {\n    let detected = 'unknown';\n    let passed = false;\n\n    if (rules.format === 'json') {\n      try {\n        JSON.parse(output);\n        detected = 'json';\n        passed = true;\n      } catch { detected = 'not json'; }\n    } else if (rules.format === 'list') {\n      const lines = output.split('\\n');\n      const listLines = lines.filter(l => /^\\s*[-*\\d]+[.)\\s]/.test(l));\n      detected = listLines.length > 0 ? 'list' : 'not list';\n      passed = listLines.length >= 2;\n    } else if (rules.format === 'paragraph') {\n      const sentences = output.split(/[.!?]+/).filter(s => s.trim().length > 10);\n      detected = sentences.length >= 2 ? 'paragraph' : 'not paragraph';\n      passed = sentences.length >= 2;\n    }\n\n    strategies.format = { passed, detected };\n  }\n\n  // 3. Length bounds\n  if (rules.minLen !== undefined || rules.maxLen !== undefined) {\n    const len = output.length;\n    const aboveMin = rules.minLen === undefined || len >= rules.minLen;\n    const belowMax = rules.maxLen === undefined || len <= rules.maxLen;\n    strategies.length = {\n      passed: aboveMin && belowMax,\n      actual: len,\n      bounds: { min: rules.minLen, max: rules.maxLen }\n    };\n  }\n\n  const allPassed = Object.values(strategies).every(s => s.passed);\n  return { passed: allPassed, strategies };\n}"
+  },
+  {
+    id: 48,
+    title: "Design a Distributed Test Runner",
+    description: "Build coordinator logic for a distributed test runner that distributes tests across N workers, handles worker failures by reassigning tests, collects results, and generates a final report. Implement the work queue pattern.",
+    difficulty: "Hard",
+    level: "Principal",
+    category: "Test Infrastructure System Design",
+    timeMinutes: 45,
+    approach: "Maintain a work queue of pending tests and a map of worker assignments. Distribute tests round-robin. On worker failure, return assigned tests to the queue. Collect results and report pass/fail with retry info.",
+    exampleIO: "Input: {tests:['t1','t2','t3','t4','t5'], workers:2, failures:['worker-1 after t2']}\nOutput: {completed:['t1','t2','t3','t4','t5'], retried:['t3'], workerStats:{w0:{ran:3},w1:{ran:2,failed:true,reassigned:1}}}",
+    hints: [
+      "Use a queue (array) for pending tests and a Map for worker -> current test assignments",
+      "When a worker fails, move its in-progress tests back to the front of the queue",
+      "Track retried tests separately to surface reliability issues"
+    ],
+    sampleAnswer: "class DistributedTestRunner {\n  constructor(tests, numWorkers) {\n    this.queue = [...tests];\n    this.numWorkers = numWorkers;\n    this.workers = new Map();\n    this.results = [];\n    this.retried = [];\n    this.workerStats = {};\n\n    for (let i = 0; i < numWorkers; i++) {\n      this.workers.set(`w${i}`, { busy: false, currentTest: null });\n      this.workerStats[`w${i}`] = { ran: 0, failed: false, reassigned: 0 };\n    }\n  }\n\n  assignNext() {\n    if (this.queue.length === 0) return null;\n    for (const [wid, state] of this.workers) {\n      if (!state.busy) {\n        const test = this.queue.shift();\n        state.busy = true;\n        state.currentTest = test;\n        return { worker: wid, test };\n      }\n    }\n    return null;\n  }\n\n  completeTest(workerId, test, passed) {\n    const worker = this.workers.get(workerId);\n    worker.busy = false;\n    worker.currentTest = null;\n    this.workerStats[workerId].ran++;\n    this.results.push({ test, passed, worker: workerId });\n  }\n\n  workerFailed(workerId) {\n    const worker = this.workers.get(workerId);\n    if (worker.currentTest) {\n      this.queue.unshift(worker.currentTest);\n      this.retried.push(worker.currentTest);\n    }\n    this.workerStats[workerId].failed = true;\n    worker.busy = false;\n    worker.currentTest = null;\n  }\n\n  reassign(failedWorkerId) {\n    for (const [wid, state] of this.workers) {\n      if (wid !== failedWorkerId && !state.busy && this.queue.length > 0) {\n        const test = this.queue.shift();\n        state.busy = true;\n        state.currentTest = test;\n        this.workerStats[wid].reassigned++;\n        return { worker: wid, test };\n      }\n    }\n    return null;\n  }\n\n  getReport() {\n    return {\n      completed: this.results.map(r => r.test),\n      retried: this.retried,\n      passed: this.results.filter(r => r.passed).length,\n      failed: this.results.filter(r => !r.passed).length,\n      pending: this.queue.length,\n      workerStats: this.workerStats\n    };\n  }\n}"
+  },
+  {
+    id: 49,
+    title: "Test Results Dashboard Aggregator",
+    description: "Aggregate test results from multiple CI runs into a unified report. Group by suite, calculate trends (pass rate over last N runs), and flag suites with declining pass rates as regressions.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "Test Infrastructure System Design",
+    timeMinutes: 30,
+    approach: "Group results by suite name. For each suite, calculate pass rate per run and overall trend. Flag regressions where recent pass rate is lower than historical average by more than a threshold.",
+    exampleIO: "Input: {runs:[{suite:'auth',results:[{pass:9,fail:1}]},{suite:'auth',results:[{pass:7,fail:3}]},{suite:'cart',results:[{pass:10,fail:0}]}]}\nOutput: {suites:{auth:{passRates:[0.9,0.7],trend:'declining',regression:true},cart:{passRates:[1.0],trend:'stable',regression:false}}}",
+    hints: [
+      "Group all runs by suite name first using a Map",
+      "Calculate pass rate = passed / (passed + failed) for each run",
+      "Trend: compare last run's pass rate to the average of previous runs"
+    ],
+    sampleAnswer: "function aggregateTestResults(runs) {\n  const suites = {};\n\n  for (const run of runs) {\n    const name = run.suite;\n    if (!suites[name]) suites[name] = { passRates: [] };\n\n    const totals = run.results.reduce((acc, r) => {\n      acc.pass += r.pass;\n      acc.fail += r.fail;\n      return acc;\n    }, { pass: 0, fail: 0 });\n\n    const rate = parseFloat((totals.pass / (totals.pass + totals.fail)).toFixed(2));\n    suites[name].passRates.push(rate);\n  }\n\n  for (const [name, data] of Object.entries(suites)) {\n    const rates = data.passRates;\n    if (rates.length < 2) {\n      data.trend = 'stable';\n      data.regression = false;\n      continue;\n    }\n\n    const recent = rates[rates.length - 1];\n    const prevAvg = rates.slice(0, -1).reduce((a, b) => a + b, 0) / (rates.length - 1);\n    const delta = recent - prevAvg;\n\n    if (delta < -0.1) {\n      data.trend = 'declining';\n      data.regression = true;\n    } else if (delta > 0.1) {\n      data.trend = 'improving';\n      data.regression = false;\n    } else {\n      data.trend = 'stable';\n      data.regression = false;\n    }\n  }\n\n  return { suites };\n}"
+  },
+  {
+    id: 50,
+    title: "Multi-Region Test Orchestrator",
+    description: "Orchestrate test execution across 3 regions (EU, US, APAC). Handle timezone-aware scheduling so tests run during each region's business hours, region-specific config, and consolidated cross-region reporting.",
+    difficulty: "Hard",
+    level: "Principal",
+    category: "Test Infrastructure System Design",
+    timeMinutes: 40,
+    approach: "Define regions with timezone offsets and business hour windows. Schedule tests only when the target region is in business hours. Merge results across regions into a unified report with per-region breakdowns.",
+    exampleIO: "Input: {tests:['login','checkout'], regions:[{name:'EU',offset:1,bizStart:9,bizEnd:17},{name:'US',offset:-5,bizStart:9,bizEnd:17}], currentUTCHour:14}\nOutput: {scheduled:{EU:{tests:['login','checkout'],localHour:15,inWindow:true},US:{tests:['login','checkout'],localHour:9,inWindow:true}}}",
+    hints: [
+      "Convert UTC to local time: localHour = (utcHour + offset + 24) % 24",
+      "Business hours check: localHour >= bizStart && localHour < bizEnd",
+      "Some regions may be outside business hours — defer their tests or skip"
+    ],
+    sampleAnswer: "function orchestrateMultiRegion(config) {\n  const { tests, regions, currentUTCHour } = config;\n  const scheduled = {};\n  const deferred = {};\n\n  for (const region of regions) {\n    const localHour = (currentUTCHour + region.offset + 24) % 24;\n    const inWindow = localHour >= region.bizStart && localHour < region.bizEnd;\n\n    if (inWindow) {\n      scheduled[region.name] = {\n        tests: [...tests],\n        localHour,\n        inWindow: true,\n        config: region.config || {}\n      };\n    } else {\n      const hoursUntilOpen = (region.bizStart - localHour + 24) % 24;\n      deferred[region.name] = {\n        tests: [...tests],\n        localHour,\n        inWindow: false,\n        deferredHoursUTC: hoursUntilOpen,\n        scheduledUTCHour: (currentUTCHour + hoursUntilOpen) % 24\n      };\n    }\n  }\n\n  return { scheduled, deferred, summary: {\n    regionsActive: Object.keys(scheduled).length,\n    regionsDeferred: Object.keys(deferred).length,\n    totalTests: tests.length * regions.length\n  }};\n}"
+  },
+  {
+    id: 51,
+    title: "Test Environment Provisioner",
+    description: "Manage a pool of test environments. Implement checkout (reserve for a test suite), checkin (release), handle stale locks with timeout-based auto-release, and prioritize urgent test suites.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "Test Infrastructure System Design",
+    timeMinutes: 30,
+    approach: "Maintain a pool of environments with status (available/locked), lock timestamp, and owner. On checkout, find available env or auto-release stale locks. Support priority queue for urgent requests.",
+    exampleIO: "Input: pool of 3 envs, checkout('suite-A','normal'), checkout('suite-B','urgent'), checkin('suite-A')\nOutput: suite-A gets env-0, suite-B gets env-1 (priority), env-0 released and available",
+    hints: [
+      "Track each environment's state: {id, status, owner, lockedAt, priority}",
+      "Stale lock check: if Date.now() - lockedAt > timeout, auto-release",
+      "For priority: if no envs available, check if any non-urgent locks can be preempted"
+    ],
+    sampleAnswer: "class EnvironmentPool {\n  constructor(envConfigs, lockTimeoutMs = 600000) {\n    this.envs = envConfigs.map((config, i) => ({\n      id: `env-${i}`,\n      config,\n      status: 'available',\n      owner: null,\n      lockedAt: null,\n      priority: null\n    }));\n    this.lockTimeout = lockTimeoutMs;\n    this.waitQueue = [];\n  }\n\n  checkout(suite, priority = 'normal') {\n    this.releaseStale();\n\n    // Find available environment\n    let env = this.envs.find(e => e.status === 'available');\n\n    // Priority preemption: take from lower priority if urgent\n    if (!env && priority === 'urgent') {\n      env = this.envs.find(e => e.priority === 'normal');\n      if (env) {\n        this.waitQueue.unshift({ suite: env.owner, priority: env.priority });\n      }\n    }\n\n    if (!env) {\n      this.waitQueue.push({ suite, priority });\n      return { success: false, queued: true, position: this.waitQueue.length };\n    }\n\n    env.status = 'locked';\n    env.owner = suite;\n    env.lockedAt = Date.now();\n    env.priority = priority;\n\n    return { success: true, envId: env.id, config: env.config };\n  }\n\n  checkin(suite) {\n    const env = this.envs.find(e => e.owner === suite);\n    if (!env) return { success: false, error: 'not found' };\n\n    env.status = 'available';\n    env.owner = null;\n    env.lockedAt = null;\n    env.priority = null;\n\n    // Assign to next in queue\n    if (this.waitQueue.length > 0) {\n      const next = this.waitQueue.shift();\n      return this.checkout(next.suite, next.priority);\n    }\n\n    return { success: true, envId: env.id };\n  }\n\n  releaseStale() {\n    const now = Date.now();\n    for (const env of this.envs) {\n      if (env.status === 'locked' && now - env.lockedAt > this.lockTimeout) {\n        env.status = 'available';\n        env.owner = null;\n        env.lockedAt = null;\n        env.priority = null;\n      }\n    }\n  }\n\n  getStatus() {\n    return this.envs.map(e => ({ id: e.id, status: e.status, owner: e.owner }));\n  }\n}"
+  },
+  {
+    id: 52,
+    title: "Flaky Test Auto-Quarantine Pipeline",
+    description: "Analyze test execution history, auto-quarantine tests exceeding a flakiness threshold, track quarantine duration, and auto-promote tests back to active after N consecutive passes. Full lifecycle management.",
+    difficulty: "Hard",
+    level: "Principal",
+    category: "Test Infrastructure System Design",
+    timeMinutes: 45,
+    approach: "Calculate flakiness score per test from history. Quarantine those above threshold. On each new run, track consecutive passes for quarantined tests. Auto-promote after meeting the pass streak requirement. Maintain lifecycle audit log.",
+    exampleIO: "Input: {history:[{test:'login',runs:['P','F','P','F','P']},{test:'cart',runs:['P','P','P','P','P']}], flakinessThreshold:0.3, promotionStreak:3}\nOutput: {quarantined:[{test:'login',flakiness:0.4,since:'run-1'}], active:['cart'], promoted:[]}",
+    hints: [
+      "Flakiness score: count state transitions (P->F or F->P) / total runs",
+      "Track quarantine entry time and consecutive passes since quarantine",
+      "Promotion requires N consecutive passes AFTER quarantine, not from history"
+    ],
+    sampleAnswer: "function manageQuarantine(history, flakinessThreshold, promotionStreak) {\n  const quarantined = [];\n  const active = [];\n  const promoted = [];\n  const auditLog = [];\n\n  for (const test of history) {\n    const runs = test.runs;\n    // Calculate flakiness: transitions / total\n    let transitions = 0;\n    for (let i = 1; i < runs.length; i++) {\n      if (runs[i] !== runs[i - 1]) transitions++;\n    }\n    const flakiness = parseFloat((transitions / Math.max(runs.length - 1, 1)).toFixed(2));\n\n    if (flakiness >= flakinessThreshold) {\n      // Check for promotion: consecutive passes at end\n      let streak = 0;\n      for (let i = runs.length - 1; i >= 0; i--) {\n        if (runs[i] === 'P') streak++;\n        else break;\n      }\n\n      if (streak >= promotionStreak) {\n        promoted.push({\n          test: test.test,\n          flakiness,\n          streak,\n          action: 'promoted back to active'\n        });\n        active.push(test.test);\n        auditLog.push({ test: test.test, event: 'promoted', reason: `${streak} consecutive passes` });\n      } else {\n        quarantined.push({\n          test: test.test,\n          flakiness,\n          consecutivePasses: streak,\n          needsMore: promotionStreak - streak\n        });\n        auditLog.push({ test: test.test, event: 'quarantined', reason: `flakiness ${flakiness} >= ${flakinessThreshold}` });\n      }\n    } else {\n      active.push(test.test);\n    }\n  }\n\n  return { quarantined, active, promoted, auditLog };\n}"
+  },
+  {
+    id: 53,
+    title: "Log-to-Test-Case Generator",
+    description: "Parse structured production logs (JSON) to auto-generate test case skeletons. Extract endpoint, HTTP method, params, and status from log entries. Output test function templates ready for implementation.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "Observability-Driven Testing",
+    timeMinutes: 30,
+    approach: "Parse each log entry for method, endpoint, params, and response status. Group by endpoint. Generate a test function template per unique endpoint+method combination with expected status assertion.",
+    exampleIO: "Input: [{method:'GET',endpoint:'/api/users',params:{page:1},status:200},{method:'POST',endpoint:'/api/users',params:{name:'Alice'},status:201}]\nOutput: [{testName:'GET /api/users returns 200', method:'GET', endpoint:'/api/users', sampleParams:{page:1}, expectedStatus:200, template:'test(...)'}]",
+    hints: [
+      "Group logs by method+endpoint to create one test per unique combination",
+      "Use the first occurrence's params as sample test data",
+      "Generate readable test names: 'METHOD /endpoint returns STATUS'"
+    ],
+    sampleAnswer: "function generateTestCases(logs) {\n  const grouped = new Map();\n\n  for (const log of logs) {\n    const key = `${log.method} ${log.endpoint}`;\n    if (!grouped.has(key)) {\n      grouped.set(key, {\n        method: log.method,\n        endpoint: log.endpoint,\n        sampleParams: log.params,\n        statuses: new Set(),\n        count: 0\n      });\n    }\n    const group = grouped.get(key);\n    group.statuses.add(log.status);\n    group.count++;\n  }\n\n  const testCases = [];\n\n  for (const [key, data] of grouped) {\n    const primaryStatus = [...data.statuses][0];\n    const testName = `${key} returns ${primaryStatus}`;\n    const paramsStr = data.sampleParams\n      ? JSON.stringify(data.sampleParams)\n      : '{}';\n\n    const template = `test('${testName}', async () => {\n  const response = await request.${data.method.toLowerCase()}('${data.endpoint}', {\n    params: ${paramsStr}\n  });\n  expect(response.status).toBe(${primaryStatus});\n});`;\n\n    testCases.push({\n      testName,\n      method: data.method,\n      endpoint: data.endpoint,\n      sampleParams: data.sampleParams,\n      expectedStatus: primaryStatus,\n      observedStatuses: [...data.statuses],\n      sampleSize: data.count,\n      template\n    });\n  }\n\n  return testCases;\n}"
+  },
+  {
+    id: 54,
+    title: "Production Anomaly Detector",
+    description: "Analyze time-series metrics (error rate, latency, throughput) using z-score to detect anomalies. Flag data points that exceed 2 standard deviations from the rolling average. Return an alert list with severity.",
+    difficulty: "Hard",
+    level: "Principal",
+    category: "Observability-Driven Testing",
+    timeMinutes: 40,
+    approach: "For each metric, compute rolling mean and standard deviation over a configurable window. Calculate z-score for each data point. If |z| > 2, flag as anomaly. Severity based on z-score magnitude: warning (>2), critical (>3).",
+    exampleIO: "Input: {metrics:[{ts:1,errorRate:0.01},{ts:2,errorRate:0.02},{ts:3,errorRate:0.01},{ts:4,errorRate:0.15},{ts:5,errorRate:0.02}], window:3}\nOutput: {anomalies:[{ts:4, metric:'errorRate', value:0.15, zScore:3.2, severity:'critical'}]}",
+    hints: [
+      "Z-score = (value - mean) / stdDev — measures how many std devs from the mean",
+      "Use a rolling window: only include the previous N data points for mean/stdDev",
+      "Standard deviation: sqrt(sum((x - mean)²) / N)"
+    ],
+    sampleAnswer: "function detectAnomalies(data, windowSize = 5) {\n  const anomalies = [];\n\n  function calcStats(values) {\n    const n = values.length;\n    if (n === 0) return { mean: 0, stdDev: 0 };\n    const mean = values.reduce((a, b) => a + b, 0) / n;\n    const variance = values.reduce((sum, v) => sum + (v - mean) ** 2, 0) / n;\n    return { mean, stdDev: Math.sqrt(variance) };\n  }\n\n  const metricNames = Object.keys(data.metrics[0]).filter(k => k !== 'ts');\n\n  for (const metric of metricNames) {\n    const values = data.metrics.map(m => m[metric]);\n\n    for (let i = 0; i < values.length; i++) {\n      const windowStart = Math.max(0, i - windowSize);\n      const window = values.slice(windowStart, i);\n\n      if (window.length < 2) continue;\n\n      const { mean, stdDev } = calcStats(window);\n      if (stdDev === 0) continue;\n\n      const zScore = parseFloat(((values[i] - mean) / stdDev).toFixed(1));\n\n      if (Math.abs(zScore) > 2) {\n        anomalies.push({\n          ts: data.metrics[i].ts,\n          metric,\n          value: values[i],\n          zScore,\n          mean: parseFloat(mean.toFixed(4)),\n          severity: Math.abs(zScore) > 3 ? 'critical' : 'warning'\n        });\n      }\n    }\n  }\n\n  return { anomalies, totalPoints: data.metrics.length, metricsAnalyzed: metricNames };\n}"
+  },
+  {
+    id: 55,
+    title: "Trace-Based Test Validator",
+    description: "Given a distributed trace (array of spans with service, operation, duration, parent), validate that the trace matches an expected service call chain. Detect missing spans and unexpected service calls.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "Observability-Driven Testing",
+    timeMinutes: 30,
+    approach: "Build a tree from spans using parentId. Walk the expected call chain against the actual tree. Report missing expected spans, unexpected spans not in the expected chain, and duration anomalies.",
+    exampleIO: "Input: {spans:[{id:'a',service:'gateway',op:'request',dur:100,parent:null},{id:'b',service:'auth',op:'validate',dur:30,parent:'a'},{id:'c',service:'db',op:'query',dur:50,parent:'b'}], expected:['gateway','auth','users']}\nOutput: {valid:false, missing:['users'], unexpected:['db'], chain:['gateway','auth','db']}",
+    hints: [
+      "Build a parent->children map to reconstruct the call tree from flat spans",
+      "Walk the tree depth-first to extract the actual service call chain",
+      "Compare actual chain against expected using Set difference for missing/unexpected"
+    ],
+    sampleAnswer: "function validateTrace(spans, expectedChain) {\n  // Build tree\n  const children = {};\n  let root = null;\n\n  for (const span of spans) {\n    if (!span.parent) root = span;\n    else {\n      if (!children[span.parent]) children[span.parent] = [];\n      children[span.parent].push(span);\n    }\n  }\n\n  // DFS to get actual chain\n  const actualChain = [];\n  const durations = {};\n\n  function walk(span) {\n    actualChain.push(span.service);\n    durations[span.service] = span.dur;\n    for (const child of (children[span.id] || [])) {\n      walk(child);\n    }\n  }\n\n  if (root) walk(root);\n\n  const actualSet = new Set(actualChain);\n  const expectedSet = new Set(expectedChain);\n\n  const missing = expectedChain.filter(s => !actualSet.has(s));\n  const unexpected = actualChain.filter(s => !expectedSet.has(s));\n\n  return {\n    valid: missing.length === 0 && unexpected.length === 0,\n    chain: actualChain,\n    missing,\n    unexpected,\n    durations,\n    totalDuration: root ? root.dur : 0\n  };\n}"
+  },
+  {
+    id: 56,
+    title: "SLO Burn Rate Monitor",
+    description: "Calculate error budget burn rate over multiple time windows (1h, 6h, 24h, 7d). Implement multi-window alerting: fire an alert only when both a short AND a long window exceed their respective thresholds. Return alert severity.",
+    difficulty: "Hard",
+    level: "Principal",
+    category: "Observability-Driven Testing",
+    timeMinutes: 40,
+    approach: "Calculate burn rate for each window: (errors in window / requests in window) / (1 - SLO). Multi-window alert fires when short window (1h) burn rate > 14x AND long window (6h) burn rate > 6x. Severity from burn rate magnitude.",
+    exampleIO: "Input: {slo:0.999, windows:{h1:{errors:50,requests:10000}, h6:{errors:200,requests:60000}, h24:{errors:500,requests:240000}, d7:{errors:2000,requests:1680000}}}\nOutput: {burnRates:{h1:5.0,h6:3.33,h24:2.08,d7:1.19}, alert:{firing:true,severity:'warning',reason:'1h and 6h windows exceeded'}}",
+    hints: [
+      "Burn rate = actual error rate / allowed error rate, where allowed = 1 - SLO",
+      "Multi-window: require BOTH short (1h>14x) AND long (6h>6x) to fire — reduces false positives",
+      "Different window pairs: (1h+6h) for fast burn, (6h+24h) for slow burn"
+    ],
+    sampleAnswer: "function monitorBurnRate(config) {\n  const { slo, windows } = config;\n  const errorBudget = 1 - slo;\n\n  const burnRates = {};\n  for (const [window, data] of Object.entries(windows)) {\n    const errorRate = data.errors / data.requests;\n    burnRates[window] = parseFloat((errorRate / errorBudget).toFixed(2));\n  }\n\n  // Multi-window alerting rules\n  const rules = [\n    { name: 'fast-burn', short: 'h1', shortThreshold: 14, long: 'h6', longThreshold: 6, severity: 'critical' },\n    { name: 'medium-burn', short: 'h6', shortThreshold: 6, long: 'h24', longThreshold: 3, severity: 'warning' },\n    { name: 'slow-burn', short: 'h24', shortThreshold: 3, long: 'd7', longThreshold: 1, severity: 'info' }\n  ];\n\n  let alert = { firing: false, severity: 'none', reason: '' };\n\n  for (const rule of rules) {\n    const shortExceeds = burnRates[rule.short] > rule.shortThreshold;\n    const longExceeds = burnRates[rule.long] > rule.longThreshold;\n\n    if (shortExceeds && longExceeds) {\n      alert = {\n        firing: true,\n        severity: rule.severity,\n        reason: `${rule.short} and ${rule.long} windows exceeded (${rule.name})`,\n        rule: rule.name\n      };\n      break; // Highest severity wins\n    }\n  }\n\n  // Budget remaining\n  const monthlyBudget = errorBudget * (windows.d7 ? windows.d7.requests / 7 * 30 : 1000000);\n  const monthlyErrors = windows.d7 ? (windows.d7.errors / 7) * 30 : 0;\n  const budgetRemaining = parseFloat(((1 - monthlyErrors / monthlyBudget) * 100).toFixed(1));\n\n  return { burnRates, alert, budgetRemaining: budgetRemaining + '%' };\n}"
+  },
+  {
+    id: 57,
+    title: "Consumer-Driven Contract Validator",
+    description: "Given a provider API response and a consumer contract (expected fields with types), validate compatibility. Support optional fields, nested objects, and type coercion rules. Return a compatibility report.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "Contract & Schema Testing",
+    timeMinutes: 35,
+    approach: "Walk the contract recursively. For each expected field, check presence in response, validate type (with coercion rules), recurse into nested objects. Track errors for required fields, warnings for optional.",
+    exampleIO: "Input: {response:{id:1,name:'John',email:'j@test.com'}, contract:{id:{type:'number',required:true},name:{type:'string',required:true},age:{type:'number',required:false}}}\nOutput: {compatible:true, errors:[], warnings:[{field:'age',issue:'optional field missing'}], fieldsChecked:3}",
+    hints: [
+      "Required missing field = error (breaking). Optional missing field = warning (non-breaking)",
+      "Type coercion: '123' as number is OK, but 'abc' as number is not",
+      "For nested objects, recurse with the current path for clear error messages"
+    ],
+    sampleAnswer: "function validateContract(response, contract) {\n  const errors = [];\n  const warnings = [];\n  let fieldsChecked = 0;\n\n  function validate(obj, schema, path = '') {\n    for (const [field, spec] of Object.entries(schema)) {\n      const fullPath = path ? `${path}.${field}` : field;\n      fieldsChecked++;\n\n      // Check presence\n      if (!(field in obj)) {\n        if (spec.required) {\n          errors.push({ field: fullPath, issue: 'required field missing' });\n        } else {\n          warnings.push({ field: fullPath, issue: 'optional field missing' });\n        }\n        continue;\n      }\n\n      const value = obj[field];\n\n      // Check type\n      if (spec.type === 'object' && spec.properties) {\n        if (typeof value !== 'object' || value === null) {\n          errors.push({ field: fullPath, issue: `expected object, got ${typeof value}` });\n        } else {\n          validate(value, spec.properties, fullPath);\n        }\n      } else if (spec.type === 'array') {\n        if (!Array.isArray(value)) {\n          errors.push({ field: fullPath, issue: `expected array, got ${typeof value}` });\n        }\n      } else {\n        const actualType = typeof value;\n        if (actualType !== spec.type) {\n          // Try coercion\n          if (spec.type === 'number' && !isNaN(Number(value))) {\n            warnings.push({ field: fullPath, issue: `coercible: ${actualType} to number` });\n          } else if (spec.type === 'string' && value !== null) {\n            warnings.push({ field: fullPath, issue: `coercible: ${actualType} to string` });\n          } else {\n            errors.push({ field: fullPath, issue: `expected ${spec.type}, got ${actualType}` });\n          }\n        }\n      }\n    }\n  }\n\n  validate(response, contract);\n\n  return {\n    compatible: errors.length === 0,\n    errors,\n    warnings,\n    fieldsChecked\n  };\n}"
+  },
+  {
+    id: 58,
+    title: "OpenAPI Schema Breaking Change Detector",
+    description: "Compare two OpenAPI schema versions to detect breaking changes: removed endpoints, removed required fields, type changes, and new required parameters. Classify each change as breaking, non-breaking, or deprecation.",
+    difficulty: "Hard",
+    level: "Principal",
+    category: "Contract & Schema Testing",
+    timeMinutes: 40,
+    approach: "Diff the two schemas endpoint by endpoint. Check for removed paths (breaking), removed fields from response (breaking), added required params (breaking), type changes (breaking). Added optional fields/endpoints are non-breaking.",
+    exampleIO: "Input: {v1:{'/users':{get:{params:['page'],response:{id:'number',name:'string'}}}}, v2:{'/users':{get:{params:['page','limit'],response:{id:'number'}}}}}\nOutput: {breaking:[{type:'field_removed',path:'/users.get.response.name'}], nonBreaking:[{type:'param_added',path:'/users.get.params.limit'}]}",
+    hints: [
+      "Removed endpoint = always breaking. Added endpoint = always non-breaking",
+      "Removed response field = breaking. Added response field = non-breaking",
+      "New required request parameter = breaking. New optional parameter = non-breaking"
+    ],
+    sampleAnswer: "function detectBreakingChanges(v1, v2) {\n  const breaking = [];\n  const nonBreaking = [];\n  const deprecations = [];\n\n  const v1Paths = Object.keys(v1);\n  const v2Paths = Object.keys(v2);\n\n  // Check removed endpoints\n  for (const path of v1Paths) {\n    if (!v2[path]) {\n      breaking.push({ type: 'endpoint_removed', path });\n      continue;\n    }\n\n    // Check methods\n    for (const method of Object.keys(v1[path])) {\n      if (!v2[path][method]) {\n        breaking.push({ type: 'method_removed', path: `${path}.${method}` });\n        continue;\n      }\n\n      const oldSpec = v1[path][method];\n      const newSpec = v2[path][method];\n\n      // Check params\n      const oldParams = new Set(oldSpec.params || []);\n      const newParams = new Set(newSpec.params || []);\n      for (const p of newParams) {\n        if (!oldParams.has(p)) {\n          nonBreaking.push({ type: 'param_added', path: `${path}.${method}.params.${p}` });\n        }\n      }\n\n      // Check response fields\n      const oldFields = oldSpec.response || {};\n      const newFields = newSpec.response || {};\n\n      for (const [field, type] of Object.entries(oldFields)) {\n        if (!(field in newFields)) {\n          breaking.push({ type: 'field_removed', path: `${path}.${method}.response.${field}` });\n        } else if (newFields[field] !== type) {\n          breaking.push({\n            type: 'type_changed',\n            path: `${path}.${method}.response.${field}`,\n            from: type,\n            to: newFields[field]\n          });\n        }\n      }\n\n      for (const field of Object.keys(newFields)) {\n        if (!(field in oldFields)) {\n          nonBreaking.push({ type: 'field_added', path: `${path}.${method}.response.${field}` });\n        }\n      }\n    }\n  }\n\n  // Check added endpoints\n  for (const path of v2Paths) {\n    if (!v1[path]) {\n      nonBreaking.push({ type: 'endpoint_added', path });\n    }\n  }\n\n  return { breaking, nonBreaking, deprecations, isBreaking: breaking.length > 0 };\n}"
+  },
+  {
+    id: 59,
+    title: "Event Schema Evolution Checker",
+    description: "Validate that a new event schema version is backward compatible with the previous version. Field additions are safe, field removals and type changes are breaking. Default values can make removals non-breaking.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "Contract & Schema Testing",
+    timeMinutes: 25,
+    approach: "Compare old and new schema field by field. Added fields: safe. Removed fields: breaking unless a default value exists. Type changes: breaking. Report compatibility verdict with details.",
+    exampleIO: "Input: {oldSchema:{userId:'string',email:'string',role:'string'}, newSchema:{userId:'string',email:'string',department:'string'}, defaults:{role:'viewer'}}\nOutput: {compatible:true, changes:[{field:'role',type:'removed',breaking:false,reason:'has default'},{field:'department',type:'added',breaking:false}]}",
+    hints: [
+      "Iterate old schema fields: if missing in new, check for default value",
+      "Iterate new schema fields: if missing in old, it's a safe addition",
+      "Type change on an existing field is always breaking — no default can fix it"
+    ],
+    sampleAnswer: "function checkSchemaEvolution(oldSchema, newSchema, defaults = {}) {\n  const changes = [];\n  let hasBreaking = false;\n\n  // Check removed and modified fields\n  for (const [field, type] of Object.entries(oldSchema)) {\n    if (!(field in newSchema)) {\n      const hasDefault = field in defaults;\n      if (!hasDefault) hasBreaking = true;\n      changes.push({\n        field,\n        type: 'removed',\n        breaking: !hasDefault,\n        reason: hasDefault ? `has default: ${defaults[field]}` : 'no default provided'\n      });\n    } else if (newSchema[field] !== type) {\n      hasBreaking = true;\n      changes.push({\n        field,\n        type: 'type_changed',\n        breaking: true,\n        from: type,\n        to: newSchema[field],\n        reason: 'type changes are always breaking'\n      });\n    }\n  }\n\n  // Check added fields\n  for (const [field, type] of Object.entries(newSchema)) {\n    if (!(field in oldSchema)) {\n      changes.push({\n        field,\n        type: 'added',\n        breaking: false,\n        reason: 'new fields are backward compatible'\n      });\n    }\n  }\n\n  return {\n    compatible: !hasBreaking,\n    changes,\n    summary: {\n      added: changes.filter(c => c.type === 'added').length,\n      removed: changes.filter(c => c.type === 'removed').length,\n      modified: changes.filter(c => c.type === 'type_changed').length,\n      breaking: changes.filter(c => c.breaking).length\n    }\n  };\n}"
+  },
+  {
+    id: 60,
+    title: "Pipeline Stage Optimizer",
+    description: "Given pipeline stages with durations and dependencies, find the critical path (longest path determining total runtime). Suggest which stages to parallelize for maximum time savings.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "CI/CD & Pipeline Engineering",
+    timeMinutes: 35,
+    approach: "Build a DAG from stages and dependencies. Compute earliest start time for each stage using topological order. Critical path = longest path from start to end. Suggest parallelizing stages not on the critical path.",
+    exampleIO: "Input: {stages:{lint:{dur:2,deps:[]},build:{dur:5,deps:[]},test:{dur:8,deps:['build']},scan:{dur:3,deps:['build']},deploy:{dur:2,deps:['test','scan','lint']}}}\nOutput: {criticalPath:['build','test','deploy'], totalTime:15, parallelizable:[{stages:['lint','build'],saving:0},{stages:['test','scan'],saving:3}]}",
+    hints: [
+      "Topological sort first, then compute earliest start = max(end times of all dependencies)",
+      "Critical path: trace back from the last stage through whichever dependency finished latest",
+      "Stages NOT on the critical path can run in parallel without affecting total time"
+    ],
+    sampleAnswer: "function optimizePipeline(config) {\n  const stages = config.stages;\n  const names = Object.keys(stages);\n\n  // Topological sort\n  const visited = new Set();\n  const order = [];\n  function dfs(name) {\n    if (visited.has(name)) return;\n    visited.add(name);\n    for (const dep of stages[name].deps) dfs(dep);\n    order.push(name);\n  }\n  names.forEach(n => dfs(n));\n\n  // Compute earliest start/end\n  const earliest = {};\n  for (const name of order) {\n    const depEnds = stages[name].deps.map(d => earliest[d].end);\n    const start = depEnds.length > 0 ? Math.max(...depEnds) : 0;\n    earliest[name] = { start, end: start + stages[name].dur };\n  }\n\n  const totalTime = Math.max(...Object.values(earliest).map(e => e.end));\n\n  // Find critical path (trace back from end)\n  const endStage = Object.entries(earliest).reduce((a, [n, e]) => e.end > earliest[a].end ? n : a, names[0]);\n  const criticalPath = [];\n  let current = endStage;\n  while (current) {\n    criticalPath.unshift(current);\n    const deps = stages[current].deps;\n    current = deps.length > 0\n      ? deps.reduce((a, b) => earliest[a].end > earliest[b].end ? a : b)\n      : null;\n  }\n\n  const critSet = new Set(criticalPath);\n  const parallelizable = [];\n\n  // Group non-critical stages that share the same dependency level\n  const levels = {};\n  for (const name of names) {\n    const level = earliest[name].start;\n    if (!levels[level]) levels[level] = [];\n    levels[level].push(name);\n  }\n\n  for (const [level, group] of Object.entries(levels)) {\n    if (group.length > 1) {\n      const maxDur = Math.max(...group.map(n => stages[n].dur));\n      const sumDur = group.reduce((s, n) => s + stages[n].dur, 0);\n      parallelizable.push({ stages: group, saving: sumDur - maxDur });\n    }\n  }\n\n  return { criticalPath, totalTime, parallelizable };\n}"
+  },
+  {
+    id: 61,
+    title: "Feature Flag Test Matrix Generator",
+    description: "Given N feature flags, generate a minimal test matrix using pairwise combinatorial testing instead of full combinatorial (2^N). Cover all pairs of flag values while keeping the matrix manageable.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "CI/CD & Pipeline Engineering",
+    timeMinutes: 30,
+    approach: "Use a greedy pairwise algorithm: track all uncovered pairs of (flag_i=val, flag_j=val). For each new test row, choose flag values that cover the most uncovered pairs. Stop when all pairs are covered.",
+    exampleIO: "Input: flags=['darkMode','newCheckout','betaAPI','cacheEnabled']\nOutput: {fullCombinations:16, pairwiseMatrix:[{darkMode:true,newCheckout:true,betaAPI:true,cacheEnabled:true},...], pairwiseSize:6, reduction:'62.5%'}",
+    hints: [
+      "Full combinatorial = 2^N rows. Pairwise guarantees every pair of flags appears together",
+      "For 4 boolean flags (16 combos), pairwise typically needs only 5-6 rows",
+      "Greedy approach: for each new row, pick values that maximise newly covered pairs"
+    ],
+    sampleAnswer: "function generatePairwiseMatrix(flags) {\n  const n = flags.length;\n  const fullSize = Math.pow(2, n);\n\n  // Generate all pairs that need coverage\n  const uncoveredPairs = new Set();\n  for (let i = 0; i < n; i++) {\n    for (let j = i + 1; j < n; j++) {\n      for (const vi of [true, false]) {\n        for (const vj of [true, false]) {\n          uncoveredPairs.add(`${i}:${vi}|${j}:${vj}`);\n        }\n      }\n    }\n  }\n\n  const matrix = [];\n\n  while (uncoveredPairs.size > 0) {\n    let bestRow = null;\n    let bestCoverage = 0;\n\n    // Try several random candidates and pick the best\n    for (let attempt = 0; attempt < 50; attempt++) {\n      const row = {};\n      for (let i = 0; i < n; i++) {\n        row[flags[i]] = Math.random() > 0.5;\n      }\n\n      // Count how many uncovered pairs this row covers\n      let coverage = 0;\n      for (let i = 0; i < n; i++) {\n        for (let j = i + 1; j < n; j++) {\n          const pair = `${i}:${row[flags[i]]}|${j}:${row[flags[j]]}`;\n          if (uncoveredPairs.has(pair)) coverage++;\n        }\n      }\n\n      if (coverage > bestCoverage) {\n        bestCoverage = coverage;\n        bestRow = { ...row };\n      }\n    }\n\n    // Mark covered pairs\n    for (let i = 0; i < n; i++) {\n      for (let j = i + 1; j < n; j++) {\n        uncoveredPairs.delete(`${i}:${bestRow[flags[i]]}|${j}:${bestRow[flags[j]]}`);\n      }\n    }\n\n    matrix.push(bestRow);\n  }\n\n  const reduction = ((1 - matrix.length / fullSize) * 100).toFixed(1);\n  return { fullCombinations: fullSize, pairwiseMatrix: matrix, pairwiseSize: matrix.length, reduction: reduction + '%' };\n}"
+  },
+  {
+    id: 62,
+    title: "Canary Deployment Health Checker",
+    description: "Compare canary deployment metrics (error rate, latency, throughput) against baseline using statistical significance. Return a promote, rollback, or continue-monitoring decision based on thresholds.",
+    difficulty: "Hard",
+    level: "Principal",
+    category: "CI/CD & Pipeline Engineering",
+    timeMinutes: 40,
+    approach: "For each metric, calculate the percentage difference between canary and baseline. Apply thresholds: if error rate increases >50% or latency increases >30%, recommend rollback. If all metrics are within bounds for sufficient sample size, promote.",
+    exampleIO: "Input: {baseline:{errorRate:0.02,p95Latency:200,rps:1000,samples:10000}, canary:{errorRate:0.025,p95Latency:210,rps:950,samples:2000}}\nOutput: {decision:'promote', confidence:0.85, metrics:{errorRate:{delta:'+25%',verdict:'ok'},p95Latency:{delta:'+5%',verdict:'ok'},rps:{delta:'-5%',verdict:'ok'}}}",
+    hints: [
+      "Calculate relative delta: (canary - baseline) / baseline * 100 for each metric",
+      "Error rate going UP is bad; throughput going DOWN is bad; latency going UP is bad",
+      "Require minimum sample size before making promote/rollback decisions"
+    ],
+    sampleAnswer: "function checkCanaryHealth(baseline, canary) {\n  const thresholds = {\n    errorRate: { maxIncrease: 50, direction: 'lower-is-better' },\n    p95Latency: { maxIncrease: 30, direction: 'lower-is-better' },\n    rps: { maxDecrease: 20, direction: 'higher-is-better' }\n  };\n\n  const minSamples = 1000;\n  const metrics = {};\n  let hasFailure = false;\n  let allPassing = true;\n\n  for (const [metric, threshold] of Object.entries(thresholds)) {\n    const baseVal = baseline[metric];\n    const canaryVal = canary[metric];\n    const delta = ((canaryVal - baseVal) / baseVal) * 100;\n    const deltaStr = (delta >= 0 ? '+' : '') + delta.toFixed(1) + '%';\n\n    let verdict = 'ok';\n\n    if (threshold.direction === 'lower-is-better' && delta > threshold.maxIncrease) {\n      verdict = 'fail';\n      hasFailure = true;\n    } else if (threshold.direction === 'higher-is-better' && -delta > threshold.maxDecrease) {\n      verdict = 'fail';\n      hasFailure = true;\n    } else if (Math.abs(delta) > threshold.maxIncrease * 0.7) {\n      verdict = 'warning';\n      allPassing = false;\n    }\n\n    metrics[metric] = { baseline: baseVal, canary: canaryVal, delta: deltaStr, verdict };\n  }\n\n  let decision, confidence;\n\n  if (canary.samples < minSamples) {\n    decision = 'continue-monitoring';\n    confidence = parseFloat((canary.samples / minSamples).toFixed(2));\n  } else if (hasFailure) {\n    decision = 'rollback';\n    confidence = 0.95;\n  } else if (allPassing) {\n    decision = 'promote';\n    confidence = parseFloat(Math.min(0.95, 0.7 + canary.samples / 50000).toFixed(2));\n  } else {\n    decision = 'continue-monitoring';\n    confidence = 0.6;\n  }\n\n  return { decision, confidence, metrics };\n}"
+  },
+  {
+    id: 63,
+    title: "Build Cache Invalidation Engine",
+    description: "Given a dependency graph of build modules and a list of changed files, determine which cached modules need invalidation and rebuild. Minimize rebuilds by only invalidating affected modules and their dependents.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "CI/CD & Pipeline Engineering",
+    timeMinutes: 30,
+    approach: "Map changed files to the modules they belong to. Then BFS/DFS upward through the reverse dependency graph to find all affected downstream modules. Only those modules need cache invalidation.",
+    exampleIO: "Input: {modules:{core:{files:['utils.js'],deps:[]},auth:{files:['login.js'],deps:['core']},api:{files:['routes.js'],deps:['core','auth']}}, changed:['utils.js']}\nOutput: {invalidated:['core','auth','api'], cached:[], rebuildOrder:['core','auth','api']}",
+    hints: [
+      "First: map changed files to their owning modules",
+      "Then: build a reverse dependency graph (module -> modules that depend on it)",
+      "BFS from changed modules through reverse deps to find all affected modules"
+    ],
+    sampleAnswer: "function invalidateCache(modules, changedFiles) {\n  // Map files to modules\n  const fileToModule = {};\n  for (const [name, mod] of Object.entries(modules)) {\n    for (const file of mod.files) {\n      fileToModule[file] = name;\n    }\n  }\n\n  // Find directly changed modules\n  const changedModules = new Set();\n  for (const file of changedFiles) {\n    if (fileToModule[file]) changedModules.add(fileToModule[file]);\n  }\n\n  // Build reverse dependency graph\n  const reverseDeps = {};\n  for (const [name, mod] of Object.entries(modules)) {\n    for (const dep of mod.deps) {\n      if (!reverseDeps[dep]) reverseDeps[dep] = [];\n      reverseDeps[dep].push(name);\n    }\n  }\n\n  // BFS to find all affected modules\n  const invalidated = new Set(changedModules);\n  const queue = [...changedModules];\n\n  while (queue.length > 0) {\n    const mod = queue.shift();\n    for (const dependent of (reverseDeps[mod] || [])) {\n      if (!invalidated.has(dependent)) {\n        invalidated.add(dependent);\n        queue.push(dependent);\n      }\n    }\n  }\n\n  // Topological sort for rebuild order\n  const allModules = Object.keys(modules);\n  const cached = allModules.filter(m => !invalidated.has(m));\n\n  const visited = new Set();\n  const rebuildOrder = [];\n  function topoSort(name) {\n    if (visited.has(name) || !invalidated.has(name)) return;\n    visited.add(name);\n    for (const dep of modules[name].deps) topoSort(dep);\n    rebuildOrder.push(name);\n  }\n  [...invalidated].forEach(m => topoSort(m));\n\n  return { invalidated: [...invalidated], cached, rebuildOrder };\n}"
+  },
+  {
+    id: 64,
+    title: "SQL Injection Scanner",
+    description: "Test a list of input fields with common SQL injection payloads. Detect vulnerable fields by analyzing response patterns: error messages containing SQL keywords, timing differences, or unexpected data in response.",
+    difficulty: "Medium",
+    level: "Staff",
+    category: "Security Testing",
+    timeMinutes: 35,
+    approach: "For each field, send a baseline request and payloaded requests. Compare responses: if payloaded response contains SQL error keywords, shows timing anomaly, or returns unexpected data, flag as vulnerable. Report with severity and payload that triggered it.",
+    exampleIO: "Input: {fields:['username','search','id'], testFn: (field,value)=>response}\nOutput: {vulnerabilities:[{field:'search',payload:\"' OR 1=1--\",indicator:'error_message',severity:'high'}], safe:['username','id'], totalTests:9}",
+    hints: [
+      "Common payloads: ' OR 1=1--, '; DROP TABLE--, ' UNION SELECT--, 1' AND '1'='1",
+      "Error indicators: 'syntax error', 'mysql', 'postgresql', 'ORA-', 'unclosed quotation'",
+      "Also check for timing-based injection: if a SLEEP payload takes longer, it's vulnerable"
+    ],
+    sampleAnswer: "function scanForSQLInjection(fields, testFn) {\n  const payloads = [\n    { value: \"' OR '1'='1\", name: 'tautology' },\n    { value: \"'; DROP TABLE users--\", name: 'drop_table' },\n    { value: \"' UNION SELECT null,null--\", name: 'union' },\n    { value: \"1' AND SLEEP(2)--\", name: 'time_based' }\n  ];\n\n  const sqlErrorPatterns = [\n    /syntax error/i, /mysql/i, /postgresql/i, /sqlite/i,\n    /ORA-\\d+/i, /unclosed quotation/i, /SQL/i,\n    /unterminated/i, /unexpected/i\n  ];\n\n  const vulnerabilities = [];\n  const safe = [];\n  let totalTests = 0;\n\n  for (const field of fields) {\n    let isVulnerable = false;\n\n    // Baseline request\n    const baseResponse = testFn(field, 'normal_value');\n    const baseTime = baseResponse.duration || 0;\n\n    for (const payload of payloads) {\n      totalTests++;\n      const response = testFn(field, payload.value);\n\n      // Check for SQL error messages in response\n      const body = typeof response.body === 'string' ? response.body : JSON.stringify(response.body || '');\n      const hasErrorPattern = sqlErrorPatterns.some(p => p.test(body));\n\n      // Check for timing anomaly (time-based injection)\n      const timingAnomaly = (response.duration || 0) > baseTime + 1500;\n\n      // Check for unexpected data (union injection)\n      const unexpectedData = response.status === 200 && body.length > (baseResponse.body || '').length * 2;\n\n      if (hasErrorPattern || timingAnomaly || unexpectedData) {\n        let indicator = hasErrorPattern ? 'error_message' : timingAnomaly ? 'timing_anomaly' : 'data_leak';\n        vulnerabilities.push({\n          field,\n          payload: payload.value,\n          technique: payload.name,\n          indicator,\n          severity: hasErrorPattern ? 'high' : timingAnomaly ? 'medium' : 'high'\n        });\n        isVulnerable = true;\n        break;\n      }\n    }\n\n    if (!isVulnerable) safe.push(field);\n  }\n\n  return { vulnerabilities, safe, totalTests };\n}"
+  },
+  {
+    id: 65,
+    title: "Auth Token Expiry Tester",
+    description: "Validate JWT token lifecycle: decode the token without verification, check expiry time, detect tokens that never expire (security risk), and test whether the refresh flow works correctly. Return a security assessment.",
+    difficulty: "Easy",
+    level: "Senior",
+    category: "Security Testing",
+    timeMinutes: 20,
+    approach: "Base64-decode the JWT payload (part between the two dots). Extract exp, iat, and other claims. Check if exp exists and is in the future. Flag tokens with no exp or very long lifetimes (>24h) as security risks.",
+    exampleIO: "Input: token='eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMSIsImV4cCI6MTcwMDAwMDAwMCwiaWF0IjoxNjk5OTk5MDAwfQ.sig'\nOutput: {valid:true, expiresAt:'2023-11-14T22:13:20Z', lifetimeHours:0.28, risks:[], assessment:'pass'}",
+    hints: [
+      "JWT has 3 parts separated by dots: header.payload.signature",
+      "Decode payload with: JSON.parse(atob(token.split('.')[1]))",
+      "Check for missing 'exp' claim — tokens without expiry are a major security risk"
+    ],
+    sampleAnswer: "function testTokenExpiry(token) {\n  const risks = [];\n\n  // Decode JWT payload\n  const parts = token.split('.');\n  if (parts.length !== 3) {\n    return { valid: false, error: 'Invalid JWT format', risks: ['malformed_token'], assessment: 'fail' };\n  }\n\n  let payload;\n  try {\n    payload = JSON.parse(atob(parts[1]));\n  } catch (e) {\n    return { valid: false, error: 'Cannot decode payload', risks: ['undecodable'], assessment: 'fail' };\n  }\n\n  const now = Math.floor(Date.now() / 1000);\n\n  // Check exp claim\n  if (!payload.exp) {\n    risks.push('no_expiry — token never expires');\n  } else {\n    const expiresAt = new Date(payload.exp * 1000).toISOString();\n    const isExpired = payload.exp < now;\n\n    if (isExpired) {\n      risks.push('token_expired');\n    }\n\n    // Check lifetime\n    if (payload.iat) {\n      const lifetimeHours = parseFloat(((payload.exp - payload.iat) / 3600).toFixed(2));\n      if (lifetimeHours > 24) {\n        risks.push(`long_lifetime: ${lifetimeHours} hours`);\n      }\n      if (lifetimeHours > 720) {\n        risks.push('excessive_lifetime: >30 days');\n      }\n\n      const assessment = risks.length === 0 ? 'pass' : risks.some(r => r.includes('no_expiry') || r.includes('excessive')) ? 'fail' : 'warning';\n\n      return {\n        valid: !isExpired,\n        expiresAt,\n        issuedAt: new Date(payload.iat * 1000).toISOString(),\n        lifetimeHours,\n        isExpired,\n        claims: Object.keys(payload),\n        risks,\n        assessment\n      };\n    }\n  }\n\n  return {\n    valid: payload.exp ? payload.exp > now : true,\n    claims: Object.keys(payload),\n    risks,\n    assessment: risks.length === 0 ? 'pass' : 'fail'\n  };\n}"
+  },
+  {
+    id: 66,
+    title: "OWASP Top 10 Checklist Automator",
+    description: "Implement automated checks for 5 of the OWASP Top 10 vulnerabilities: injection, broken authentication, sensitive data exposure, XSS, and security misconfiguration. Return a checklist with pass/fail per category and remediation hints.",
+    difficulty: "Hard",
+    level: "Principal",
+    category: "Security Testing",
+    timeMinutes: 45,
+    approach: "For each OWASP category, run specific checks against the app config/responses. Injection: check for parameterized queries. Auth: check session config. Data exposure: check for HTTPS and sensitive headers. XSS: check Content-Security-Policy. Misconfig: check debug mode and default creds.",
+    exampleIO: "Input: {headers:{'content-security-policy':'default-src self','x-frame-options':'DENY','strict-transport-security':'max-age=31536000'}, config:{debug:false,https:true,parameterizedQueries:true,sessionTimeout:3600}}\nOutput: {score:4, total:5, checks:[{category:'Injection',passed:true},{category:'Broken Auth',passed:true},{category:'Data Exposure',passed:true},{category:'XSS',passed:true},{category:'Misconfiguration',passed:false,issue:'Missing X-Content-Type-Options header'}]}",
+    hints: [
+      "Injection: check if parameterized queries / prepared statements are enabled",
+      "XSS: check for Content-Security-Policy and X-XSS-Protection headers",
+      "Security misconfiguration: check for debug mode off, no default credentials, all security headers present"
+    ],
+    sampleAnswer: "function owaspChecklist(appConfig) {\n  const { headers = {}, config = {} } = appConfig;\n  const checks = [];\n  const normalHeaders = {};\n  for (const [k, v] of Object.entries(headers)) {\n    normalHeaders[k.toLowerCase()] = v;\n  }\n\n  // 1. Injection\n  const injectionPassed = config.parameterizedQueries === true;\n  checks.push({\n    category: 'Injection',\n    passed: injectionPassed,\n    issue: injectionPassed ? null : 'Parameterized queries not enabled',\n    remediation: injectionPassed ? null : 'Use prepared statements for all database queries'\n  });\n\n  // 2. Broken Authentication\n  const authIssues = [];\n  if (!config.sessionTimeout || config.sessionTimeout > 7200) authIssues.push('Session timeout too long or missing');\n  if (config.defaultCredentials) authIssues.push('Default credentials detected');\n  checks.push({\n    category: 'Broken Auth',\n    passed: authIssues.length === 0,\n    issue: authIssues.join('; ') || null,\n    remediation: authIssues.length > 0 ? 'Set session timeout <2h, remove default credentials' : null\n  });\n\n  // 3. Sensitive Data Exposure\n  const dataIssues = [];\n  if (!config.https) dataIssues.push('HTTPS not enabled');\n  if (!normalHeaders['strict-transport-security']) dataIssues.push('Missing HSTS header');\n  checks.push({\n    category: 'Data Exposure',\n    passed: dataIssues.length === 0,\n    issue: dataIssues.join('; ') || null,\n    remediation: dataIssues.length > 0 ? 'Enable HTTPS and add Strict-Transport-Security header' : null\n  });\n\n  // 4. XSS\n  const xssIssues = [];\n  if (!normalHeaders['content-security-policy']) xssIssues.push('Missing Content-Security-Policy');\n  if (!normalHeaders['x-xss-protection']) xssIssues.push('Missing X-XSS-Protection (legacy but still useful)');\n  checks.push({\n    category: 'XSS',\n    passed: xssIssues.length === 0,\n    issue: xssIssues.join('; ') || null,\n    remediation: xssIssues.length > 0 ? 'Add CSP header and X-XSS-Protection' : null\n  });\n\n  // 5. Security Misconfiguration\n  const misconfigIssues = [];\n  if (config.debug) misconfigIssues.push('Debug mode enabled in production');\n  if (!normalHeaders['x-frame-options']) misconfigIssues.push('Missing X-Frame-Options');\n  if (!normalHeaders['x-content-type-options']) misconfigIssues.push('Missing X-Content-Type-Options');\n  checks.push({\n    category: 'Misconfiguration',\n    passed: misconfigIssues.length === 0,\n    issue: misconfigIssues.join('; ') || null,\n    remediation: misconfigIssues.length > 0 ? 'Disable debug, add X-Frame-Options and X-Content-Type-Options headers' : null\n  });\n\n  const score = checks.filter(c => c.passed).length;\n  return { score, total: checks.length, grade: score === 5 ? 'A' : score >= 4 ? 'B' : score >= 3 ? 'C' : 'F', checks };\n}"
   }
 ];
 
@@ -1076,6 +2038,39 @@ let currentProblem = null;
 let timerInterval = null;
 let timerSeconds = 0;
 let isTimerRunning = false;
+let currentMode = 'growth';
+const sprintCategories = ['DSA for QE', 'Playwright', 'API Testing', 'Performance & Load Testing'];
+
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('growth-mode-btn').classList.toggle('active', mode === 'growth');
+  document.getElementById('sprint-mode-btn').classList.toggle('active', mode === 'sprint');
+  document.getElementById('mode-label').textContent = mode === 'growth'
+    ? 'All 66 problems — build architect depth'
+    : 'Interview sprint — land the job in 2 weeks';
+  document.getElementById('sprint-banner').classList.toggle('active', mode === 'sprint');
+
+  // Update category filter options for sprint mode
+  const catFilter = document.getElementById('category-filter');
+  const currentVal = catFilter.value;
+  if (mode === 'sprint') {
+    for (const opt of catFilter.options) {
+      if (opt.value && !sprintCategories.includes(opt.value)) {
+        opt.disabled = true;
+        opt.style.display = 'none';
+      }
+    }
+    if (currentVal && !sprintCategories.includes(currentVal)) {
+      catFilter.value = '';
+    }
+  } else {
+    for (const opt of catFilter.options) {
+      opt.disabled = false;
+      opt.style.display = '';
+    }
+  }
+  applyFilters();
+}
 
 function renderProblems(problemsToRender) {
   const container = document.getElementById('problems-container');
@@ -1335,6 +2330,10 @@ function applyFilters() {
 
   let filtered = problems;
 
+  if (currentMode === 'sprint') {
+    filtered = filtered.filter(p => sprintCategories.includes(p.category));
+  }
+
   if (level) {
     filtered = filtered.filter(p => p.level === level);
   }
@@ -1368,7 +2367,7 @@ function updateStats() {
 
 function resetProgress() {
   if (confirm('Are you sure? This will clear all your saved progress.')) {
-    for (let i = 1; i <= 17; i++) {
+    for (let i = 1; i <= 66; i++) {
       localStorage.removeItem(`problem-${i}`);
     }
     updateStats();
@@ -1380,7 +2379,7 @@ function resetProgress() {
 function renderReadinessReport() {
   let completed = 0;
   const categoryStats = {};
-  const categories = ['Flakiness Detection', 'Test Architecture', 'API Testing', 'Test Data Management', 'Reliability Engineering', 'AI in Testing'];
+  const categories = ['Flakiness Detection', 'Test Architecture', 'API Testing', 'Test Data Management', 'Reliability Engineering', 'AI in Testing', 'Playwright', 'DSA for QE', 'Performance & Load Testing', 'AI/LLM Testing', 'Test Infrastructure System Design', 'Observability-Driven Testing', 'Contract & Schema Testing', 'CI/CD & Pipeline Engineering', 'Security Testing'];
 
   categories.forEach(cat => {
     categoryStats[cat] = { total: 0, completed: 0 };
@@ -1399,8 +2398,8 @@ function renderReadinessReport() {
   const categoriesCovered = categories.filter(c => categoryStats[c].completed > 0).length;
 
   document.getElementById('report-score').textContent = score + '%';
-  document.getElementById('report-completed').textContent = completed + '/17';
-  document.getElementById('report-categories').textContent = categoriesCovered + '/6';
+  document.getElementById('report-completed').textContent = completed + '/66';
+  document.getElementById('report-categories').textContent = categoriesCovered + '/15';
 
   const breakdown = document.getElementById('category-breakdown');
   breakdown.innerHTML = categories.map(cat => {
@@ -1442,5 +2441,10 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
 renderProblems(problems);
 updateStats();
 </script>
+
+<div class="site-footer">
+  AI Technical Coach &mdash; Implementation Framework
+</div>
+
 </body>
 </html>
