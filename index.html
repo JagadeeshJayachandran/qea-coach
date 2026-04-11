@@ -170,18 +170,26 @@
       <strong>Works best when pasted into your existing coaching card chat</strong> — the AI already knows your initiative and phase.
     </div>
     <div class="template-tabs">
-      <div class="template-tab template-tab--active">T5 &mdash; ADR</div>
+      <div class="template-tab" id="tabT5" onclick="switchTab('t5')" style="cursor:pointer;">T5 &mdash; ADR</div>
+      <div class="template-tab" id="tabRehearsal" onclick="switchTab('rehearsal')" style="cursor:pointer;">Stakeholder Rehearsal</div>
       <div class="template-tab template-tab--soon">T4 <span class="soon-label">Soon</span></div>
       <div class="template-tab template-tab--soon">T6 <span class="soon-label">Soon</span></div>
     </div>
-    <div class="template-prompt-box">
+    <div class="template-prompt-box" id="t5Box">
       <div class="template-prompt-header">
         <span>T5 &mdash; Architecture Decision Record &middot; Paste into your AI chat</span>
         <button class="copy-btn-small" onclick="copyT5(this)"><span>📋</span> Copy</button>
       </div>
       <div class="template-prompt-content" id="t5Content"></div>
     </div>
-    <div class="template-footnote">More template prompts coming soon.</div>
+    <div class="template-prompt-box" id="rehearsalBox" style="display:none;">
+      <div class="template-prompt-header">
+        <span>Stakeholder Rehearsal &middot; Paste into your AI chat before any real conversation</span>
+        <button class="copy-btn-small" onclick="copyRehearsal(this)"><span>📋</span> Copy</button>
+      </div>
+      <div class="template-prompt-content" id="rehearsalContent"></div>
+    </div>
+    <div class="template-footnote">Rehearse every stakeholder conversation with AI before having it for real. More template prompts coming soon.</div>
   </div>
 </div>
 
@@ -252,6 +260,101 @@ If I paste a PROGRESS SNAPSHOT along with the coaching prompt (or in my first me
 
 If the snapshot is more than 7 days old, say: "Your last session was DATE. Has anything changed \u2014 new blockers, different priorities, or progress since then?" Then proceed normally.`;
 
+const REHEARSAL_PROMPT = `I want to rehearse a conversation with a stakeholder before I have it for real. You will role-play as my stakeholder and pressure-test my pitch so I'm fully prepared.
+
+--- BEFORE WE START: SAFETY SCAN ---
+
+First, ask me to paste the document or talking points I plan to use in the conversation. Once I paste it, scan it SILENTLY for these red flags:
+
+RED FLAG 1 — PROGRAMME LEAKS
+Look for: any mention of a coaching programme, coach's name, "beta cohort", template numbers (T1-T12), "Week X Asset", worked example links, or any external programme branding.
+If found: STOP and say: "🚨 Your document contains programme references that must be removed before any real conversation. I found: [list them]. Clean these out first, then paste the updated version."
+
+RED FLAG 2 — AI-GENERATED LANGUAGE
+Look for: overly polished language, buzzword density that doesn't match how a real person talks, generic phrases like "leverage synergies", "drive transformation", or perfectly structured paragraphs that sound written by an AI rather than spoken by a person.
+If found: Flag specific sentences and say: "These lines sound AI-generated. If your stakeholder asks 'did you write this yourself?' — could you defend every word? Let's rewrite the flagged sections in YOUR voice before we rehearse."
+
+RED FLAG 3 — FORMAL ASK / APPROVAL LANGUAGE
+Look for: phrases like "I request your approval", "I need your sign-off", "seeking your consent to proceed", or any language that frames this as a formal proposal requiring managerial permission.
+If found: Say: "🚨 This sounds like you're asking for formal permission. In many orgs — especially flat ones — this triggers governance questions. Consider reframing as: 'Here's what I'm planning to work on — I wanted your input' or 'I've started exploring this — wanted to share my thinking.' The difference: one asks for a gate, the other invites a conversation."
+
+RED FLAG 4 — WRONG STAKEHOLDER
+After the scan, ask me: "Who exactly are you presenting this to? What's their role, and what's their relationship to you?" Then assess:
+- If they're HR (not a direct manager or tech lead): warn that HR may interpret initiative pitches as process violations unless framed carefully.
+- If they're a skip-level or someone I don't report to: flag the political risk and suggest warming up my direct line first.
+- If I say "I don't have a clear manager" or describe a flat org: switch to a collaborative framing — "sharing thinking" not "pitching for approval."
+
+RED FLAG 5 — SENSITIVE CONTENT
+Look for: company names, client names, revenue numbers, proprietary system names, or anything that could be internal IP.
+If found: Say: "I see what might be company-sensitive information. I'll use it for this rehearsal, but remember — never paste content like this into enterprise AI tools where your company admin can see it. Use a personal AI account."
+
+--- ONCE THE DOCUMENT IS CLEAN: START THE REHEARSAL ---
+
+Ask me these setup questions ONE AT A TIME:
+
+SETUP 1: "Who is the stakeholder? Give me their name (or a fake name), their role, and one thing about their personality or priorities."
+>>> STOP. Wait for my answer. <<<
+
+SETUP 2: "What's the setting? (Scheduled 1:1, casual hallway chat, team meeting, Slack message, email?) And how much time do you have?"
+>>> STOP. Wait for my answer. <<<
+
+SETUP 3: "What's your goal for this conversation? Pick one: (a) Get them excited about my initiative, (b) Get informal go-ahead to start building, (c) Share progress and get feedback, (d) Ask for specific support (time, access, resources), (e) Something else."
+>>> STOP. Wait for my answer. <<<
+
+--- NOW ROLE-PLAY THE STAKEHOLDER ---
+
+Rules for how you play the stakeholder:
+1. STAY IN CHARACTER. You are the stakeholder, not an AI. Use their name if I gave you one.
+2. BE REALISTIC, NOT HOSTILE. Push back the way a busy, skeptical-but-fair senior person would. Don't be artificially aggressive, but don't be a pushover either.
+3. ASK THE HARD QUESTIONS. These are the questions that catch people off guard:
+   - "Where did this idea come from?" (Tests if they leak the programme)
+   - "Did you write this yourself?" (Tests if they can own AI-generated content)
+   - "Who else knows about this?" (Tests if they reveal the coaching relationship)
+   - "Is this your own initiative or did someone put you up to this?" (Direct challenge)
+   - "What makes you think you're the right person for this?" (Confidence test)
+   - "We've tried something like this before — it didn't work." (Objection handling)
+   - "I don't have budget/time for this right now." (Resource objection)
+   - "How does this fit with what the team is already doing?" (Alignment test)
+4. MATCH THE STAKEHOLDER TYPE:
+   - Engineering Manager/Tech Lead: will ask about technical feasibility, team impact, timelines
+   - Director/VP: will ask about business value, ROI, strategic alignment
+   - HR: will ask about process, policy compliance, who else is involved
+   - Peer/colleague: will ask about workload impact and why you care about this
+5. TEST FOR PROGRAMME LEAKS DURING THE CONVERSATION. If at any point during the rehearsal I accidentally say "my coach", "the programme", "template", "beta cohort" or similar — BREAK CHARACTER immediately and say: "⏸️ PAUSE — You just leaked a programme reference. In a real conversation, this would raise questions. The phrase was: '[exact phrase]'. How would you say this without any programme reference?" Then resume the role-play.
+6. AFTER 5-7 EXCHANGES, wrap up the role-play naturally (the stakeholder ends the meeting or conversation).
+
+--- POST-REHEARSAL DEBRIEF ---
+
+After the role-play ends, break character and give me a structured debrief:
+
+READINESS SCORE: [1-10]
+- 8-10: You're ready. Go have the conversation.
+- 5-7: Almost there. Fix the issues below and run one more round.
+- 1-4: Not ready. You need to rethink your approach before this conversation.
+
+WHAT WORKED:
+- [2-3 things I said that would land well with this stakeholder]
+
+WHAT NEEDS WORK:
+- [2-3 specific things to improve, with exact rewording suggestions]
+
+PROGRAMME LEAK CHECK: [PASS / FAIL]
+- Did I accidentally reference the programme, a coach, templates, or anything external? List every instance.
+
+OWNERSHIP CHECK: [PASS / FAIL]
+- Could I explain every part of my document in my own words, or did I stumble on sections that sounded like someone else wrote them?
+
+FRAMING CHECK: [PASS / FAIL]
+- Did I frame this as my own professional thinking, or did it sound like I was delivering someone else's framework?
+
+STAKEHOLDER FIT CHECK: [PASS / FAIL]
+- Am I presenting to the right person? If not, who should I talk to first?
+
+SUGGESTED OPENING LINE:
+- Give me the single best opening sentence for the real conversation, tailored to this specific stakeholder.
+
+Then ask: "Want to run it again with the fixes, try a different stakeholder, or are you ready for the real thing?"`;
+
 const T5_PROMPT = `I need to fill in my Architecture Decision Record (ADR).
 
 An ADR captures the key technical decision I made in Phase 1: what problem I was solving, what alternatives I evaluated, what I chose, and why. It is the written evidence of the thinking behind my initiative.
@@ -299,8 +402,6 @@ AFTER ALL 6 ANSWERS:
 Format my answers as a completed ADR I can copy-paste into my T5 Google Doc template. Use plain, professional language. Use the 6 question labels above as section headings. No jargon unless I used it myself. Keep each section to 3\u20135 sentences \u2014 concise but complete.`;
 
 const PROMPT = `You are my technical implementation coach.
-
-You must assume I might be a strong tester but a weak programmer. When I seem lost, break tasks into smaller steps instead of increasing complexity.
 
 ABOUT ME:
 - I'm a Senior SDET/QA Engineer working on a high-visibility quality initiative to build my case for a Staff/Principal IC promotion
@@ -701,9 +802,46 @@ function copyT5(btn) {
   });
 }
 
+function copyRehearsal(btn) {
+  navigator.clipboard.writeText(REHEARSAL_PROMPT).then(() => {
+    btn.classList.add('copied');
+    btn.innerHTML = '<span>\u2705</span> Copied!';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = '<span>\ud83d\udccb</span> Copy';
+    }, 2500);
+  });
+}
+
+function renderRehearsal() {
+  const el = document.getElementById('rehearsalContent');
+  if (el) el.textContent = REHEARSAL_PROMPT;
+}
+
+function switchTab(tab) {
+  const t5Box = document.getElementById('t5Box');
+  const rehearsalBox = document.getElementById('rehearsalBox');
+  const tabT5 = document.getElementById('tabT5');
+  const tabRehearsal = document.getElementById('tabRehearsal');
+  if (tab === 't5') {
+    t5Box.style.display = 'block';
+    rehearsalBox.style.display = 'none';
+    tabT5.classList.add('template-tab--active');
+    tabRehearsal.classList.remove('template-tab--active');
+  } else {
+    t5Box.style.display = 'none';
+    rehearsalBox.style.display = 'block';
+    tabRehearsal.classList.add('template-tab--active');
+    tabT5.classList.remove('template-tab--active');
+  }
+}
+
 renderPrompt();
 renderAddon();
 renderT5();
+renderRehearsal();
+// Default to T5 tab active
+switchTab('t5');
 </script>
 </body>
 </html>
