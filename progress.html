@@ -50,6 +50,22 @@
   .status-badge.on-track { background: #e8f5e9; color: #2e7d32; }
   .status-badge.building { background: #fff3e0; color: #e65100; }
   .status-badge.at-risk { background: #ffebee; color: #c62828; }
+  .status-badge.benched { background: #fff8e1; color: #f57f17; }
+  .status-badge.path-e { background: #fbe9e7; color: #bf360c; }
+  .status-badge.paused { background: #f5f5f5; color: #757575; }
+
+  .pivot-legend { background: #fff; border-radius: 10px; padding: 14px 20px; margin-top: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .pivot-legend h3 { font-size: 12px; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+  .pivot-legend-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pivot-tag { padding: 4px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .pivot-tag.baseline { background: #e8f5e9; color: #2e7d32; }
+  .pivot-tag.path-a { background: #e3f2fd; color: #1565c0; }
+  .pivot-tag.path-b { background: #fff8e1; color: #f57f17; }
+  .pivot-tag.path-c { background: #f3e5f5; color: #6a1b9a; }
+  .pivot-tag.path-c2 { background: #ede7f6; color: #4527a0; }
+  .pivot-tag.path-d { background: #e0f2f1; color: #00695c; }
+  .pivot-tag.path-e { background: #fbe9e7; color: #bf360c; }
+  .pivot-tag.path-f { background: #f5f5f5; color: #757575; }
 
   .legend { display: flex; justify-content: center; gap: 24px; margin-top: 20px; padding: 12px; background: #fff; border-radius: 8px; }
   .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #555; }
@@ -125,7 +141,7 @@
   <div class="header">
     <h1>QEA Beta Cohort &mdash; Phase Journey Map</h1>
     <p>Where you started vs. where you are now</p>
-    <div class="date">Week 5 of 12 &mdash; 11 April 2026</div>
+    <div class="date">Week 5 of 12 &mdash; 17 April 2026</div>
   </div>
 
   <div class="week-progress">
@@ -152,7 +168,7 @@
       <div class="tj-cell done">✅ Done</div>
       <div class="tj-cell done">✅ Done</div>
       <div class="tj-cell done">✅ Done</div>
-      <div class="tj-cell today">📝 Today</div>
+      <div class="tj-cell partial">🔄 In Progress</div>
     </div>
 
     <div class="tj-row">
@@ -161,7 +177,7 @@
       <div class="tj-cell done">✅ Done</div>
       <div class="tj-cell done">✅ Done</div>
       <div class="tj-cell done">✅ Done</div>
-      <div class="tj-cell today">📝 Today</div>
+      <div class="tj-cell partial">🔄 In Review</div>
     </div>
 
     <div class="tj-row">
@@ -169,8 +185,8 @@
       <div class="tj-cell idea">💡 An idea</div>
       <div class="tj-cell done">✅ Done</div>
       <div class="tj-cell done">✅ Done</div>
-      <div class="tj-cell partial">⏳ In review</div>
-      <div class="tj-cell today">📝 Today</div>
+      <div class="tj-cell partial">⏳ In revision</div>
+      <div class="tj-cell not-yet">Not yet</div>
     </div>
 
     <div class="tj-row">
@@ -178,17 +194,17 @@
       <div class="tj-cell idea">💡 An idea</div>
       <div class="tj-cell done">✅ Done</div>
       <div class="tj-cell done">✅ Done</div>
-      <div class="tj-cell partial">⏳ In review</div>
-      <div class="tj-cell today">📝 Today</div>
+      <div class="tj-cell done">✅ Done</div>
+      <div class="tj-cell not-yet">Not yet</div>
     </div>
 
     <div class="tj-row">
       <div class="tj-name">Jeevak</div>
       <div class="tj-cell idea">💡 An idea</div>
+      <div class="tj-cell done">✅ Done</div>
       <div class="tj-cell not-yet">Not yet</div>
       <div class="tj-cell not-yet">Not yet</div>
       <div class="tj-cell not-yet">Not yet</div>
-      <div class="tj-cell today">📝 Today</div>
     </div>
 
     <div class="tj-insight">
@@ -217,7 +233,7 @@
       <div class="phase-block future">PROD</div>
       <div class="phase-block future">SHOWCASE</div>
     </div>
-    <div class="status-badge building">Building</div>
+    <div class="status-badge on-track">On Track</div>
   </div>
 
   <!-- Arpit — SCOPE ✓, Phase 2 LEARN -->
@@ -249,7 +265,7 @@
       <div class="phase-block future">PROD</div>
       <div class="phase-block future">SHOWCASE</div>
     </div>
-    <div class="status-badge on-track">On Track</div>
+    <div class="status-badge benched">Path B — Benched</div>
   </div>
 
   <!-- Ashutosh — Phase 1 SCOPE -->
@@ -265,7 +281,7 @@
       <div class="phase-block future">PROD</div>
       <div class="phase-block future">SHOWCASE</div>
     </div>
-    <div class="status-badge on-track">On Track</div>
+    <div class="status-badge path-e">Path E — Scope at Risk</div>
   </div>
 
   <!-- Jeevak — Phase 1 SCOPE (at risk) -->
@@ -281,7 +297,7 @@
       <div class="phase-block future">PROD</div>
       <div class="phase-block future">SHOWCASE</div>
     </div>
-    <div class="status-badge at-risk">At Risk</div>
+    <div class="status-badge paused">Path F — Paused</div>
   </div>
 
   <div class="legend">
@@ -289,6 +305,20 @@
     <div class="legend-item"><div class="legend-dot current"></div> Current Phase</div>
     <div class="legend-item"><div class="legend-dot future"></div> Upcoming</div>
     <div class="legend-item"><div class="legend-dot at-risk"></div> At Risk</div>
+  </div>
+
+  <div class="pivot-legend">
+    <h3>Pivot Path Reference</h3>
+    <div class="pivot-legend-grid">
+      <span class="pivot-tag baseline">Baseline — standard template cadence, on track</span>
+      <span class="pivot-tag path-a">A — Accelerated: ahead of schedule, stretch goals</span>
+      <span class="pivot-tag path-b">B — Benched: project paused; build POC on sample/public project</span>
+      <span class="pivot-tag path-c">C — Career Pivot: job-searching; portfolio-first delivery</span>
+      <span class="pivot-tag path-c2">C2 — Job-Hunting While Employed: dual internal + portfolio track</span>
+      <span class="pivot-tag path-d">D — Delayed Start: late joiner; compressed template schedule</span>
+      <span class="pivot-tag path-e">E — Scope at Risk: private build, de-scoped, programme refs stripped</span>
+      <span class="pivot-tag path-f">F — Paused: no delivery expected; re-engagement date required</span>
+    </div>
   </div>
 
   <div class="footer">Updated weekly by Coach Jag &mdash; QE Architect Accelerator Beta Cohort</div>
