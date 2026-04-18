@@ -21,9 +21,19 @@
   .option-box { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px 20px; margin: 12px 0; }
   .option-title { font-weight: 700; color: #333; }
   .checklist { list-style: none; padding: 0; }
-  .checklist li { padding: 6px 0; font-size: 14px; }
-  .checklist li::before { content: "\2610 "; font-size: 16px; margin-right: 8px; }
+  .checklist li { padding: 6px 0; font-size: 14px; display: flex; align-items: flex-start; gap: 8px; }
+  .checklist input[type="checkbox"] { width: 16px; height: 16px; margin-top: 3px; flex-shrink: 0; cursor: pointer; accent-color: #1a73e8; }
+  .fill-area[contenteditable] { color: #1a1a1a; cursor: text; background: #fff; }
+  .fill-area[contenteditable]:empty::before { content: attr(data-placeholder); color: #999; pointer-events: none; }
+  .fill-area[contenteditable]:focus { outline: 2px solid #1a73e8; border-color: #1a73e8; border-style: solid; }
+  .print-btn { background: #1a73e8; color: #fff; border: none; padding: 12px 28px; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; margin: 28px 0 8px; display: block; }
+  .print-btn:hover { background: #1557b0; }
   .footer-note { font-size: 12px; color: #888; margin-top: 40px; border-top: 1px solid #eee; padding-top: 12px; }
+  @media print {
+    .print-btn { display: none; }
+    .fill-area { background: #fff !important; border-style: solid !important; }
+    .how-to, .trigger-box, .fill-section, .option-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
 </style>
 </head>
 <body>
@@ -54,19 +64,19 @@
 <div class="fill-section">
   <div class="fill-label">What happened?</div>
   <div class="fill-hint">(2-3 sentences. What changed in your work situation? Be specific — when did it happen, what's the impact?)</div>
-  <div class="fill-area">Write here...</div>
+  <div class="fill-area" contenteditable="true" data-placeholder="Write here..."></div>
 </div>
 
 <div class="fill-section">
   <div class="fill-label">What's still true from your original initiative?</div>
   <div class="fill-hint">(What skills, research, or relationships from your original initiative still apply? Nothing is wasted.)</div>
-  <div class="fill-area">Write here...</div>
+  <div class="fill-area" contenteditable="true" data-placeholder="Write here..."></div>
 </div>
 
 <div class="fill-section">
   <div class="fill-label">What's your timeline?</div>
   <div class="fill-hint">(How long are you benched/between projects? Is this temporary or permanent? Are you job hunting?)</div>
-  <div class="fill-area">Write here...</div>
+  <div class="fill-area" contenteditable="true" data-placeholder="Write here..."></div>
 </div>
 
 <h2>Part 2 — Choose Your Pivot Path</h2>
@@ -145,26 +155,26 @@
 <h2>Part 3 — Your Pivoted Initiative</h2>
 
 <div class="fill-section">
-  <div class="fill-label">Which path did you choose? (A / B / C / D)</div>
-  <div class="fill-area">Write here...</div>
+  <div class="fill-label">Which path did you choose? (A / B / C / D / E / F)</div>
+  <div class="fill-area" contenteditable="true" data-placeholder="Write here..."></div>
 </div>
 
 <div class="fill-section">
   <div class="fill-label">Your updated initiative in one sentence</div>
   <div class="fill-hint">(Rewrite your initiative statement to reflect the new reality. Keep it specific and achievable within the remaining programme weeks.)</div>
-  <div class="fill-area">Write here...</div>
+  <div class="fill-area" contenteditable="true" data-placeholder="Write here..."></div>
 </div>
 
 <div class="fill-section">
   <div class="fill-label">What can you deliver in the next 2 weeks?</div>
   <div class="fill-hint">(Not 12 weeks — the next 2. What's one concrete thing you can build or show?)</div>
-  <div class="fill-area">Write here...</div>
+  <div class="fill-area" contenteditable="true" data-placeholder="Write here..."></div>
 </div>
 
 <div class="fill-section">
   <div class="fill-label">Who needs to know about this change?</div>
   <div class="fill-hint">(New manager? New team? Nobody? Your coach?)</div>
-  <div class="fill-area">Write here...</div>
+  <div class="fill-area" contenteditable="true" data-placeholder="Write here..."></div>
 </div>
 
 <h2>Part 4 — Which Templates Still Apply?</h2>
@@ -198,12 +208,14 @@
 <p>Before sharing ANY document from this programme with anyone at your company:</p>
 
 <ul class="checklist">
-  <li>Removed all programme references, template numbers, and branding</li>
-  <li>Removed coach's name and any mention of external coaching</li>
-  <li>Created a clean copy (not the original template)</li>
-  <li>Can explain every line without referencing the programme</li>
-  <li>Have NOT pasted any programme content into company AI tools (ChatGPT Enterprise, Claude Team, etc.)</li>
+  <li><input type="checkbox"><span>Removed all programme references, template numbers, and branding</span></li>
+  <li><input type="checkbox"><span>Removed coach's name and any mention of external coaching</span></li>
+  <li><input type="checkbox"><span>Created a clean copy (not the original template)</span></li>
+  <li><input type="checkbox"><span>Can explain every line without referencing the programme</span></li>
+  <li><input type="checkbox"><span>Have NOT pasted any programme content into company AI tools (ChatGPT Enterprise, Claude Team, etc.)</span></li>
 </ul>
+
+<button class="print-btn" onclick="window.print()">Save as PDF</button>
 
 <p class="footer-note">Technical Implementation Framework | Professional Development Resource</p>
 
