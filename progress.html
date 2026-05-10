@@ -53,6 +53,10 @@
   .status-badge.benched { background: #fff8e1; color: #f57f17; }
   .status-badge.path-e { background: #fbe9e7; color: #bf360c; }
   .status-badge.paused { background: #f5f5f5; color: #757575; }
+  .status-badge.landed { background: linear-gradient(135deg, #ffd54f, #66bb6a); color: #1b5e20; box-shadow: 0 2px 6px rgba(46,125,50,0.3); }
+  .landed-banner { display: inline-block; margin-top: 4px; padding: 2px 8px; background: linear-gradient(135deg, #fff8e1, #e8f5e9); color: #1b5e20; font-size: 10px; font-weight: 700; border-radius: 8px; border: 1px solid #66bb6a; }
+  .tj-cell.video-sent { background: #ede7f6; color: #4527a0; font-size: 11px; }
+  .tj-cell.na { background: #f5f5f5; color: #9e9e9e; font-size: 11px; font-style: italic; }
 
   .pivot-legend { background: #fff; border-radius: 10px; padding: 14px 20px; margin-top: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
   .pivot-legend h3 { font-size: 12px; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
@@ -66,6 +70,7 @@
   .pivot-tag.path-d { background: #e0f2f1; color: #00695c; }
   .pivot-tag.path-e { background: #fbe9e7; color: #bf360c; }
   .pivot-tag.path-f { background: #f5f5f5; color: #757575; }
+  .pivot-tag.path-g { background: linear-gradient(135deg, #ffd54f, #66bb6a); color: #1b5e20; font-weight: 700; box-shadow: 0 1px 4px rgba(46,125,50,0.25); }
 
   .legend { display: flex; justify-content: center; gap: 24px; margin-top: 20px; padding: 12px; background: #fff; border-radius: 8px; }
   .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #555; }
@@ -79,7 +84,7 @@
 
   .week-progress { text-align: center; margin-bottom: 24px; }
   .week-progress .bar-bg { width: 200px; height: 8px; background: #e0e0e0; border-radius: 4px; margin: 8px auto; position: relative; }
-  .week-progress .bar-fill { height: 100%; background: linear-gradient(90deg, #1565c0, #42a5f5); border-radius: 4px; width: 41.67%; }
+  .week-progress .bar-fill { height: 100%; background: linear-gradient(90deg, #1565c0, #42a5f5); border-radius: 4px; width: 75%; }
   .week-progress .label { font-size: 13px; color: #666; font-weight: 600; }
 
   .password-overlay {
@@ -141,17 +146,17 @@
   <div class="header">
     <h1>QEA Beta Cohort &mdash; Phase Journey Map</h1>
     <p>Where you started vs. where you are now</p>
-    <div class="date">Week 5 of 12 &mdash; 17 April 2026</div>
+    <div class="date">Week 9 of 12 &mdash; 10 May 2026</div>
   </div>
 
   <div class="week-progress">
-    <div class="label">Programme Progress: Week 5 / 12</div>
+    <div class="label">Programme Progress: Week 9 / 12</div>
     <div class="bar-bg"><div class="bar-fill"></div></div>
   </div>
 
   <div class="template-journey">
-    <div class="tj-title">📈 From Idea → Evidence: Your First 5 Weeks</div>
-    <div class="tj-subtitle">3 weeks ago you had an idea. Today you have documented evidence a Staff Engineer would be proud of.</div>
+    <div class="tj-title">📈 From Idea → Evidence: Your First 9 Weeks</div>
+    <div class="tj-subtitle">8 weeks ago you had an idea. Today you have evidence, ADRs, stakeholder maps, and quality guardrails — the artefacts of a Staff Engineer.</div>
 
     <div class="tj-row tj-labels">
       <div class="tj-name label"></div>
@@ -160,6 +165,8 @@
       <div class="tj-cell label">T3 — Learning</div>
       <div class="tj-cell label">T4 — Pitch</div>
       <div class="tj-cell label">T5 — ADR</div>
+      <div class="tj-cell label">T6 — Stakeholder Map</div>
+      <div class="tj-cell label">T7 — Quality Guardrail</div>
     </div>
 
     <div class="tj-row">
@@ -168,7 +175,9 @@
       <div class="tj-cell done">✅ Done</div>
       <div class="tj-cell done">✅ Done</div>
       <div class="tj-cell done">✅ Done</div>
-      <div class="tj-cell partial">🔄 In Progress</div>
+      <div class="tj-cell done">✅ Done</div>
+      <div class="tj-cell na">N/A</div>
+      <div class="tj-cell video-sent">🎬 Video sent</div>
     </div>
 
     <div class="tj-row">
@@ -177,7 +186,9 @@
       <div class="tj-cell done">✅ Done</div>
       <div class="tj-cell done">✅ Done</div>
       <div class="tj-cell done">✅ Done</div>
-      <div class="tj-cell partial">🔄 In Review</div>
+      <div class="tj-cell done">✅ Done</div>
+      <div class="tj-cell video-sent">🎬 Video sent</div>
+      <div class="tj-cell video-sent">🎬 Video sent</div>
     </div>
 
     <div class="tj-row">
@@ -185,8 +196,10 @@
       <div class="tj-cell idea">💡 An idea</div>
       <div class="tj-cell done">✅ Done</div>
       <div class="tj-cell done">✅ Done</div>
-      <div class="tj-cell partial">⏳ In revision</div>
-      <div class="tj-cell not-yet">Not yet</div>
+      <div class="tj-cell done">✅ Done</div>
+      <div class="tj-cell done">✅ Done</div>
+      <div class="tj-cell video-sent">🎬 Video sent</div>
+      <div class="tj-cell video-sent">🎬 Video sent</div>
     </div>
 
     <div class="tj-row">
@@ -196,6 +209,8 @@
       <div class="tj-cell done">✅ Done</div>
       <div class="tj-cell done">✅ Done</div>
       <div class="tj-cell not-yet">Not yet</div>
+      <div class="tj-cell video-sent">🎬 Video sent</div>
+      <div class="tj-cell video-sent">🎬 Video sent</div>
     </div>
 
     <div class="tj-row">
@@ -205,10 +220,12 @@
       <div class="tj-cell not-yet">Not yet</div>
       <div class="tj-cell not-yet">Not yet</div>
       <div class="tj-cell not-yet">Not yet</div>
+      <div class="tj-cell video-sent">🎬 Video sent</div>
+      <div class="tj-cell video-sent">🎬 Video sent</div>
     </div>
 
     <div class="tj-insight">
-      💡 In 3 weeks: from "I have an idea" → a problem statement, a learning plan, a stakeholder-reviewed pitch, and today — your first Architecture Decision Record. This is what Staff Engineers do.
+      💡 In 8 weeks: from "I have an idea" → problem statement, learning plan, pitch, ADR, stakeholder map, quality guardrails. The artefacts of a Staff Engineer, accumulated.
     </div>
   </div>
 
@@ -220,7 +237,7 @@
     <div class="phase-label p5">Phase 5<br>SHOWCASE</div>
   </div>
 
-  <!-- Chakri — Phase 3 BUILD (furthest ahead) -->
+  <!-- Chakri — Between Phase 4 PROD and Phase 5 SHOWCASE -->
   <div class="participant">
     <div class="info">
       <div class="name">Chakri</div>
@@ -229,14 +246,14 @@
     <div class="journey">
       <div class="phase-block completed">SCOPE &#10003;</div>
       <div class="phase-block completed">LEARN &#10003;</div>
-      <div class="phase-block current"><span class="marker">&#128205;</span>BUILD</div>
-      <div class="phase-block future">PROD</div>
-      <div class="phase-block future">SHOWCASE</div>
+      <div class="phase-block completed">BUILD &#10003;</div>
+      <div class="phase-block completed">PROD &#10003;</div>
+      <div class="phase-block current"><span class="marker">&#128205;</span>SHOWCASE</div>
     </div>
     <div class="status-badge on-track">On Track</div>
   </div>
 
-  <!-- Arpit — SCOPE ✓, Phase 2 LEARN -->
+  <!-- Arpit — Between Phase 4 PROD and Phase 5 SHOWCASE -->
   <div class="participant">
     <div class="info">
       <div class="name">Arpit</div>
@@ -244,28 +261,29 @@
     </div>
     <div class="journey">
       <div class="phase-block completed">SCOPE &#10003;</div>
-      <div class="phase-block current"><span class="marker">&#128205;</span>LEARN</div>
-      <div class="phase-block future">BUILD</div>
-      <div class="phase-block future">PROD</div>
-      <div class="phase-block future">SHOWCASE</div>
+      <div class="phase-block completed">LEARN &#10003;</div>
+      <div class="phase-block completed">BUILD &#10003;</div>
+      <div class="phase-block completed">PROD &#10003;</div>
+      <div class="phase-block current"><span class="marker">&#128205;</span>SHOWCASE</div>
     </div>
     <div class="status-badge on-track">On Track</div>
   </div>
 
-  <!-- Divya — Phase 1 SCOPE -->
+  <!-- Divya — Between Phase 3 BUILD and Phase 4 PROD -->
   <div class="participant">
     <div class="info">
       <div class="name">Divya</div>
       <div class="initiative">AI-Native Visual Testing<br>(Playwright + Figma + AI)</div>
+      <div class="landed-banner">🎉 Landed new role &mdash; 9 May 2026</div>
     </div>
     <div class="journey">
-      <div class="phase-block current"><span class="marker">&#128205;</span>SCOPE</div>
-      <div class="phase-block future">LEARN</div>
-      <div class="phase-block future">BUILD</div>
-      <div class="phase-block future">PROD</div>
+      <div class="phase-block completed">SCOPE &#10003;</div>
+      <div class="phase-block completed">LEARN &#10003;</div>
+      <div class="phase-block completed">BUILD &#10003;</div>
+      <div class="phase-block current"><span class="marker">&#128205;</span>PROD</div>
       <div class="phase-block future">SHOWCASE</div>
     </div>
-    <div class="status-badge benched">Path B — Benched</div>
+    <div class="status-badge landed">Path G &mdash; Landed ✅</div>
   </div>
 
   <!-- Ashutosh — Phase 1 SCOPE -->
@@ -318,10 +336,11 @@
       <span class="pivot-tag path-d">D — Delayed Start: late joiner; compressed template schedule</span>
       <span class="pivot-tag path-e">E — Scope at Risk: private build, de-scoped, programme refs stripped</span>
       <span class="pivot-tag path-f">F — Paused: no delivery expected; re-engagement date required</span>
+      <span class="pivot-tag path-g">G — Landed: new role secured; programme assets became interview leverage; portfolio drove the outcome</span>
     </div>
   </div>
 
-  <div class="footer">Updated weekly by Coach Jag &mdash; QE Architect Accelerator Beta Cohort</div>
+  <div class="footer">Updated weekly by Coach Jag &middot; Last refresh 9 May 2026 &mdash; QE Architect Accelerator Beta Cohort</div>
 </div>
 <script>
 function checkPassword() {
